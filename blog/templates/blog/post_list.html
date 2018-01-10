@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+</head>
+<body>
+		<h1>hello JB blog view</h1> 
+	<ul>
+	{% for post in post_list %}
+		<li>
+		{{post.id}}
+		<a href="{% url 'blog:postDV' post.slug %}">{{post.title}}</a>
+		</li>
+	{% endfor %}
+	</ul>	
+<!--{{page_obj}}  --> 
+	{% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    {% endif %}
+    <span class="page-current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+    {% endif %}
+</body>
+<footer>
+	
+</footer>
+</html>

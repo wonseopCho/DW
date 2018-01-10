@@ -1,0 +1,20 @@
+<html>
+<head>
+	
+</head>
+<body>
+		<h1>hello JB bookmark list view</h1> 
+		{{object_list}}
+		{{bookmark_list}}
+		<ul>
+		{% for bookmark in bookmark_list %}
+			<li>
+				{{bookmark.title}} : <a href="{{bookmark.url}}" target="_blank">{{bookmark.url}}</a>
+			</li>
+		{% endfor %}
+		</ul>
+</body>
+<footer>
+	
+</footer>
+</html>
