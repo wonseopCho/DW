@@ -134,7 +134,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'DW', 'statics')
+    os.path.join(BASE_DIR, 'DW', 'static')
 ]
 
 STATIC_ROOT = "/home/wonseop/DW/static"
