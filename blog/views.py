@@ -5,7 +5,6 @@ from . import models
 #from django.http import HttpResponse
 
 
-
 class PostLV(ListView):
 	model = models.Post
 	# template_name ='blog/post_list2.html' <== use own name

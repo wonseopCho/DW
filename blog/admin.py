@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Post
 
 class PostAdmin(admin.ModelAdmin):
-	list_display = ['title', 'slug', 'description', 'content_length', 'created_at']
+	list_display = ['id','title', 'slug', 'description', 'content_length', 'created_at']
 	list_filter = ['updated_at']
 	search_fields = ['title']
 	prepopulated_fields = {

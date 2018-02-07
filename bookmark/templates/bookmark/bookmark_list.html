@@ -1,7 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+
 <html>
 <head>
 	
 </head>
+{% block content %}
 <body>
 		<h1>hello JB bookmark list view</h1> 
 		{{object_list}}
@@ -14,6 +18,7 @@
 		{% endfor %}
 		</ul>
 </body>
+{% endblock %}
 <footer>
 	
 </footer>

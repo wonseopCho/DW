@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load statics}
+
+{% block content %}
+<table class='table table-hover table-bordered'>
+<tbody>
+{% for post in post_list %}
+	<tr>
+		<td>{{post.title}}</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

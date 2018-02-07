@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView
 from .models import Bookmark
+from django.http import JsonResponse
 #from django.http import HttpResponse
 
 #CBV

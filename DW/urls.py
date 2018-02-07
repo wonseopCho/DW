@@ -16,11 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.http import HttpResponse, HttpResponseNotFound
+from django.conf.urls.static import static
+from django.conf import settings
 from DW import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_view, name='home'),
     path('blog/', include('blog.urls')),
+    path('blog2/', include('blog2.urls')),
     path('bookmark/', include('bookmark.urls')),
-]
+    path('mapAPI/', include('mapAPI.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

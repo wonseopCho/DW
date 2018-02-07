@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block content %}
+<style type="text/css">
+	img {
+		max-width: 100%
+	}
+</style>
+<h1> {{post_detail.title}}</h1>
+{% if post_detail.photo %}
+	<img src="{{post_detail.photo.url}}" />
+{% endif %}
+
+{{post_detail.content|linebreaks}}
+
+<a href="{% url 'blog2:comment_new' post_detail.pk %}">댓글쓰기</a>
+
+<ul>
+{% for comment in post_detail.comment_set.all %}
+	<li>
+	글쓴이:{{comment.author}} 내용:{{comment.message}} 
+	<a href="{% url 'blog2:comment_edit' post_detail.pk comment.pk %}">댓글수정</a>
+	</li>
+{% endfor %}
+</ul>
+{% endblock %}
