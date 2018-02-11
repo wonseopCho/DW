@@ -67,14 +67,28 @@
         width: 345px;
       }
 
+      #GPS {
+    	position: absolute;
+    	left: 13px;
+    	top: 150px;
+    	font-weight:bold;
+	  } 
+
 </style>
 {% endblock %}
 
 {% block content %}
-
 <input id="pac-input" class="controls" type="text" placeholder="Search Box">
 <div id="map"></div>
-
+<div id="GPS">
+	<img src="{% static 'Images/gps.png' %}" alt='Your Location' width="30" height="30"/>
+</div>
+<div id="choose" style="width:100%; border-color:red; border-style: dotted">
+	<button class="btn lodge" id ="lodge">숙소</button>
+	<button class="btn store" id ="store">먹거리</button>
+	<button class="btn ">페스트벌</button>
+	<button class="btn ">제래시장</button>
+</div>
 {% endblock %}
 
 {% block additional_script %}
@@ -104,7 +118,10 @@
   	var geocoder;
  	var map;
  	var infowindow;
+ 	var service;
+ 	var search_keywords = 'food';//default selection
  	var markers = [];
+ 	var geo_pos;
 
   	function initMap() {
   		var markers_from_DB = {{markers|safe}};
@@ -125,36 +142,33 @@
 	      zoom: 14
 	    });
 
-	    var request = {
+	    infowindow = new google.maps.InfoWindow();
+		service = new google.maps.places.PlacesService(map);
+	    google.maps.event.addListener(map, 'click',
+	    	function(event){
+	    		var latlng = event.latLng;
+	    		searchCallback(search_keywords,latlng);
+	    	}
+	    	
+	    );
+	    markers =[];
+	    for(var i = 0; i < kor_coords.length; i++){
+	    	markers.push(addMarker(kor_coords[i]));
+	    };
+
+	    // nearby search after Geolocation				
+		var request = {
 		    location: kor_coords[0].coord,
 		    radius: '500',
 		    types: ['lodging','gas_station']
 		};
-
-		infowindow = new google.maps.InfoWindow();
-		var service = new google.maps.places.PlacesService(map);
+		deletMarkers();
+		addMarker(kor_coords[0]);
 		service.textSearch(request, callback);
-	   
-	    google.maps.event.addListener(map, 'click',
-	    	function(event){
-	    		var latlng = event.latLng;
-	    		var request = {
-	    			location:latlng,
-	    			radius: 8047,
-	    			types: ['lodging','gas_station']
-	    		};
-	    		//map.setCenter(event.latLng)
-	    		deletMarkers();
-	    		geocodeLatLng(geocoder, map, infowindow, latlng);
-	    		service.textSearch(request, callback);
-	    		//addMarker({coord:event.latLng});
-	    	}
-	    );
 
-	    for(var i = 0; i < kor_coords.length; i++){
-	    	addMarker(kor_coords[i]);
-	    };
-	    //testing for Geocoding
+//-----------------------------------------------------------------------------
+
+	    //testing for Geocoding with DB
 	    /*
 	    for(var j = 0; j < addresses.length; j++){
 	    	codeAddress(addresses[j]);
@@ -202,12 +216,7 @@
 	        };
 
 	        // Create a marker for each place.
-	        markers.push(new google.maps.Marker({
-	          map: map,
-	          icon: icon,
-	          title: place.name,
-	          position: place.geometry.location
-	        }));
+	        markers.push(createMarker(place));
 
 	        if (place.geometry.viewport) {
 	          // Only geocodes have viewport.
@@ -219,6 +228,83 @@
 	      map.fitBounds(bounds);
 	    });
 	}
+//-----------------------------------------------------------------------------
+//							catefory selections	
+	document.getElementById('lodge').addEventListener('click',
+		function(event){
+			var keyword = 'lodging';
+			var latlng = map.getCenter();
+			searchCallback(keyword,latlng);
+	});
+
+	document.getElementById('store').addEventListener('click',
+		function(event){
+			var keyword = 'store';
+			var latlng = map.getCenter();
+			searchCallback(keyword,latlng);
+	});
+
+	document.getElementById('GPS').addEventListener('click',
+		function(event){
+			GPS();
+			
+	});
+//-----------------------------------------------------------------------------
+	function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }
+
+	function searchCallback(keyword,latlng){
+		search_keywords = keyword;
+    		var request = {
+    			location:latlng,
+    			radius: 8047,
+    			types: [search_keywords]
+    		};
+    		map.setCenter(event.latLng)
+    		deletMarkers();
+    		geocodeLatLng(geocoder, map, infowindow, latlng);
+    		service.textSearch(request, callback);
+	}
+
+//-----------------------------------------------------------------------------
+//							GeoLocation (GPS)
+	function GPS(){
+	//	var geoinfoWindow = new google.maps.InfoWindow({map: map});
+	    // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				geo_pos = [
+				  {coord:{lat: position.coords.latitude,
+				  lng: position.coords.longitude}}
+				];
+			//	geoinfoWindow.setPosition(geo_pos[0].coord);
+			//	geoinfoWindow.setContent('Location found.');
+				map.setCenter(geo_pos[0].coord);
+//-------------------------------------------------------------------------------
+// nearby search after Geolocation				
+				var request = {
+				    location: geo_pos[0].coord,
+				    radius: '500',
+				    types: ['lodging','gas_station']
+				};
+				deletMarkers();
+				addMarker(geo_pos[0]);
+				service.textSearch(request, callback);
+//-------------------------------------------------------------------------------				
+			}, function() {
+			//	handleLocationError(true, geoinfoWindow, map.getCenter());
+			});
+		} 
+		else {
+		// Browser doesn't support Geolocation
+	//	handleLocationError(false, geoinfoWindow, map.getCenter());
+		}
+	}
+//-------------------------------------------------------------------------------
 
 	function geocodeLatLng(geocoder, map, infowindow, o_latlng) {
         var input = o_latlng.lat()+','+o_latlng.lng();// or without 'split' var latlngStr = [o_latlng.lat(),o_latlng.lng()]; 
@@ -253,7 +339,7 @@
         var placeLoc = place.geometry.location;
         var icon = {
 	          url: place.icon,
-	          size: new google.maps.Size(71, 71),
+	          size: new google.maps.Size(25, 25),
 	          origin: new google.maps.Point(0, 0),
 	          anchor: new google.maps.Point(17, 34),
 	          scaledSize: new google.maps.Size(25, 25)
@@ -263,14 +349,15 @@
           animation: google.maps.Animation.DROP,
           position: place.geometry.location,
         });
-
         if(place.icon){
 	    	marker.setIcon(icon);
 	    }
-
+	    var infowindow = new google.maps.InfoWindow({
+          maxWidth: 200
+        });
         google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name+ "<br>" + place.formatted_address + place.reference);
-          infowindow.open(map, this);
+			infowindow.setContent(place.name+ "<br>" + place.formatted_address + place.reference);
+			infowindow.open(map, this);
         });
 
         //need to maker sure returning 'marker' to delete previous markers before
@@ -334,37 +421,31 @@
 		clearMarkers();
 		markers = [];
 	}
-	
-    
-    function addMarker(markers){
+
+    function addMarker(location){
     	var marker = new google.maps.Marker({
-	        position: markers.coord,
+	        position: location.coord,
 	        map: map,
 	        animation: google.maps.Animation.DROP,
 	        draggable: false,
-	        label: markers.label,
-	        icon: '',//default image
+	        //icon: '',//default image
 	    });
-
-
 	    if(markers.label){
 	    	marker.setLabel(markers.label);
 	    }
-
 	    if(markers.iconImage){
 	    	marker.setIcon(markers.iconImage);
 	    }
-
 	    if(markers.content){
-	    	var infowindow = new google.maps.InfoWindow({
+	    	var	infowindow = new google.maps.InfoWindow({
 		    	content: markers.content,
 		    	maxWidth: 200
 		  	});
-
 		  	marker.addListener('click', function(){
 		  		infowindow.open(map, marker);
 		  	});
 	    }
+	    markers.push(marker);
     }
 </script>
 
@@ -373,7 +454,9 @@
 <script type="text/javascript"> 
 var s = JSON.parse({{addresses|safe}});
 var markers_from_DB = {{markers|safe}};
+console.log('addrss form DB');
 console.log(s);
+console.log('markers latLng only form DB');
 console.log(markers_from_DB);
 
 </script>
