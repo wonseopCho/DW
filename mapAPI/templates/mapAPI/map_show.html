@@ -41,7 +41,7 @@
         margin-left: 12px;
         padding: 0 11px 0 13px;
         text-overflow: ellipsis;
-        width: 300px;
+        width: 200px;
       }
 
       #pac-input:focus {
@@ -85,7 +85,7 @@
 </div>
 <div id="choose" style="width:100%; border-color:red; border-style: dotted">
 	<button class="btn lodge" id ="lodge">숙소</button>
-	<button class="btn store" id ="store">먹거리</button>
+	<button class="btn restaurant" id ="restaurant">먹거리</button>
 	<button class="btn ">페스트벌</button>
 	<button class="btn ">제래시장</button>
 </div>
@@ -119,7 +119,7 @@
  	var map;
  	var infowindow;
  	var service;
- 	var search_keywords = 'food';//default selection
+ 	var search_keywords = ['food'];//default selection
  	var markers = [];
  	var geo_pos;
 
@@ -232,14 +232,14 @@
 //							catefory selections	
 	document.getElementById('lodge').addEventListener('click',
 		function(event){
-			var keyword = 'lodging';
+			var keyword = ['lodging'];
 			var latlng = map.getCenter();
 			searchCallback(keyword,latlng);
 	});
 
-	document.getElementById('store').addEventListener('click',
+	document.getElementById('restaurant').addEventListener('click',
 		function(event){
-			var keyword = 'store';
+			var keyword = ['restaurant'];
 			var latlng = map.getCenter();
 			searchCallback(keyword,latlng);
 	});
@@ -262,9 +262,9 @@
     		var request = {
     			location:latlng,
     			radius: 8047,
-    			types: [search_keywords]
+    			types: search_keywords
     		};
-    		map.setCenter(event.latLng)
+    		map.setCenter(latlng)
     		deletMarkers();
     		geocodeLatLng(geocoder, map, infowindow, latlng);
     		service.textSearch(request, callback);
@@ -355,11 +355,22 @@
 	    var infowindow = new google.maps.InfoWindow({
           maxWidth: 200
         });
+	    var show_info;
+	    if (place.photos){
+			var pic_url = place.photos[0].getUrl({
+			    maxWidth: 600,
+			    maxHeight: 400
+			});
+			show_info = place.name+ "<br>" + place.formatted_address +"<img src='"+pic_url+"' width=220 height=130/>";
+		}
+		else {
+			show_info = place.name+ "<br>" + place.formatted_address;
+		}
         google.maps.event.addListener(marker, 'click', function() {
-			infowindow.setContent(place.name+ "<br>" + place.formatted_address + place.reference);
+			infowindow.setContent(show_info);
 			infowindow.open(map, this);
         });
-
+   	
         //need to maker sure returning 'marker' to delete previous markers before
         return marker;
   	}
