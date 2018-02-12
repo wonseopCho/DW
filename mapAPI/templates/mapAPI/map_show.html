@@ -72,27 +72,49 @@
     	left: 13px;
     	top: 150px;
     	font-weight:bold;
+	  }
+	  #bottom {
+	  	height:35%;
+	  	border: 1px solid blue;
+	 	overflow:auto; 
+	  }
+	  #contents {
+	  	height:100%;
+	  	border: 1px solid orange;
+	 	overflow:hidden; 
 	  } 
 
 </style>
 {% endblock %}
 
 {% block content %}
-<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-<div id="map"></div>
-<div id="GPS">
-	<img src="{% static 'Images/gps.png' %}" alt='Your Location' width="30" height="30"/>
+<div id="contents">
+	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+	<div id="map"></div>
+	<div id="bottom">
+		<div id="GPS">
+			<a href="#">
+			<img src="{% static 'octicons-6.0.1\lib\svg\location.svg' %}" alt='Your Location' width="30" height="30"/>
+			</a>
+		</div>
+		<div id="choose" style="width:100%; border-color:red; border-style: dotted">
+			<button class="btn lodge" id ="lodge">숙소</button>
+			<button class="btn restaurant" id ="restaurant">먹거리</button>
+			<button class="btn ">페스트벌</button>
+			<button class="btn ">제래시장</button>
+		</div>
+		<div id="info_table" class="list-group" style="width:100%; border-color:red; border-style: dotted">
+			
+		</div>
+	</div>
 </div>
-<div id="choose" style="width:100%; border-color:red; border-style: dotted">
-	<button class="btn lodge" id ="lodge">숙소</button>
-	<button class="btn restaurant" id ="restaurant">먹거리</button>
-	<button class="btn ">페스트벌</button>
-	<button class="btn ">제래시장</button>
-</div>
+
+
 {% endblock %}
 
 {% block additional_script %}
 <script>
+
 	$(function(){
 		$.ajaxSetup({
 		    headers: { "X-CSRFToken": getCookie("csrftoken") }
@@ -121,6 +143,7 @@
  	var service;
  	var search_keywords = ['food'];//default selection
  	var markers = [];
+ 	var hoverMarker = [];
  	var geo_pos;
 
   	function initMap() {
@@ -133,7 +156,7 @@
 	  					 	content:"test_"}
 	  					];
 	  	var kor_coords = [	
-	  				{coord:{lat: 37.532600, lng: 127.024612},content:'test'}
+	  				{coord:{lat: 37.56145265126773, lng: 126.9938850402832},content:'test'}
 	  			 ];
 
 	  	geocoder = new google.maps.Geocoder();		 
@@ -146,6 +169,7 @@
 		service = new google.maps.places.PlacesService(map);
 	    google.maps.event.addListener(map, 'click',
 	    	function(event){
+	    		clearInfoTable();
 	    		var latlng = event.latLng;
 	    		searchCallback(search_keywords,latlng);
 	    	}
@@ -162,6 +186,7 @@
 		    radius: '500',
 		    types: ['lodging','gas_station']
 		};
+		console.log(kor_coords[0].coord);
 		deletMarkers();
 		addMarker(kor_coords[0]);
 		service.textSearch(request, callback);
@@ -232,6 +257,7 @@
 //							catefory selections	
 	document.getElementById('lodge').addEventListener('click',
 		function(event){
+			clearInfoTable();
 			var keyword = ['lodging'];
 			var latlng = map.getCenter();
 			searchCallback(keyword,latlng);
@@ -239,6 +265,7 @@
 
 	document.getElementById('restaurant').addEventListener('click',
 		function(event){
+			clearInfoTable();
 			var keyword = ['restaurant'];
 			var latlng = map.getCenter();
 			searchCallback(keyword,latlng);
@@ -246,6 +273,7 @@
 
 	document.getElementById('GPS').addEventListener('click',
 		function(event){
+			clearInfoTable();
 			GPS();
 			
 	});
@@ -293,6 +321,7 @@
 				};
 				deletMarkers();
 				addMarker(geo_pos[0]);
+				clearInfoTable();
 				service.textSearch(request, callback);
 //-------------------------------------------------------------------------------				
 			}, function() {
@@ -332,7 +361,6 @@
 			window.alert('Geocoder failed due to: ' + status);
       		}
     	});
-
     }
 
     function createMarker(place) {
@@ -372,6 +400,7 @@
         });
    	
         //need to maker sure returning 'marker' to delete previous markers before
+        markers.push(marker);
         return marker;
   	}
 
@@ -380,10 +409,26 @@
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (var i = 0; i < results.length; i++) {
 			  var place = results[i];
-			  console.log(results[i]);
 			  markers.push(createMarker(results[i]));
+			  makeInfoTable(results[i]);
 			}
+		extraScript();
 		}
+	}
+
+	function makeInfoTable(place){
+		console.log(place);
+		var location;
+		location = [place.geometry.location.lat(),place.geometry.location.lng()];
+		$("#info_table").append("<a href='#' class='list-group-item list-group-item-action'>"+place.name+"<div style='display:none'>"+location+"</div></a><script> <\/script>");
+	}
+
+	function extraScript(){
+		$("#info_table").append("<script>$('#info_table > a').hover(function(){markers.push(createHoverMarker($('#info_table > a:hover >div').text()));},function(){hoverMarkerout();}); <\/script>");
+	};
+
+	function clearInfoTable(){
+		$("#info_table").empty();
 	}
 
 	function codeAddress(address) {
@@ -431,7 +476,14 @@
 	function deletMarkers(){
 		clearMarkers();
 		markers = [];
+
 	}
+
+	function hoverMarkerout(){
+  		for (var i = 0; i < hoverMarker.length; i++) {
+          hoverMarker[i].setMap(null);
+        }
+  	}
 
     function addMarker(location){
     	var marker = new google.maps.Marker({
@@ -457,7 +509,22 @@
 		  	});
 	    }
 	    markers.push(marker);
+	    return marker;
     }
+
+    function createHoverMarker(location) {
+    	var latlngStr = location.split(',', 2);
+    	var marker = new google.maps.Marker({
+	        position: {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])},
+	        map: map,
+	        animation: google.maps.Animation.DROP,
+	        draggable: false,
+	        //icon: '',//default image
+	    });
+    	map.setCenter({lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])})
+	  	hoverMarker.push(marker); 
+	  	return marker;    
+  	}
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{Google_key}}&libraries=places&callback=initMap" async defer></script>
@@ -469,7 +536,6 @@ console.log('addrss form DB');
 console.log(s);
 console.log('markers latLng only form DB');
 console.log(markers_from_DB);
-
 </script>
 
 <br><br>
