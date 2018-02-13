@@ -8,20 +8,16 @@
        * element that contains the map. */
       #map {
       	margin-top:57px;
-        height: 55%;
+        height: 90%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
+        overflow:hidden; 
       }
 
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
       .controls {
         margin-top: 10px;
         border: 1px solid transparent;
@@ -75,37 +71,55 @@
 	  }
 	  #bottom {
 	  	height:35%;
-	  	border: 1px solid blue;
+	  	border: 0px solid blue;
 	 	overflow:auto; 
 	  }
 	  #contents {
 	  	height:100%;
-	  	border: 1px solid orange;
-	 	overflow:hidden; 
-	  } 
+	  	border: 0px solid orange;
+	  }
+	  .info_detail {
+	  	font-size:11px;
+	  	float:left;
+	  	width:70%;
+	  	border:0px solid black;
+	  	padding:0px;
+	  }
 
 </style>
 {% endblock %}
 
 {% block content %}
-<div id="contents">
-	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-	<div id="map"></div>
-	<div id="bottom">
-		<div id="GPS">
-			<a href="#">
-			<img src="{% static 'octicons-6.0.1\lib\svg\location.svg' %}" alt='Your Location' width="30" height="30"/>
-			</a>
-		</div>
-		<div id="choose" style="width:100%; border-color:red; border-style: dotted">
+<div id="contents" style="overflow: hidden">
+	<div style="height:60%;border:0px solid orange">
+		<input id="pac-input" class="controls" type="text" placeholder="Search Box" />
+		<div id="map" ></div>
+		<div id="choose" style="height:10%width:100%;border:0px solid green">
 			<button class="btn lodge" id ="lodge">숙소</button>
 			<button class="btn restaurant" id ="restaurant">먹거리</button>
 			<button class="btn ">페스트벌</button>
 			<button class="btn ">제래시장</button>
 		</div>
-		<div id="info_table" class="list-group" style="width:100%; border-color:red; border-style: dotted">
-			
+		<div id="GPS">
+			<a href="#">
+				<img src="{% static 'octicons-6.0.1\lib\svg\location.svg' %}" alt='Your Location' width="30" height="30"/>
+			</a>
 		</div>
+	</div>
+	<div id="bottom" style="height:40%;margin-top:-35px">
+		<div id="info_table" class="list-group" style="height:100%;width:50%;border:0px solid red;float:left">
+			<ul id="info_table_ul" class="sortable" style="overflow:auto;list-style-type:none">
+			</ul>
+			<div id="infoScript">
+			</div>
+		</div>
+		<div id="select_table" class="list-group" style="height:100%;width:50%;border:0px solid blue">
+			<ul id="select_table_ul" class="sortable" style="overflow:auto;height:100%;width:100%;list-style-type:none">
+			</ul>
+			<div id="selectScript">
+			</div>
+		</div>
+
 	</div>
 </div>
 
@@ -114,7 +128,31 @@
 
 {% block additional_script %}
 <script>
+// Simple list
+var a = document.getElementById("info_table_ul");
+var asortable =Sortable.create(a,  { 
+									group: {name:"a", pull: 'clone', put:true ,revertClone:true},
+									onAdd: function (evt) {
+										var itemEl = evt.item;
+										console.log("a");
+										itemEl.remove();
+										clearInfoScript();
+										infoScript();
+									}
+								});
 
+var b = document.getElementById("select_table_ul");
+var bsortable = Sortable.create(b, {
+									group: {name:"a", pull: true, put: true},
+									onAdd: function (evt) {
+										var itemEl = evt.item;
+									//	var cln = itemEl.cloneNode(true);
+									//	document.getElementById("select_table_ul").appendChild(cln);
+										clearSelectScript();
+										selectScript();
+									}
+								});
+//--------------------------------------------------------------------------------------------
 	$(function(){
 		$.ajaxSetup({
 		    headers: { "X-CSRFToken": getCookie("csrftoken") }
@@ -152,17 +190,24 @@
   		var addresses = JSON.parse({{addresses|safe}});
  
 	  	var default_coord = [
-	  						{coord:{lat: -33.865143, lng: 151.209900},
-	  					 	content:"test_"}
-	  					];
+	  							{coord:{lat: -33.865143, lng: 151.209900},
+	  					 		 content:"test_"}
+	  						];
 	  	var kor_coords = [	
-	  				{coord:{lat: 37.56145265126773, lng: 126.9938850402832},content:'test'}
-	  			 ];
+	  						{coord:{lat: 37.56145265126773, lng: 126.9938850402832},
+	  						 content:'test'}
+	  			 		 ];
 
 	  	geocoder = new google.maps.Geocoder();		 
 	    map = new google.maps.Map(document.getElementById('map'), {
 	      center: kor_coords[0].coord,
-	      zoom: 14
+	      zoom: 14,
+	      zoomControl: true,
+		  mapTypeControl: false,
+		  scaleControl: true,
+		  streetViewControl: false,
+		  rotateControl: true,
+		  fullscreenControl: false,
 	    });
 
 	    infowindow = new google.maps.InfoWindow();
@@ -183,7 +228,7 @@
 	    // nearby search after Geolocation				
 		var request = {
 		    location: kor_coords[0].coord,
-		    radius: '500',
+		    radius: 400,
 		    types: ['lodging','gas_station']
 		};
 		console.log(kor_coords[0].coord);
@@ -289,7 +334,7 @@
 		search_keywords = keyword;
     		var request = {
     			location:latlng,
-    			radius: 8047,
+    			radius: 400,
     			types: search_keywords
     		};
     		map.setCenter(latlng)
@@ -316,7 +361,7 @@
 // nearby search after Geolocation				
 				var request = {
 				    location: geo_pos[0].coord,
-				    radius: '500',
+				    radius: 400,
 				    types: ['lodging','gas_station']
 				};
 				deletMarkers();
@@ -369,8 +414,8 @@
 	          url: place.icon,
 	          size: new google.maps.Size(25, 25),
 	          origin: new google.maps.Point(0, 0),
-	          anchor: new google.maps.Point(17, 34),
-	          scaledSize: new google.maps.Size(25, 25)
+	          anchor: new google.maps.Point(10, 22),
+	          scaledSize: new google.maps.Size(23, 23)
 	        };
         var marker = new google.maps.Marker({
           map: map,
@@ -389,14 +434,17 @@
 			    maxWidth: 600,
 			    maxHeight: 400
 			});
-			show_info = place.name+ "<br>" + place.formatted_address +"<img src='"+pic_url+"' width=220 height=130/>";
+			show_info = "<div style='float:left;padding:0px;border:0px solid red;width:100%'><div style='float:left;border:0px solid black;width:30%'><img src='"+pic_url+"' width=100% height=60/></div><div style='padding-left:7px;float:left;width:70%;border:0px solid green'>"+place.name+"</div></div>"
 		}
 		else {
-			show_info = place.name+ "<br>" + place.formatted_address;
+			show_info = place.name+ "<br>";
 		}
-        google.maps.event.addListener(marker, 'click', function() {
+        google.maps.event.addListener(marker, 'mouseover', function() {
 			infowindow.setContent(show_info);
 			infowindow.open(map, this);
+        });
+        google.maps.event.addListener(marker, 'mouseout', function() {
+			infowindow.close(map, this);
         });
    	
         //need to maker sure returning 'marker' to delete previous markers before
@@ -412,23 +460,53 @@
 			  markers.push(createMarker(results[i]));
 			  makeInfoTable(results[i]);
 			}
-		extraScript();
+		infoScript();
 		}
 	}
 
 	function makeInfoTable(place){
 		console.log(place);
 		var location;
+		var opening_time;
+		var pic_url
+		var image;
+		if (place.opening_hours){
+			opening_time = place.opening_hours.open_now;
+		}
+		else {
+			opening_time = '';
+		};
+		if (place.photos){
+			pic_url = place.photos[0].getUrl({
+			maxWidth: 600,
+			maxHeight: 400
+			});
+			image="<img src='"+pic_url+"'width=100%; height=50px />";
+		}
+		else {
+			image='';
+		};
 		location = [place.geometry.location.lat(),place.geometry.location.lng()];
-		$("#info_table").append("<a href='#' class='list-group-item list-group-item-action'>"+place.name+"<div style='display:none'>"+location+"</div></a><script> <\/script>");
+		$("#info_table_ul").append("<li style='height:70px; width:100%;margin-left:-35px'><div style='width:100%;height:100%;border:1px solid rgba(0, 0, 0, 0.125);padding:0px;cursor: pointer;' class='list-group-item list-group-item-action'><div class='info_detail'><strong>"+place.name+"</strong><br>별점:"+place.rating+"<br>여는시간:"+opening_time+"<p style='display:none'>"+location+"</p></div><div style='width:30%;border:0px solid red;float:right' >"+image+"</div></div></li>");
 	}
 
-	function extraScript(){
-		$("#info_table").append("<script>$('#info_table > a').hover(function(){markers.push(createHoverMarker($('#info_table > a:hover >div').text()));},function(){hoverMarkerout();}); <\/script>");
+	function infoScript(){
+		$("#infoScript").append("<script>$('#info_table_ul > li').hover(function(){markers.push(createHoverMarker($('#info_table_ul > li >div:hover > div >p').text()));},function(){hoverMarkerout();}); <\/script>");
 	};
-
+	function selectScript(){
+		$("#selectScript").append("<script>$('#select_table_ul > li').hover(function(){markers.push(createHoverMarker($('#select_table_ul > li >div:hover > div >p').text()));},function(){hoverMarkerout();}); <\/script>");
+	};
 	function clearInfoTable(){
-		$("#info_table").empty();
+		$("#info_table_ul").empty();
+	}
+	function clearSelecTable(){
+		$("#select_table_ul").empty();
+	}
+	function clearSelectScript(){
+		$("#selectScript").empty();
+	}
+	function clearInfoScript(){
+		$("#infoScript").empty();
 	}
 
 	function codeAddress(address) {
@@ -514,14 +592,17 @@
 
     function createHoverMarker(location) {
     	var latlngStr = location.split(',', 2);
+    	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
     	var marker = new google.maps.Marker({
-	        position: {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])},
+	        position: latlng,
 	        map: map,
 	        animation: google.maps.Animation.DROP,
 	        draggable: false,
+	        zIndex: 999,
 	        //icon: '',//default image
 	    });
-    	map.setCenter({lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])})
+	    
+    	map.setCenter(latlng);
 	  	hoverMarker.push(marker); 
 	  	return marker;    
   	}
