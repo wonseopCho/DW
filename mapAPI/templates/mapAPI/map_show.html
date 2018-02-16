@@ -8,7 +8,7 @@
        * element that contains the map. */
       #map {
       	margin-top:57px;
-        height: 90%;
+        height: 100%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -90,15 +90,10 @@
 {% endblock %}
 
 {% block content %}
-<div id="contents" style="overflow: hidden">
-	<div style="height:60%;border:0px solid orange">
+<div id="contents" style="overflow: hidden;border:0px solid orange">
+	<div style="height:60%;border:0px solid red">
 		<input id="pac-input" class="controls" type="text" placeholder="Search Box" />
-		<div id="map" ></div>
-		<div id="choose" style="height:10%width:100%;border:0px solid green">
-			<button class="btn lodge" id ="lodge">숙소</button>
-			<button class="btn restaurant" id ="restaurant">먹거리</button>
-			<button class="btn ">페스트벌</button>
-			<button class="btn ">제래시장</button>
+		<div id="map" >
 		</div>
 		<div id="GPS">
 			<a href="#">
@@ -106,7 +101,13 @@
 			</a>
 		</div>
 	</div>
-	<div id="bottom" style="height:40%;margin-top:-35px">
+	<div id="choose" style="height:5%; width:100%;border:0px solid green">
+		<button class="btn lodge" id ="lodge" style="width:15%;height:100%">숙소</button>
+		<button class="btn restaurant" id ="restaurant" style="width:17%;height:100%">먹거리</button>
+		<button class="btn " style="width:24%;height:100%">페스트벌</button>
+		<button class="btn " style="width:24%;height:100%">제래시장</button>
+	</div>
+	<div id="bottom" style="height:35%; border:0px solid green;">
 		<div id="info_table" class="list-group" style="height:100%;width:50%;border:0px solid red;float:left">
 			<ul id="info_table_ul" class="sortable" style="overflow:auto;list-style-type:none">
 			</ul>
@@ -119,7 +120,6 @@
 			<div id="selectScript">
 			</div>
 		</div>
-
 	</div>
 </div>
 {% endblock %}
