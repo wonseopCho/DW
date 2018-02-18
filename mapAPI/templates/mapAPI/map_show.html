@@ -157,18 +157,29 @@ var bsortable = Sortable.create(b, {
 										tourMarkerIndex++;
 										clearSelectScript();
 										selectScript();
+										removeTourLine();
+										drawingTourLine();
 									},
 									onRemove: function (evt) {
 											var itemEl = evt.item;
 											var latlng;
 											latlng = itemEl.querySelector('p:nth-of-type(1)').innerHTML;
 											console.log(evt.oldIndex);
+											console.log("tour path",tourPath);
 											deleteTourMarker(latlng,evt.oldIndex);
 											tourMarkerIndex--;
+											removeTourLine();
+											reOrderTourMarker();
+											drawingTourLine();
 										},
 									onUpdate: function (evt) {
 										tourMarker.splice(evt.newIndex, 0, tourMarker.splice(evt.oldIndex, 1)[0]);
 										console.log("sorted", tourMarker);
+										console.log("tour marker position",tourMarker);
+										removeTourLine();
+										reOrderTourMarker();
+										drawingTourLine();
+									
 										}
 								});
 //--------------------------------------------------------------------------------------------
@@ -202,6 +213,7 @@ var bsortable = Sortable.create(b, {
  	var markers = [];
  	var hoverMarker = [];
  	var tourMarker = [];
+ 	var tourPath;
  	var tourMarkerIndex = 1;
  	var geo_pos;
 
@@ -559,7 +571,7 @@ var bsortable = Sortable.create(b, {
 			method:"post",
 			data:updates,
 			success: function(res){
-				console.log(res)
+				console.log(res);
 			}
 		});
 	}
@@ -614,10 +626,8 @@ var bsortable = Sortable.create(b, {
     }
 
     function createHoverMarker(location,arg) {
-
     	var latlngStr = location.split(',', 2);
     	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
- 
     	var marker = new google.maps.Marker({
 	        position: latlng,
 	        map: map,
@@ -649,19 +659,69 @@ var bsortable = Sortable.create(b, {
 	    			fontSize: "20px",
 	    			color: "black",
 	    		},
-	    });
-	    
+	    }); 
     	map.setCenter(place.geometry.location);
 	  	tourMarker.push(marker);
 	  	console.log(tourMarker);
-	//  	console.log(location,latlng,'marker_array',tourMarker[0].position.lat());
 	  	return marker;
   	}
+
+  	function reOrderTourMarker(){
+  		var j=1;
+		var tempTourMarker = tourMarker;
+		for(i=0;i< tempTourMarker.length;i++){
+			tourMarker[i].setMap(null);
+		};
+		tourMarker = [];
+		for(i=0;i< tempTourMarker.length;i++){
+			console.log(tempTourMarker[i].position);
+			var marker = new google.maps.Marker({
+		        position: tempTourMarker[i].position,
+		        map: map,
+		        draggable: false,
+		        zIndex: 9999,
+		        icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',//default image
+		    	label: {
+		    			text: ''+j+'',
+		    			fontWeight: "bold",
+		    			fontSize: "20px",
+		    			color: "black",
+		    		},
+		    	}
+		    );
+		j++;
+		tourMarker.push(marker);
+		};
+  	}
+  	function drawingTourLine(){
+  		var tourCoordinates = [];
+  		for(i=0; i < tourMarker.length; i++){
+  			tourCoordinates.push(tourMarker[i].position);
+  		};
+  		console.log("poli",tourCoordinates);
+  		tourPath = new google.maps.Polyline({
+          path: tourCoordinates,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        tourPath.setMap(map);
+        console.log(tourPath);
+  	}
+
+  	function removeTourLine() {
+		if (tourPath){
+			tourPath.setMap(null);
+		}
+    }
+
   	function deleteTourMarker(latlng,index){
-  		var latlngStr = latlng.split(',', 2);
 	    tourMarker[index].setMap(null);
 		tourMarker.splice(index,1);
   		console.log(tourMarker,'!!tourmaker delete event!!');
+
+
 	}
 </script>
 
