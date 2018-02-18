@@ -108,13 +108,13 @@
 		<button class="btn " style="width:24%;height:100%">제래시장</button>
 	</div>
 	<div id="bottom" style="height:35%; border:0px solid green;">
-		<div id="info_table" class="list-group" style="height:100%;width:50%;border:0px solid red;float:left">
+		<div id="info_table" class="list-group" style="height:100%;width:50%;border:0px solid red;float:left;background-color: rgba( 0, 0, 255, 0.5 )">
 			<ul id="info_table_ul" class="sortable" style="overflow:auto;list-style-type:none">
 			</ul>
 			<div id="infoScript">
 			</div>
 		</div>
-		<div id="select_table" class="list-group" style="height:100%;width:50%;border:0px solid blue">
+		<div id="select_table" class="list-group" style="height:100%;width:50%;border:0px solid blue;background-color: rgba( 255, 0, 0, 0.3 )">
 			<ul id="select_table_ul" class="sortable" style="overflow:auto;height:100%;width:100%;list-style-type:none">
 			</ul>
 			<div id="selectScript">
@@ -146,18 +146,30 @@ var bsortable = Sortable.create(b, {
 									//	var cln = itemEl.cloneNode(true);
 									//	document.getElementById("select_table_ul").appendChild(cln);
 									//		 x = itemEl.getElementById("select_table_ul")
-										var latlng;
-										latlng = itemEl.querySelector('p').innerHTML;
-										createTourMarker(latlng);
+										place = itemEl.querySelector('p:nth-of-type(2)').innerHTML;
+										place = place.replace(/\"\\&quot;/gi,'\'');
+										place = place.replace(/\\&quot;"/gi,'\'');
+										place = place.replace(/=\"/gi,'\'');
+										place = place.replace(/\">/gi,'\'>');
+										place = JSON.parse(place);
+										console.log(evt.newIndex);
+										createTourMarker(place,tourMarkerIndex);
+										tourMarkerIndex++;
 										clearSelectScript();
 										selectScript();
 									},
 									onRemove: function (evt) {
 											var itemEl = evt.item;
 											var latlng;
-											latlng = itemEl.querySelector('p').innerHTML;
-											deleteTourMarker(latlng);
+											latlng = itemEl.querySelector('p:nth-of-type(1)').innerHTML;
+											console.log(evt.oldIndex);
+											deleteTourMarker(latlng,evt.oldIndex);
+											tourMarkerIndex--;
 										},
+									onUpdate: function (evt) {
+										tourMarker.splice(evt.newIndex, 0, tourMarker.splice(evt.oldIndex, 1)[0]);
+										console.log("sorted", tourMarker);
+										}
 								});
 //--------------------------------------------------------------------------------------------
 	$(function(){
@@ -190,6 +202,7 @@ var bsortable = Sortable.create(b, {
  	var markers = [];
  	var hoverMarker = [];
  	var tourMarker = [];
+ 	var tourMarkerIndex = 1;
  	var geo_pos;
 
   	function initMap() {
@@ -495,14 +508,15 @@ var bsortable = Sortable.create(b, {
 			image='';
 		};
 		location = [place.geometry.location.lat(),place.geometry.location.lng()];
-		$("#info_table_ul").append("<li style='height:70px; width:100%;margin-left:-35px'><div style='width:100%;height:100%;border:1px solid rgba(0, 0, 0, 0.125);padding:0px;cursor: pointer;' class='list-group-item list-group-item-action'><div class='info_detail'><strong>"+place.name+"</strong><br>별점:"+place.rating+"<br>여는시간:"+opening_time+"<p style='display:none'>"+location+"</p></div><div style='width:30%;border:0px solid red;float:right' >"+image+"</div></div></li>");
+		console.log("stringify",JSON.stringify(place));
+		$("#info_table_ul").append("<li style='height:70px; width:100%;margin-left:-35px'><div style='width:100%;height:100%;border:1px solid rgba(0, 0, 0, 0.125);padding:0px;cursor: pointer;' class='list-group-item list-group-item-action'><div class='info_detail'><strong>"+place.name+"</strong><br>별점:"+place.rating+"<br>여는시간:"+opening_time+"<p style='display:none'>"+location+"</p><p style='display:none'>"+JSON.stringify(place)+"</p></div><div style='width:30%;border:0px solid red;float:right' >"+image+"</div></div></li>");
 	}
 
 	function infoScript(){
-		$("#infoScript").append("<script>$('#info_table_ul > li').hover(function(){markers.push(createHoverMarker($('#info_table_ul > li >div:hover > div >p').text(),'I'));},function(){hoverMarkerout();}); <\/script>");
+		$("#infoScript").append("<script>$('#info_table_ul > li').hover(function(){markers.push(createHoverMarker($('#info_table_ul > li >div:hover > div >p:nth-of-type(1)').text()));},function(){hoverMarkerout();}); <\/script>");
 	};
 	function selectScript(){
-		$("#selectScript").append("<script>$('#select_table_ul > li').hover(function(){markers.push(createHoverMarker($('#select_table_ul > li >div:hover > div >p').text(),'I'));},function(){hoverMarkerout();}); <\/script>");
+		$("#selectScript").append("<script>$('#select_table_ul > li').hover(function(){markers.push(createHoverMarker($('#select_table_ul > li >div:hover > div >p:nth-of-type(1)').text()));},function(){hoverMarkerout();}); <\/script>");
 		
 	};
 	function clearInfoTable(){
@@ -600,22 +614,17 @@ var bsortable = Sortable.create(b, {
     }
 
     function createHoverMarker(location,arg) {
-    	var icon;
+
     	var latlngStr = location.split(',', 2);
     	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
-    	if (arg == 'S') {
-    		icon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-    	}
-    	else {
-    		icon = '';
-    	};
+ 
     	var marker = new google.maps.Marker({
 	        position: latlng,
 	        map: map,
 	        animation: google.maps.Animation.DROP,
 	        draggable: false,
 	        zIndex: 999,
-	        icon: icon,
+	        icon: '',
 	    });
 	    
     	map.setCenter(latlng);
@@ -623,30 +632,35 @@ var bsortable = Sortable.create(b, {
 	  	return marker;    
   	}
 
-  	function createTourMarker(location) {
-    	var latlngStr = location.split(',', 2);
-    	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+  	function createTourMarker(place, markerIndex) {
+  	//	var place;
+    //	var latlngStr = location.split(',', 2);
+    // 	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
     	var marker = new google.maps.Marker({
-	        position: latlng,
+	        position: place.geometry.location,
 	        map: map,
 	        animation: google.maps.Animation.DROP,
 	        draggable: false,
-	        zIndex: 999,
+	        zIndex: 9999,
 	        icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',//default image
+	    	label: {
+	    			text: ''+markerIndex+'',
+	    			fontWeight: "bold",
+	    			fontSize: "20px",
+	    			color: "black",
+	    		},
 	    });
 	    
-    	map.setCenter(latlng);
+    	map.setCenter(place.geometry.location);
 	  	tourMarker.push(marker);
+	  	console.log(tourMarker);
 	//  	console.log(location,latlng,'marker_array',tourMarker[0].position.lat());
 	  	return marker;
   	}
-  	function deleteTourMarker(latlng){
+  	function deleteTourMarker(latlng,index){
   		var latlngStr = latlng.split(',', 2);
-  		for(i=0; i<tourMarker.length; i++){
-  			if((tourMarker[i].position.lat() == parseFloat(latlngStr[0])) && (tourMarker[i].position.lng() == parseFloat(latlngStr[1]))){
-  				tourMarker[i].setMap(null);
-  			}
-  		}
+	    tourMarker[index].setMap(null);
+		tourMarker.splice(index,1);
   		console.log(tourMarker,'!!tourmaker delete event!!');
 	}
 </script>
