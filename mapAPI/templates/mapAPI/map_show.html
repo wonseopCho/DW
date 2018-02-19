@@ -152,12 +152,13 @@ var bsortable = Sortable.create(b, {
 										place = place.replace(/=\"/gi,'\'');
 										place = place.replace(/\">/gi,'\'>');
 										place = JSON.parse(place);
-										console.log(evt.newIndex);
-										createTourMarker(place,tourMarkerIndex);
+										console.log("oldevt",evt.oldIndex,"new", evt.newIndex);
+										createTourMarker(place,tourMarkerIndex,evt.newIndex);
 										tourMarkerIndex++;
 										clearSelectScript();
 										selectScript();
 										removeTourLine();
+										reOrderTourMarker();
 										drawingTourLine();
 									},
 									onRemove: function (evt) {
@@ -642,7 +643,7 @@ var bsortable = Sortable.create(b, {
 	  	return marker;    
   	}
 
-  	function createTourMarker(place, markerIndex) {
+  	function createTourMarker(place, markerLabel, newIndex) {
   	//	var place;
     //	var latlngStr = location.split(',', 2);
     // 	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
@@ -654,15 +655,19 @@ var bsortable = Sortable.create(b, {
 	        zIndex: 9999,
 	        icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',//default image
 	    	label: {
-	    			text: ''+markerIndex+'',
+	    			text: ''+markerLabel+'',
 	    			fontWeight: "bold",
 	    			fontSize: "20px",
 	    			color: "black",
 	    		},
 	    }); 
     	map.setCenter(place.geometry.location);
-	  	tourMarker.push(marker);
-	  	console.log(tourMarker);
+    	if ((tourMarker.length == 0) || (tourMarker.length <= newIndex)){
+    		tourMarker.push(marker);
+    	}
+	  	else {
+	  		tourMarker.splice(newIndex, 0, marker);
+	  	}
 	  	return marker;
   	}
 
