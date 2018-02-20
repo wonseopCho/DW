@@ -160,6 +160,7 @@ var bsortable = Sortable.create(b, {
 										removeTourLine();
 										reOrderTourMarker();
 										drawingTourLine();
+										
 									},
 									onRemove: function (evt) {
 											var itemEl = evt.item;
@@ -180,7 +181,7 @@ var bsortable = Sortable.create(b, {
 										removeTourLine();
 										reOrderTourMarker();
 										drawingTourLine();
-									
+									//	calculateAndDisplayRoute();
 										}
 								});
 //--------------------------------------------------------------------------------------------
@@ -210,12 +211,15 @@ var bsortable = Sortable.create(b, {
  	var map;
  	var infowindow;
  	var service;
+ 	var directionsService;
+ 	var directionsDisplay;
  	var search_keywords = ['food'];//default selection
  	var markers = [];
  	var hoverMarker = [];
  	var tourMarker = [];
  	var tourPath;
  	var tourMarkerIndex = 1;
+ 	var tourWaypts = [];
  	var geo_pos;
 
   	function initMap() {
@@ -232,6 +236,8 @@ var bsortable = Sortable.create(b, {
 	  						 content:'test'}
 	  			 		 ];
 
+	  	directionsService = new google.maps.DirectionsService;
+  		directionsDisplay = new google.maps.DirectionsRenderer;		 		 
 	  	geocoder = new google.maps.Geocoder();		 
 	    map = new google.maps.Map(document.getElementById('map'), {
 	      center: kor_coords[0].coord,
@@ -244,6 +250,7 @@ var bsortable = Sortable.create(b, {
 		  fullscreenControl: false,
 	    });
 
+	    directionsDisplay.setMap(map);
 	    infowindow = new google.maps.InfoWindow();
 		service = new google.maps.places.PlacesService(map);
 	    google.maps.event.addListener(map, 'click',
@@ -647,6 +654,7 @@ var bsortable = Sortable.create(b, {
   	//	var place;
     //	var latlngStr = location.split(',', 2);
     // 	var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+    	console.log("tour rout",place);
     	var marker = new google.maps.Marker({
 	        position: place.geometry.location,
 	        map: map,
@@ -664,11 +672,43 @@ var bsortable = Sortable.create(b, {
     	map.setCenter(place.geometry.location);
     	if ((tourMarker.length == 0) || (tourMarker.length <= newIndex)){
     		tourMarker.push(marker);
+    		tourWaypts.push({
+    			location: place.formatted_address,
+    			stopover: true
+    		});
     	}
 	  	else {
 	  		tourMarker.splice(newIndex, 0, marker);
+	  		tourWaypts.splice(newIndex, 0, {
+    			location: place.formatted_address,
+    			stopover: true,
+    		});
 	  	}
 	  	return marker;
+  	}
+
+  	function calculateAndDisplayRoute(){
+  		console.log("waypts",tourWaypts);
+  		directionsService.route({
+		    origin: tourWaypts[0].location,
+		    destination: tourWaypts[tourWaypts.length - 1].location,
+		    waypoints: [{location: tourWaypts[1].location},{location: tourWaypts[2].location}],
+		    optimizeWaypoints: true,
+		    travelMode: 'TRANSIT',
+  			transitOptions: {
+    			departureTime: new Date(Date.now()),
+   				modes: ['BUS'],
+    			routingPreference: 'FEWER_TRANSFERS'
+ 			},
+  			unitSystem: google.maps.UnitSystem.METRIC
+ 			}, function(response, status) {
+		    if (status === 'OK') {
+		      directionsDisplay.setDirections(response);		  
+		    } else {
+		      console.log(response);
+		      window.alert('Directions request failed due to ' + status);
+		    }
+		  });
   	}
 
   	function reOrderTourMarker(){
@@ -713,6 +753,7 @@ var bsortable = Sortable.create(b, {
         });
         tourPath.setMap(map);
         console.log(tourPath);
+        console.log("tMarker",tourMarker);
   	}
 
   	function removeTourLine() {
@@ -729,7 +770,6 @@ var bsortable = Sortable.create(b, {
 
 	}
 </script>
-
 <script src="https://maps.googleapis.com/maps/api/js?key={{Google_key}}&libraries=places&callback=initMap" async defer></script>
 
 <script type="text/javascript"> 
