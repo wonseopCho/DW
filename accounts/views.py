@@ -84,7 +84,8 @@ def view_profile(request, pk=None):
 		user = request.user
 	others = User.objects.exclude(id = request.user.id)
 	if Friend.objects.filter(current_user=request.user).count() != 1:
-		Friend.make_friend(current_user=request.user, new_friend=None)
+		Friend.make_friend(current_user=request.user, new_friend=request.user)
+		Friend.lose_friend(current_user=request.user, new_friend=request.user)
 	friend = Friend.objects.get(current_user=request.user)
 	friends_list = friend.users.all()
 	args = {

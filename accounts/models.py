@@ -28,6 +28,7 @@ class Friend(models.Model):
 		friend, created = cls.objects.get_or_create(
 			current_user = current_user
 		)
+		print('////////////////', friend, created)
 		friend.users.add(new_friend)
 
 	@classmethod
