@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Pofile{% endblock %}
+
+{% block headAddon %}
+{% endblock %}
+
+{% block content %}
+
+<br>
+
+<div class="container">
+	<form method="post">
+		{% csrf_token %}
+		{{form.as_p}}
+	<button type="submit">Submit</button>
+	</form>
+</div>
+
+{% endblock %}
+
+{% block additional_script %}{% endblock %}
+{% block footer %}{% endblock %}

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog2',
     'bookmark',
     'mapAPI',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'DW.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'DW.urls'
@@ -161,3 +163,30 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'DW', 'media')
 MEDIA_URL = '/media/'
 
 GOOGLE_API_KEY = 'AIzaSyDTkQh8Koyc8fx_BluoKD3y45EeT3Qmong'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
+
+LOGIN_EXEMPT_URLS = [
+    r'^login/$',
+    r'^accounts/login/$',
+    r'^accounts/register/$',
+    r'^accounts/reset-password/$',
+    r'^accounts/reset-password/done/$',
+    r'^accounts/reset-password/confirm/<uidb64>/<token>/$',
+    r'^accounts/reset-password/complete/$',
+]
+
+#python -m smtpd -n -c DebuggingServer localhost:1025  #for smtp 
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+
+'''
+#ex
+EMAIL_HOST_USER = 'testsite_app'
+EMAIL_HOST_PASSWORD = 'mys3cr3tp4ssw0rd'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'TestSite Team <noreply@example.com>'
+'''

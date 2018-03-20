@@ -18,6 +18,7 @@ from django.urls import include, path
 from django.http import HttpResponse, HttpResponseNotFound
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.views import login, logout
 from DW import views
 
 urlpatterns = [
@@ -27,4 +28,7 @@ urlpatterns = [
     path('blog2/', include('blog2.urls')),
     path('bookmark/', include('bookmark.urls')),
     path('mapAPI/', include('mapAPI.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('login/', login, {'template_name':'login.html'} ,name='login'),
+    path('logout/', logout, {'template_name':'logout.html'}, name='logout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
