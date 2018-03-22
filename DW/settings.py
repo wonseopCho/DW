@@ -37,11 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # for multiplke images uploads Ref)https://github.com/TND/django-files-widget
+    # 'sorl.thumbnail',
+    # 'topnotchdev.files_widget',
+    # ---------------------------
+    'multiupload',
     'blog',
     'blog2',
     'bookmark',
     'mapAPI',
     'accounts',
+    'tips',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +100,12 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8',
+            'init_command': 'SET character_set_connection=utf8;'
+                            'SET collation_connection=utf8_unicode_ci;'
+                            "SET NAMES 'utf8';"
+                            "SET CHARACTER SET utf8;"
+                            "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }
 }

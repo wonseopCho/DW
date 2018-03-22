@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headAddon %}
+<style type="text/css">
+
+div.tips {
+  background-color: #ddffff!important;
+  border: 0px solid red;
+  padding: 7px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+ }
+
+ </style>
+{% endblock %}
+
+{% block content %}
+<div /*class="container"*/ class="card" style="border: 0px solid blue; height: 90%">
+  <div class="tips">
+    <h4>Tips</h4>
+  </div>
+  <div class="card" style="border: 1px solid red; background-color: #ccccb3; width:100%">
+  	<div>
+  		■Subway - sub title
+  	</div>
+  	<div style="border: 1px solid blue; width: 95%; height:200px; margin: 0 auto; background-color: #99ebff">
+  		video
+  	</div>
+  	<div style="border: 1px solid orange; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+  		<div style= "border: 1px solid red; background-color: #99ebff; width:30%; height: 100px; float: left;"> image1</div>
+  		<div style= "border: 1px solid red; background-color: #99ebff; width:30%; height: 100px; float: left; margin-left:5%"> image2</div>
+  		<div style= "border: 1px solid red; background-color: #99ebff; width:30%; height: 100px; float: left; margin-left:5%"> image3</div>
+  	</div>
+  	<div style="border: 1px solid orange;background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+  		text
+  	</div>
+  	<div>
+  		<span >view</span>
+  		<span style="margin-left: 15%">likes</span>
+  		<span style="margin-left: 15%">share</span>
+  		<span style="margin-left: 15%">carrier</span>
+  	</div>
+  	<div style="width: 100%; margin: 0 auto;text-align: center;">
+  		<button type="button" class="btn btn-primary" style="float:left"> 글보기 </button>
+  		<button type="button" class="btn btn-success"> 공유 </button>
+  		<button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
+  	</div>
+  </div>
+</div>
+{% for article in gallery %}
+  {{article.title}}
+  {% for images in article.image_set.all %}
+    {{images.file}}
+  {% endfor %}
+  <br>
+  =====================
+  <br>
+{% endfor %}
+{% endblock %}
+
+{% block additional_script %}{% endblock %}
+{% block footer %}{% endblock %}
