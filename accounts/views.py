@@ -63,7 +63,8 @@ def register(request):
             	mail_subject, message, to=[to_email])
 			email.send()
 			return HttpResponse('please confirm your email. address to complete the registration')
-          
+		else:
+			return HttpResponse('username exists')
 	else:
 		form = RegistrationForm()
 		return render(request, 'accounts/reg_form.html', {

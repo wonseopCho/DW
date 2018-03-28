@@ -22,6 +22,7 @@ def comment_new(request, pk):
 		if form.is_valid():
 			comment = form.save(commit=False)
 			comment.post = Post.objects.get(pk=pk)
+			comment.author = str(request.user)
 			comment.save()
 			return redirect('blog2:detail', pk)
 	else:
@@ -37,6 +38,7 @@ def comment_edit(request, post_pk, comment_pk):
 		if form.is_valid():
 			comment = form.save(commit=False)
 			comment.post = Post.objects.get(pk=post_pk)
+			comment.author = str(request.user)
 			comment.save()
 			return redirect('blog2:detail', post_pk)
 	else:

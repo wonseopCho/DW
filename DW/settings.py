@@ -37,10 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # for multiplke images uploads Ref)https://github.com/TND/django-files-widget
-    # 'sorl.thumbnail',
-    # 'topnotchdev.files_widget',
-    # ---------------------------
+    'embed_video',
+    'imagekit',
     'multiupload',
     'blog',
     'blog2',

@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
+{% load embed_video_tags %}
+{% load imagekit %}
 
 {% block headAddon %}
+<link rel="stylesheet" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/assets/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/assets/owl.theme.default.min.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/docs/assets/css/docs.theme.min.css' %}"> -->
+<!-- <script src="{% static 'owlcarousel/OwlCarousel2-2.3.2/doc/assets/vendors/jquery.min.js' %}"></script> -->
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 <style type="text/css">
-
 div.tips {
   background-color: #ddffff!important;
   border: 0px solid red;
@@ -12,53 +19,159 @@ div.tips {
   margin: 0 auto;
   text-align: center;
  }
-
+ .item{
+   height: 10rem;
+   background: #4DC7A0;
+   padding:1rem;
+ }
  </style>
 {% endblock %}
 
 {% block content %}
-<div /*class="container"*/ class="card" style="border: 0px solid blue; height: 90%">
-  <div class="tips">
+
+ <!--  <video width="320" height="240" controls>
+      <source src="/static/Images/mov_bbb.mp4" type="video/mp4"> Your browser does not support the video tag.
+    </video> -->
+<div class="container card" style="border: 0px solid blue; height: 90%">
+  <!-- <div class="tips">
     <h4>Tips</h4>
+  </div> -->
+  {% for article in gallery %}
+  <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px">
+    <!-- <div style="border: 0px solid blue; width: 95%; height:200px; margin: 0 auto; background-color: #99ebff">
+      {% video article.video '100% x 100%' %}
+    </div> -->
+    <!-- <div class="owl-carousel owl-theme" style="border: 1px solid orange; width: 95%; height:100%; margin: 0 auto; margin-top: 10px;">
+      {% for images in article.image_set.all %}
+      <div style="border: 1px solid red; background-color: #4DC7A0; width:100%; height: 100%; float: left; "> 
+      <img style="width:100; height:100" src="{{images.thumnails.url}}"/>
+      </div>
+      {% endfor %}
+      <div>
+      {% video article.video '352 x 330' %}
+      </div>
+    </div> -->
+    <div class="owl-carousel owl-theme" style="border: 0px solid orange; width: 95%; height:100%; margin: 0 auto; margin-top: 5px;">
+      {% for images in article.image_set.all %}
+      <div style="border: 0px solid red; background-color: #4DC7A0; width:100%; height: 100%; float: left; "> 
+      <img style="width:100%; height:100%" src="{{images.thumnails.url}}"/>
+      </div>
+      {% endfor %}
+      <!-- <div>
+      {% video article.video '100% x 100%' %}
+      </div> -->
+    </div>
+    <div style="margin-top:0px">
+      ■Subway - {{article.title}}
+    </div>
+    <div style="border: 1px solid orange;background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+      <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article.text}}</textarea>
+    </div>
+    <div>
+      <span >view</span>
+      <span style="margin-left: 15%">likes</span>
+      <span style="margin-left: 15%">share</span>
+      <span style="margin-left: 15%">carrier</span>
+      <br><br>
+      <!-- <a href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{article.id}}&t={{article.title}}">
+        <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
+      </a>
+      <a href="https://twitter.com/share?text={{article.title}}&url={{request.build_absolute_uri}}{{article.id}}">
+        <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
+      </a>
+      <a href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{article.id}}&media={{image}}&description={{article.title}}">
+        <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
+      </a>
+      <a href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{article.id}}&redirect_uri={{request.build_absolute_uri}}">
+        <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
+      </a> -->
+     <!--  <a href="https://story.kakao.com/share?url={{request.build_absolute_uri}}">
+        <img src="{% static '/Images/sns/story.svg' %}" width="35" height="35">
+      </a>
+      <a href="kakaolink://send?appkey={APP_KEY}&appver=1.0&apiver=3.0&linkver=3.5&forwardable=false&objs=’[{ ‘objtype’: ‘button’, ‘text’: {{article.title}}, ‘action’: { ‘type’: ‘web’, ‘url’: {{request.build_absolute_uri}}{{article.id}} }}]">
+         <img src="{% static '/Images/sns/talk.svg' %}" width="35" height="35">
+      </a>
+      <a href="http://blog.naver.com/openapi/share?url={{request.build_absolute_uri}}{{article.id}}&title={{article.title}}">NAVER</a>
+      <a href="http://line.me/R/msg/text/?{{article.title}}">
+        <img src="{% static '/Images/sns/line.svg' %}" width="35" height="35">
+      </a>
+      <a href="http://band.us/plugin/share?body={{article.title}}%0A{{request.build_absolute_uri}}{{article.id}}&route={{request.build_absolute_uri}}">Band</a> -->
+    </div>
+    <div style="width: 100%; margin: 0 auto;text-align: center;">
+      <a href="{% url 'tips:view_tip' pk=article.id %}">
+      <button type="button" class="btn btn-primary" style="float:left"> 글보기 </button>
+      </a>
+      <!-- <button type="button" class="btn btn-success"> 공유 </button> -->
+      <a href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{article.id}}&t={{article.title}}">
+        <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
+      </a>
+      <a href="https://twitter.com/share?text={{article.title}}&url={{request.build_absolute_uri}}{{article.id}}">
+        <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
+      </a>
+      <a href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{article.id}}&media={{image}}&description={{article.title}}">
+        <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
+      </a>
+      <a href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{article.id}}&redirect_uri={{request.build_absolute_uri}}">
+        <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
+      </a>
+      <button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
+    </div>
   </div>
-  <div class="card" style="border: 1px solid red; background-color: #ccccb3; width:100%">
-  	<div>
-  		■Subway - sub title
-  	</div>
-  	<div style="border: 1px solid blue; width: 95%; height:200px; margin: 0 auto; background-color: #99ebff">
-  		video
-  	</div>
-  	<div style="border: 1px solid orange; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
-  		<div style= "border: 1px solid red; background-color: #99ebff; width:30%; height: 100px; float: left;"> image1</div>
-  		<div style= "border: 1px solid red; background-color: #99ebff; width:30%; height: 100px; float: left; margin-left:5%"> image2</div>
-  		<div style= "border: 1px solid red; background-color: #99ebff; width:30%; height: 100px; float: left; margin-left:5%"> image3</div>
-  	</div>
-  	<div style="border: 1px solid orange;background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
-  		text
-  	</div>
-  	<div>
-  		<span >view</span>
-  		<span style="margin-left: 15%">likes</span>
-  		<span style="margin-left: 15%">share</span>
-  		<span style="margin-left: 15%">carrier</span>
-  	</div>
-  	<div style="width: 100%; margin: 0 auto;text-align: center;">
-  		<button type="button" class="btn btn-primary" style="float:left"> 글보기 </button>
-  		<button type="button" class="btn btn-success"> 공유 </button>
-  		<button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
-  	</div>
-  </div>
-</div>
-{% for article in gallery %}
-  {{article.title}}
-  {% for images in article.image_set.all %}
-    {{images.file}}
   {% endfor %}
-  <br>
-  =====================
-  <br>
-{% endfor %}
+</div>
+
 {% endblock %}
 
-{% block additional_script %}{% endblock %}
+{% block additional_script %}
+<script src="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/owl.carousel.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+  $(".owl-carousel").owlCarousel({
+    items: 3,
+    margin: 22,
+    merge:true,
+    loop: true,
+    nav: false,
+    autoWidth: false,
+    autoHeight: true,
+    video:false,
+    lazyLoad:true,
+    center:true,
+    responsiveClass:true,
+    responsive:{
+        0:{
+            items:1,
+            nav:true
+        },
+        600:{
+            items:3,
+            nav:false
+        },
+        1000:{
+            items:5,
+            nav:true,
+            loop:false
+        }
+    }
+    
+  });
+});
+</script>
+
+<script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+  $('.test_slick').slick({
+    dots: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    adaptiveHeight: true,
+    centerMode: false,
+  });
+});
+</script>
+
+{% endblock %}
+
 {% block footer %}{% endblock %}

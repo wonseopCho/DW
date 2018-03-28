@@ -24,7 +24,9 @@ class CategoryAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True
-    list_display = ['id', 'category', 'title', 'created_at', 'updated_at']
+    search_fields = ['category','title']
+    list_display = ['id', 'category', 'title', 'views', 'likes_counts', 'created_at', 'updated_at']
+    list_display_links = ['id', 'category', 'title']
 
     def delete_file(self, pk, request):
         '''
@@ -33,12 +35,16 @@ class CategoryAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
         obj = get_object_or_404(Image, pk=pk)
         return obj.delete()
 
+    def likes_counts(self, category):
+        return '{}'.format(category.likes.count())
+
+
 
 class ImageAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
     multiupload_form = False
     multiupload_list = True
-    list_display = ['id', 'category', 'category_id', 'file', 'created_at', 'updated_at']
-
+    list_display = ['id', 'category', 'category_id', 'file', 'thumnails','created_at', 'updated_at']
+    list_display_links = ['category']
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Image, ImageAdmin)

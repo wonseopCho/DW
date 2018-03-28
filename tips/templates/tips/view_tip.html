@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+{% for tip in tips %}
+
+	{{tip.id}}
+	<br>
+	{{tip.category}}
+	<br>
+	{{tip.title}}
+	<br>
+	{{tip.text}}
+	{%for pic in tip.image_set.all %}
+		<br>
+		<img src="">
+		{{pic.file.url}}
+	{% endfor %}
+</div>	
+
+
+{% endfor %}
+
+{% endblock %}
