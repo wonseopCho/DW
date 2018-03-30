@@ -2,11 +2,12 @@
 {% load static %}
 
 {% block headAddon %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
-<link rel="stylesheet" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/assets/owl.carousel.min.css' %}">
-<link rel="stylesheet" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/assets/owl.theme.default.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/assets/owl.carousel.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/assets/owl.theme.default.min.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'lightslider-master/dist/css/lightslider.css' %}"/>
 
 <style>
 /*body {
@@ -131,20 +132,28 @@ div.listicle {
   margin-top: 10px
 }
 
- .slick-center {
-  background-color: #ff9900;
-  border-radius: .50rem;
+ .slick_select {
+  border-bottom: 4px solid white ;
   font-weight: bold;
+  text-decoration: none;
+}
+
+.main_nav_slick {
+  border:0px solid red; 
+  background-color:#4DC7A0; 
+  text-align:center;
 }
 
 .main_nav_item {
-  border-radius: .50rem;
-  border: 0px solid red ;
+/*  border-radius: .50rem;*/
+  color: white;
+  font-weight: bold;
   height:50px; 
-  padding-top: 10px;
-  
 }
 
+#tips_ModalText {
+    white-space: pre-wrap;
+}
 </style>
 {% endblock %}
 {% block title %} 
@@ -380,49 +389,73 @@ div.listicle {
       </div>
       <div class="bg-dark box-shadow mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
     </div>
-  </div>
+  </div> -->
 
-  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+<!--   <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
     Launch demo modal
   </button> -->
 
   <!-- Modal -->
-  <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div class="modal-content" style="height:100%">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          <div style="border: 0px solid red; float:left"> 
+            <h4 class="modal-title" id="tips_ModalTitle" style="color:black">Modal title</h4>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="z-index:999;  color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
         </div>
-        <div class="modal-body">
-          ...
+        <div id='tips_ModalText' class="modal-body" style="color:black">
+         
         </div>
-        <div class="modal-footer">
+       <!--  <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+        </div> -->
       </div>
     </div>
-  </div> -->
+  </div>
   <div style="border:0px solid red; background-color: grey; width:100%; height:200px">
     
   </div>
-  <div id="main_nav" class="main_nav_slick nav" style="  background-color: #4DC7A0;
-text-align: center;">
-    <div class="main_nav_item">Subway</div>
-    <div class="main_nav_item">Taxi</div>
-    <div class="main_nav_item">Bus</div>
-    <div class="main_nav_item">Life</div>
-    <div class="main_nav_item">Food</div>
-    <div class="main_nav_item">Shooping</div>
-    <div class="main_nav_item"">Tour</div>
-    <div class="main_nav_item">Activity</div>
+<!-- 
+  <div id="test_lightSlider" class="" style="border:0px solid red; background-color:#4DC7A0; text-align:center;">
+    <div class="main_nav_item test_lightSlider_item">Subway</div>
+    <div class="main_nav_item test_lightSlider_item">Taxi</div>
+    <div class="main_nav_item test_lightSlider_item">Bus</div>
+    <div class="main_nav_item test_lightSlider_item">Life</div>
+    <div class="main_nav_item test_lightSlider_item">Food</div>
+    <div class="main_nav_item test_lightSlider_item">Shooping</div>
+    <div class="main_nav_item test_lightSlider_item">Tour</div>
+    <div class="main_nav_item test_lightSlider_item">Activity</div>
   </div>
+  <div class="container card" style="border: 1px solid red ;width:100% ;height:100%; text-align: center">
+    <div id="test_body" class="" style="border: 0px solid red ;width:100% ;height:100%; text-align: center">
+      <div style="border: 0px solid red ;width:100%;height:300px">Subway</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Taxi</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Bus</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Life</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Food</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Shooping</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Tour</div>
+      <div style="border: 0px solid red ;width:100%;height:300px">Activity</div>
+    </div>
+  </div> -->
+<!-- --------------------------------------------------------------------------------------------- -->
+  <div id="main_nav_slick" class="main_nav_slick">
+    <div id="main_nav_item" class="main_nav_item slick_select" style="display: table"><span style="display: table-cell; vertical-align: middle">Subway</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Taxi</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Bus</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Life</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Food</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Shooping</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Tour</span></div>
+    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Activity</span></div>
+  </div>  
   <div class="container card" style="border: 0px solid red ;width:100% ;height:100%; text-align: center">
-    <div class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%; text-align: center">
-      <div class="subway" style="border: 0px solid red ; width:100%; height:100%">Subway
-      {% for article_subway in subways %}
-        <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px"> 
+    <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%; text-align: center">
+      <div class="subway" style="border: 0px solid red ; width:100%; height:100%">
+        {% for article_subway in subways %}
+        <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; height:570px; margin-top: 15px"> 
          <!-- card image slide  
          <div class="owl-carousel owl-theme" style="border: 0px solid red; background-color: #ccccb3; width:100%;height:100%; margin: 0 auto; margin-top: 15px">
             {% for images in article_subway.image_set.all %}
@@ -431,25 +464,33 @@ text-align: center;">
               </div>
             {% endfor %}
           </div> -->
-          <div style="border:0px solid red;margin-top:0px; width:100%; height: 230px; margin:0 auto">
+          <div style="margin-top:0px; border: 0px solid red; width:100%; height:520px">
             ■Subway - {{article_subway.title}}
-            <img style="width:100%;height:200px" src="{{article_subway.image_set.first.thumnails.url}}"/>
+            <img style="width:100%; height:490px" src="{{article_subway.image_set.first.file.url}}"/>
           </div>
-          <div style="border: 0px solid orange; background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+          <div style=" display: none; position:relative; top: -200px; border: 0px solid orange; background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
             <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_subway.text}}</textarea>
           </div>
-          <div style="margin-top:10px">
-            <span class="badge badge-light">Views {{article_subway.views}}</span>
-            <span id="{{article_subway.id}}" onclick="likesUpdate({{article_subway.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article_subway.likes.count}}</span>
+          <div style="margin-top:10px;">
+            <span id="views_{{article_subway.id}}" class="badge badge-light">Views {{article_subway.views}}</span>
+            <!-- <span><img src="{% static 'octicons-6.0.1\libs\svg\heart.svg' %}" width="20" height="20"/></span> -->
+            <span id="likes_{{article_subway.id}}" onclick="likesUpdate({{article_subway.id}})" class="badge badge-light" style="margin-left: 15%">
+                Likes {{article_subway.likes.count}}
+            </span>
             <span style="margin-left: 15%">shares</span>
             <span style="margin-left: 15%">carrier</span>
             <br>
           </div>
-          <div style=" border: 0px solid orange; width: 100%; padding-top:10px ; margin: 0 auto; text-align: center">
-            <a href="{% url 'tips:view_tip' pk=article_subway.id %}">
-            <button type="button" class="btn btn-primary" style="float:left"> 글보기 </button>
-            </a>
-            <button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
+          <div style="position:relative; border: 0px solid red">
+            <div style="position:relative; top:-200px; right: 10px; border: 0px solid black ; width: 80px; float: right"> 
+              <button onclick="articleText_call({{article_subway.id}})" data-toggle="modal" data-target="#tips" type="button" class="btn" style="width: 80px; background-color: rgba(255, 255, 255, 0.5);">글보기</button>
+            </div>
+            <div style="position:relative; top:-150px; right:-70px; border: 0px solid black; width:80px; float:right">
+              <button type="button" class="btn" style="width: 80px; background-color: rgba(255, 0, 0, 0.5);"> 사진 </button>
+            </div>
+            <div style="position:relative; top:-100px; right:-150px; border: 0px solid black; width:80px; float:right">  
+              <button type="button" class="btn" style="width: 80px; background-color: rgba(255, 135, 0, 0.5);"> 담기 </button>
+            </div>
           </div>
         </div>
       {% endfor %}
@@ -465,23 +506,23 @@ text-align: center;">
               </div>
             {% endfor %}
           </div> -->
-          <div style="margin-top:0px">
+          <div style="border:0px solid red;margin-top:0px; width:100%; height: 230px; margin:0 auto">
             ■Subway - {{article_taxi.title}}
-            <img style="width:100%; height:100%" src="{{article_taxi.image_set.first.thumnails.url}}"/>
+            <img style="width:100%;height:200px" src="{{article_taxi.image_set.first.thumnails.url}}"/>
           </div>
           <div style="border: 0px solid orange; background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
             <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_taxi.text}}</textarea>
           </div>
           <div>
-            <span >view</span>
-            <span style="margin-left: 15%">likes</span>
-            <span style="margin-left: 15%">share</span>
+            <span class="badge badge-light">Views {{article_taxi.views}}</span>
+            <span id="{{article_taxi.id}}" onclick="likesUpdate({{article_taxi.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article_taxi.likes.count}}</span>
+            <span style="margin-left: 15%">shares</span>
             <span style="margin-left: 15%">carrier</span>
             <br>
           </div>
-          <div style=" border: 1px solid orange; width: 100%; margin: 0 auto; text-align: center">
+          <div style=" border: 0px solid orange; width: 100%; margin: 0 auto; text-align: center">
             <a href="{% url 'tips:view_tip' pk=article_taxi.id %}">
-            <button type="button" class="btn btn-primary" style="float:left"> 글보기 </button>
+            <button type="button" class="btn btn-primary" style="float:left" > 글보기 </button>
             </a>
             <button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
           </div>
@@ -500,40 +541,94 @@ text-align: center;">
 {% endblock %}
 
 {% block additional_script %}
-<script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'lightslider-master/dist/js/lightslider.min.js' %}"></script> 
+<script>
+   $(document).ready(function() {
+    var slider = $("#test_lightSlider").lightSlider({
+      slideMargin: 5,
+      item: 4,
+      loop: false,
+      controls: false,
+      pager: false,
+      onBeforeSlide: function (el) {
+            console.log(el.getCurrentSlideCount());
+        }
+    });
+    // $('.test_lightSlider_item').click(function(){
+    //   console.log(slider.getCurrentSlideCount());
+    // })
+
+  });
+</script>
+<script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.js' %}"></script>
 <script>
 
 $(document).ready(function(){
-  $('.main_nav_slick').slick({
-      arrows: false,
-      dots: false,
-      infinite: true,
-      speed: 300,
-      slidesToShow: 3,
-      slidesToScroll: 3,
-      adaptiveHeight: true,
-      centerMode: true,
-      focusOnSelect: true,
-      asNavFor: '.body_div_slick'
-    });
-  $('.body_div_slick').slick({
+  $('#main_nav_slick').slick({
+    arrows: false,
+    dots: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    adaptiveHeight: true,
+    centerMode: false,
+    focusOnSelect: true,
+    swipeToSlide: true,
+    accessibility: true,
+    edgeFriction: 0.0,
+  });
+
+  $('#body_div_slick').slick({
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
     arrows: false,
-    infinite: true,
+    infinite: false,
     fade: false,
     adaptiveHeight: true,
     touchThreshold: 2,
     fade: false,
-    asNavFor: '.main_nav_slick'
+    asNavFor: '#main_nav_slick'
   });
-  $('.main_nav_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-     // var offset = $('div.container').offset();
-     if (window.pageYOffset >= sticky) {
+
+  $('#main_nav_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+     // var offset = $('div.container').offset();.
+    if (window.pageYOffset >= sticky) {
+      $('html,body').animate({scrollTop: 190}, 400);
+    }
+  });
+
+  $('.main_nav_item').click(function(e) {
+    e.preventDefault();
+    slideIndex = $(this).index();
+    $('div').removeClass('slick_select');
+    $(this).addClass('slick_select');
+    $('#body_div_slick').slick('slickGoTo', slideIndex, true );
+  });
+ 
+  $('#body_div_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+   // var offset = $('div.container').offset();
+    if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
      }
   });
+  
+  $('#body_div_slick').on('afterChange', function(event, slick, currentSlide, nextSlide){
+    if ($('.main_nav_item').hasClass('slick-current')) {
+      console.log(currentSlide);
+      $('div').removeClass('slick_select');
+      $("#main_nav_slick div:eq("+(parseInt(currentSlide)+2)+")").addClass('slick_select'); //when infinite mode is false
+      // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
+    }
+    else {
+      console.log("no");
+    };
+    if (window.pageYOffset >= sticky) {
+      $('html,body').animate({scrollTop: 190}, 400);
+     }
+  });
+
 });
 </script>
 <script src="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/owl.carousel.min.js' %}"></script>
@@ -569,11 +664,9 @@ $(document).ready(function(){
   });
 });
 
-
-
 window.onscroll = function() {myFunction()};
 
-var navbar = document.getElementById("main_nav");
+var navbar = document.getElementById("main_nav_slick");
 var sticky = navbar.offsetTop;
 
 function myFunction() {
@@ -614,35 +707,42 @@ function likesUpdate(pk){
       method:"post",
       data: updates,
       success: function(res){
+        // console.log(res);
         if (res == 'login_require') {
           alert(res);
         }
         else if (res == 'post_error') {
-          
+          // add.. process
         }
         else {
-        $('#'+pk).html(res);
+        $('#likes_'+pk).html(res.likes_counts);
         }
       }, error: function(error){
-        console.log(error)
-        console.log("error")
+        console.log(error);
+        console.log("error");
       }
     });
   }
-</script>
 
-{% csrf_token %}
-<script>
-function latlngUpdate(updates){
-    $.ajax({
-      url:"{% url 'mapAPI:latlngUpdates' %}",
+function articleText_call(pk){
+  var article={}
+  article.pk = parseInt(pk)
+  $.ajax({
+      url:"{% url 'tips:articleText_call' %}",
       method:"post",
-      data:updates,
+      data:article,
       success: function(res){
         console.log(res);
+        $('#tips_ModalTitle').html(res.title);
+        $('#tips_ModalText').html(res.text);
+        $('#views_'+pk).html(res.views_counts);
+      }, error: function(error){
+        console.log(error);
+        console.log("error");
       }
     });
-  }
+}
+
 </script>
 {% endblock %}
 

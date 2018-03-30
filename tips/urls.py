@@ -7,6 +7,6 @@ app_name ='tips'
 urlpatterns = [
 	path('subway/', views.subway, name='subway'),
 	path('likesUpdate/', views.likesUpdate, name='likesUpdate'),
-	path('test/', views.test, name='test'),
+	path('articleText_call/', views.articleText_call, name='articleText_call'),
 	re_path(r'^(?P<pk>\d+)/$', views.view_tip, name='view_tip'),
 ]	

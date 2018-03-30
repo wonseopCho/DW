@@ -18,7 +18,6 @@ class LazyEncoder(DjangoJSONEncoder):
         return super().default(obj)
 '''
 def mapShow(request):
-	
 	values = MapAddress.objects.values('lat', 'lng', 'type')
 	markers = []
 	if len(values) != 0:
@@ -33,7 +32,6 @@ def mapShow(request):
 		'addresses' : json.dumps(serialize('json', MapAddress.objects.all())),
 		'markers' : markers,
 		'Google_key': settings.GOOGLE_API_KEY
-
 	})
 
 #@csrf_exempt
