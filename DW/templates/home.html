@@ -631,39 +631,8 @@ $(document).ready(function(){
 
 });
 </script>
-<script src="{% static 'owlcarousel/OwlCarousel2-2.3.2/dist/owl.carousel.min.js' %}"></script>
-<script>
-$(document).ready(function(){
-  $(".owl-carousel").owlCarousel({
-    items: 3,
-    margin: 22,
-    merge:true,
-    loop: true,
-    nav: true,
-    autoWidth: false,
-    autoHeight: true,
-    video:false,
-    lazyLoad:true,
-    center:false,
-    responsiveClass:true,
-    responsive:{
-        0:{
-            items:1,
-            nav:true
-        },
-        600:{
-            items:3,
-            nav:false
-        },
-        1000:{
-            items:5,
-            nav:true,
-            loop:false
-        }
-    }
-  });
-});
 
+<script>
 window.onscroll = function() {myFunction()};
 
 var navbar = document.getElementById("main_nav_slick");
