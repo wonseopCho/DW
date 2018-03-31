@@ -6,6 +6,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.conf import settings
 from tips.models import Category, Image
+from urllib import parse
 import json
 
 #CVB
@@ -21,7 +22,10 @@ def home_view(request):
 '''
 
 def home_view(request):
-	args = { 'subways' : Category.objects.filter(category='subway' or 'Subway'),
-			 'taxis' : Category.objects.filter(category='taxi' or 'Taxi')
+	# p_page = request.META['HTTP_REFERER']
+	p_page = parse.urlparse(request.META.get('HTTP_REFERER')).path
+	args = {'p_page' : p_page,
+			'subways' : Category.objects.filter(category='subway' or 'Subway'),
+			'taxis' : Category.objects.filter(category='taxi' or 'Taxi'),
 	 }
 	return render(request, 'home.html', args)
