@@ -10,12 +10,27 @@ def subway(request):
 	args = { 'gallery' : Category.objects.filter(category='subway' or 'Subway') }
 	return render(request, 'tips/subway.html' , args)
 
-def view_tip(request, pk):
+def view_subway_tip(request, pk):
 	updates = Category.objects.get(id=pk)
 	updates.views += 1
 	updates.save()
 	args = { 'tips' : Category.objects.filter(id=pk) }
 	return render(request, 'tips/view_tip.html' , args)
+
+def view_taxi_tip(request, pk):
+	updates = Category.objects.get(id=pk)
+	updates.views += 1
+	updates.save()
+	args = { 'tips' : Category.objects.filter(id=pk) }
+	return render(request, 'tips/view_tip.html' , args)
+
+def view_bus_tip(request, pk):
+	updates = Category.objects.get(id=pk)
+	updates.views += 1
+	updates.save()
+	args = { 'tips' : Category.objects.filter(id=pk) }
+	return render(request, 'tips/view_tip.html' , args)
+
 
 # @csrf_exempt
 def likesUpdate(request):

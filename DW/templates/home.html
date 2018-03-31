@@ -472,14 +472,6 @@ div.listicle {
       <div class="taxi" style="border: 0px solid red ;height:100%">Taxi
         {% for article_taxi in taxis %}
          <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px"> 
-         <!-- card image slide  
-         <div class="owl-carousel owl-theme" style="border: 0px solid red; background-color: #ccccb3; width:100%;height:100%; margin: 0 auto; margin-top: 15px">
-            {% for images in article_subway.image_set.all %}
-              <div style="border: 0px solid red; background-color: #4DC7A0; width:100%; height: 100%; float: left; ">
-                <img style="width:100%; height:100%" src="{{images.thumnails.url}}"/>
-              </div>
-            {% endfor %}
-          </div> -->
           <div style="border:0px solid red;margin-top:0px; width:100%; height: 230px; margin:0 auto">
             ■Subway - {{article_taxi.title}}
             <img style="width:100%;height:200px" src="{{article_taxi.image_set.first.thumnails.url}}"/>
@@ -488,14 +480,14 @@ div.listicle {
             <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_taxi.text}}</textarea>
           </div>
           <div>
-            <span class="badge badge-light">Views {{article_taxi.views}}</span>
-            <span id="{{article_taxi.id}}" onclick="likesUpdate({{article_taxi.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article_taxi.likes.count}}</span>
+            <span id="views_{{article_taxi.id}}" class="badge badge-light">Views {{article_taxi.views}}</span>
+            <span id="likes_{{article_taxi.id}}" onclick="likesUpdate({{article_taxi.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article_taxi.likes.count}}</span>
             <span style="margin-left: 15%">shares</span>
             <span style="margin-left: 15%">carrier</span>
             <br>
           </div>
           <div style=" border: 0px solid orange; width: 100%; margin: 0 auto; text-align: center">
-            <a href="{% url 'tips:view_tip' pk=article_taxi.id %}">
+            <a href="{% url 'tips:view_taxi_tip' pk=article_taxi.id %}">
             <button type="button" class="btn btn-primary" style="float:left" > 글보기 </button>
             </a>
             <button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
@@ -503,10 +495,35 @@ div.listicle {
         </div>
       {% endfor %}
       </div>
-      <div style="border: 0px solid red ;width:100%;height:100%">Bus</div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Bus
+        {% for article_bus in buses %}
+         <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px"> 
+          <div style="border:0px solid red;margin-top:0px; width:100%; height: 230px; margin:0 auto">
+            ■Subway - {{article_bus.title}}
+            <img style="width:100%;height:200px" src="{{article_bus.image_set.first.thumnails.url}}"/>
+          </div>
+          <div style="border: 0px solid orange; background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+            <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_bus.text}}</textarea>
+          </div>
+          <div>
+            <span id="views_{{article_bus.id}}" class="badge badge-light">Views {{article_bus.views}}</span>
+            <span id="likes_{{article_bus.id}}" onclick="likesUpdate({{article_bus.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article_bus.likes.count}}</span>
+            <span style="margin-left: 15%">shares</span>
+            <span style="margin-left: 15%">carrier</span>
+            <br>
+          </div>
+          <div style=" border: 0px solid orange; width: 100%; margin: 0 auto; text-align: center">
+            <a href="{% url 'tips:view_bus_tip' pk=article_bus.id %}">
+            <button type="button" class="btn btn-primary" style="float:left" > 글보기 </button>
+            </a>
+            <button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
       <div style="border: 0px solid red ;width:100%;height:100%">Life</div>
       <div style="border: 0px solid red ;width:100%;height:100%">Food</div>
-      <div style="border: 0px solid red ;width:100%;height:100%">Shooping</div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Shopping</div>
       <div style="border: 0px solid red ;width:100%;height:100%">Tour</div>
       <div style="border: 0px solid red ;width:100%;height:100%">Activity</div>
     </div>
@@ -519,8 +536,25 @@ div.listicle {
 <script>
 
 $(document).ready(function(){
-  var initial_slide = 0;
-  console.log(history.length);
+  var initial_slide;
+  var p_page = getCookie('p_page');
+  setCookie('p_page', '', -1);
+  if (p_page == 'subway') {initial_slide = 0 };
+  if (p_page == 'taxi') {initial_slide = 1 };
+  if (p_page == 'bus') {initial_slide = 2 };
+  if (p_page == 'life') {initial_slide = 3 };
+  if (p_page == 'food') {initial_slide = 4 };
+  if (p_page == 'shopping') {initial_slide = 5 };
+  if (p_page == 'tour') {initial_slide = 6 };
+  if (p_page == 'activity') {initial_slide = 7 };
+  console.log(p_page,'<>',initial_slide);
+
+  $('#main_nav_slick').on('init', function(event, slick){
+    if (initial_slide != undefined ){$('div').removeClass('slick_select');};
+    $("#main_nav_slick div:eq("+(parseInt(initial_slide)+2)+")").addClass('slick_select'); //when infinite mode is false
+      // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
+  });
+
   $('#main_nav_slick').slick({
     initialSlide: initial_slide,
     arrows: false,
@@ -538,6 +572,7 @@ $(document).ready(function(){
   });
 
   $('#body_div_slick').slick({
+    initialSlide: initial_slide,
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
@@ -548,11 +583,6 @@ $(document).ready(function(){
     touchThreshold: 2,
     fade: false,
     asNavFor: '#main_nav_slick'
-  });
-
-  $('#main_nav_slick').on('init', function(event, slick){
-  alert("re");
-  // left
   });
 
   $('#main_nav_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
@@ -571,7 +601,6 @@ $(document).ready(function(){
   });
  
   $('#body_div_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-   // var offset = $('div.container').offset();
     if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
      }
@@ -579,7 +608,6 @@ $(document).ready(function(){
   
   $('#body_div_slick').on('afterChange', function(event, slick, currentSlide, nextSlide){
     if ($('.main_nav_item').hasClass('slick-current')) {
-      console.log(currentSlide);
       $('div').removeClass('slick_select');
       $("#main_nav_slick div:eq("+(parseInt(currentSlide)+2)+")").addClass('slick_select'); //when infinite mode is false
       // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
@@ -673,6 +701,28 @@ function articleText_call(pk){
         console.log("error");
       }
     });
+}
+
+function setCookie(cName, cValue, cDay){
+        var expire = new Date();
+        expire.setDate(expire.getDate() + cDay);
+        cookies = cName + '=' + escape(cValue) + '; path=/ ';
+        if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+        document.cookie = cookies;
+    }
+ 
+function getCookie(cName) {
+    cName = cName + '=';
+    var cookieData = document.cookie;
+    var start = cookieData.indexOf(cName);
+    var cValue = '';
+    if(start != -1){
+        start += cName.length;
+        var end = cookieData.indexOf(';', start);
+        if(end == -1)end = cookieData.length;
+        cValue = cookieData.substring(start, end);
+    }
+    return unescape(cValue);
 }
 
 </script>

@@ -27,5 +27,6 @@ def home_view(request):
 	args = {'p_page' : p_page,
 			'subways' : Category.objects.filter(category='subway' or 'Subway'),
 			'taxis' : Category.objects.filter(category='taxi' or 'Taxi'),
+			'buses' : Category.objects.filter(category='bus' or 'Bus'),
 	 }
 	return render(request, 'home.html', args)

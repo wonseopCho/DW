@@ -18,8 +18,18 @@
 		{% endfor %}
 	</div>	
 	{% endfor %}
-
 {% endblock %}
 
-{% block additional_script %} 
+{% block additional_script %}
+<script>
+var category = document.location.href.split('/')[4];
+setCookie('p_page', category, 1); 
+function setCookie(cName, cValue, cDay){
+    var expire = new Date();
+    expire.setDate(expire.getDate() + cDay);
+    cookies = cName + '=' + escape(cValue) + '; path=/ ';
+    if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+    document.cookie = cookies;
+}
+</script>
 {% endblock %}
