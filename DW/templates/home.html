@@ -416,14 +416,14 @@ div.listicle {
     <br>
   </div>
   <div id="main_nav_slick" class="main_nav_slick">
-    <div id="main_nav_item" class="main_nav_item slick_select" style="display: table"><span style="display: table-cell; vertical-align: middle">Subway</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Taxi</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Bus</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Life</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Food</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Shooping</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Tour</span></div>
-    <div id="main_nav_item" class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Activity</span></div>
+    <div class="main_nav_item slick_select" style="display: table"><span style="display: table-cell; vertical-align: middle">Subway</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Taxi</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Bus</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Life</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Food</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Shooping</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Tour</span></div>
+    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Activity</span></div>
   </div>  
   <div class="container card" style="border: 0px solid red ;width:100% ;height:100%; text-align: center">
     <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%; text-align: center">
@@ -547,7 +547,6 @@ $(document).ready(function(){
   if (p_page == 'shopping') {initial_slide = 5 };
   if (p_page == 'tour') {initial_slide = 6 };
   if (p_page == 'activity') {initial_slide = 7 };
-  console.log(p_page,'<>',initial_slide);
 
   $('#main_nav_slick').on('init', function(event, slick){
     if (initial_slide != undefined ){$('div').removeClass('slick_select');};
@@ -570,6 +569,7 @@ $(document).ready(function(){
     accessibility: true,
     edgeFriction: 0.0,
   });
+  
 
   $('#body_div_slick').slick({
     initialSlide: initial_slide,
@@ -586,18 +586,19 @@ $(document).ready(function(){
   });
 
   $('#main_nav_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-     // var offset = $('div.container').offset();.
+     // var offset = $('div.container').offset();
     if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
     }
   });
 
-  $('.main_nav_item').click(function(e) {
+  $('.main_nav_item').on('click',function(e) {
     e.preventDefault();
     slideIndex = $(this).index();
     $('div').removeClass('slick_select');
     $(this).addClass('slick_select');
-    $('#body_div_slick').slick('slickGoTo', slideIndex, true );
+    $('#main_nav_slick').slick('slickGoTo', slideIndex-1, true );
+    $('#body_div_slick').slick('slickGoTo', slideIndex, true ); 
   });
  
   $('#body_div_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
@@ -606,15 +607,14 @@ $(document).ready(function(){
      }
   });
   
-  $('#body_div_slick').on('afterChange', function(event, slick, currentSlide, nextSlide){
+  $('#body_div_slick').on('afterChange', function(event, slick, currentSlide){
+    $('#main_nav_slick').slick('slickGoTo', currentSlide-1, true );
     if ($('.main_nav_item').hasClass('slick-current')) {
       $('div').removeClass('slick_select');
       $("#main_nav_slick div:eq("+(parseInt(currentSlide)+2)+")").addClass('slick_select'); //when infinite mode is false
       // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
     }
-    else {
-      console.log("no");
-    };
+    else {    };
     if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
      }
@@ -625,7 +625,6 @@ $(document).ready(function(){
 
 <script>
 window.onscroll = function() {myFunction()};
-
 var navbar = document.getElementById("main_nav_slick");
 var sticky = navbar.offsetTop;
 
