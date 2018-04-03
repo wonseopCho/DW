@@ -5,7 +5,7 @@ from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.conf import settings
-from tips.models import Category, Image
+from tips.models import Category, Article, Image
 from urllib import parse
 import json
 
@@ -24,9 +24,10 @@ def home_view(request):
 def home_view(request):
 	# p_page = request.META['HTTP_REFERER']
 	p_page = parse.urlparse(request.META.get('HTTP_REFERER')).path
-	args = {'p_page' : p_page,
-			'subways' : Category.objects.filter(category='subway' or 'Subway'),
-			'taxis' : Category.objects.filter(category='taxi' or 'Taxi'),
-			'buses' : Category.objects.filter(category='bus' or 'Bus'),
-	 }
+	args= {'p_page' : p_page}
+	category_articles={}
+	for cate in Category.objects.all():
+		category = Category.objects.get(category=cate.category).id
+		category_articles.update({ cate.category : Article.objects.filter(category=category)})
+	args.update({'category_articles' : category_articles })
 	return render(request, 'home.html', args)

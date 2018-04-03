@@ -25,8 +25,7 @@ SECRET_KEY = 'j)p9lo0zybdy77%2-6xzdps=spd0894+1dt9g*lczgd*_kkpjc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['127.0.0.1','192.168.11.17','.pythonanywhere.com']
 
 # Application definition
 
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'mapAPI',
     'accounts',
     'tips',
+    'tips.templatetags',
 ]
 
 MIDDLEWARE = [

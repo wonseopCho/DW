@@ -1,3 +1,57 @@
+<!-- card image slide  
+         <div class="owl-carousel owl-theme" style="border: 0px solid red; background-color: #ccccb3; width:100%;height:100%; margin: 0 auto; margin-top: 15px">
+            {% for images in article_subway.image_set.all %}
+              <div style="border: 0px solid red; background-color: #4DC7A0; width:100%; height: 100%; float: left; ">
+                <img style="width:100%; height:100%" src="{{images.thumnails.url}}"/>
+              </div>
+            {% endfor %}
+          </div> -->
+          <div style="margin-top:0px; border: 0px solid red; width:100%; height:520px">
+            ■Subway - {{article_subway.title}}
+            <img style="width:100%; height:490px" src="{{article_subway.image_set.first.file.url}}"/>
+          </div>
+          <div style=" display: none; position:relative; top: -200px; border: 0px solid orange; background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+            <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_subway.text}}</textarea>
+          </div>
+          <div style="margin-top:10px;">
+            <span id="views_{{article_subway.id}}" class="badge badge-light">Views {{article_subway.views}}</span>
+            <!-- <span><img src="{% static 'octicons-6.0.1\libs\svg\heart.svg' %}" width="20" height="20"/></span> -->
+            <span id="likes_{{article_subway.id}}" onclick="likesUpdate({{article_subway.id}})" class="badge badge-light" style="margin-left: 15%">
+                Likes {{article_subway.likes.count}}
+            </span>
+            <span style="margin-left: 15%">shares</span>
+            <span style="margin-left: 15%">carrier</span>
+            <br>
+          </div>
+          <div style="position:relative; border: 0px solid red">
+            <div style="position:relative; top:-200px; right: 10px; border: 0px solid black ; width: 80px; float: right"> 
+              <button onclick="articleText_call({{article_subway.id}})" data-toggle="modal" data-target="#tips" type="button" class="btn" style="width: 80px; background-color: rgba(255, 255, 255, 0.5);">글보기</button>
+            </div>
+            <div style="position:relative; top:-150px; right:-70px; border: 0px solid black; width:80px; float:right">
+              <button type="button" class="btn" style="width: 80px; background-color: rgba(255, 0, 0, 0.5);"> 사진 </button>
+            </div>
+            <div style="position:relative; top:-100px; right:-150px; border: 0px solid black; width:80px; float:right">  
+              <button type="button" class="btn" style="width: 80px; background-color: rgba(255, 135, 0, 0.5);"> 담기 </button>
+            </div>
+          </div>
+
+
+
+
+          <div class="container">
+          <div class="row">
+            <div class="col-md-4" > 
+              <div style="margin-top:0px; border: 0px solid red; width:135px; height:95px;">
+                <img style="width:100%; height:100%" src="{{article_subway.image_set.first.thumnails.url}}"/>
+              </div>
+              <div style="border: 1px solid orange; width: 60%; height:90px; margin-left:7px;">
+                ■Subway - {{article_subway.title}}
+                <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_subway.text}}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
 {% extends "base.html" %}
 {% load static %}
 {% load jb_replace %}
@@ -442,28 +496,30 @@ a * {
   <div class="container" style="border: 0px solid red ;width:100% ;height:100%;">
     <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
 
-      {% for category, articles in category_articles.items %}
-        <div class="{{category}}" style="border: 0px solid red; margin-top: 7px; width:100%; height:100%;">
-          <div class="row">
-            {% for article in articles %}
-              <div class="col-md-6" style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top: 10px"> 
-                <a href="{% url 'tips:view_'|add:category pk=article.id %}">
-                <div style="margin-top:0px; border: 0px solid red; width:130px; height:95px; float:left">
-                  <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
-                </div>
-                <div style="border: 0px solid orange; width: 58%; height:70px; margin-left:7px; float:left; font-size: 15px;">
-                  <div style="border:0px solid blue; width:100%; font-weight: bold;">{{article.title}}</div>
-                  <div style="font-size: 0.9em; margin-top:13px">{{article.slug|_replace}}</div>
-                </div>
-                </a>
-              </div>
-              {% endfor %}
-          </div>
-        </div>
-      {% endfor %}
 
-    <!--   <div class="taxi" style="border: 0px solid red ;height:100%">
-        {% for article_taxi in taxi %}
+      <div class="subway" style="border: 0px solid red; margin-top: 7px; width:100%; height:100%;">
+        <div class="row">
+          {% for article_subway in subways %}
+          
+            <div class="col-md-6" style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top: 10px"> 
+              <a href="{% url 'tips:view_subway' pk=article_subway.id %}">
+              <div style="margin-top:0px; border: 0px solid red; width:130px; height:95px; float:left">
+                <img style="width:100%; height:100%" src="{{article_subway.image_set.first.thumnails.url}}"/>
+              </div>
+              <div style="border: 0px solid orange; width: 58%; height:70px; margin-left:7px; float:left; font-size: 15px;">
+                <div style="border:0px solid blue; width:100%; font-weight: bold;">{{article_subway.title}}</div>
+                <div style="font-size: 0.9em; margin-top:13px">{{article_subway.slug|_replace}}</div>
+              </div>
+              </a>
+            </div>
+          
+          {% endfor %}
+        </div>
+      </div>
+
+
+      <div class="taxi" style="border: 0px solid red ;height:100%">
+        {% for article_taxi in taxis %}
         <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px">
           <div style="border:0px solid orange; width:100%">
             <div style="border:0px solid red;margin-top:0px; width:100%; height: 230px;">
@@ -489,7 +545,38 @@ a * {
           </div>
         </div>
       {% endfor %}
-      </div> -->
+      </div>
+      <div style="border: 0px solid red ;width:100%;height:100%">
+        {% for article_bus in buses %}
+         <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px"> 
+          <div style="border:0px solid red;margin-top:0px; width:100%; height: 230px; margin:0 auto">
+            ■Bus - {{article_bus.title}}
+            <img style="width:100%;height:200px" src="{{article_bus.image_set.first.thumnails.url}}"/>
+          </div>
+          <div style="border: 0px solid orange; background-color: #99ebff; width: 95%; height:100px; margin: 0 auto; margin-top: 10px;">
+            <textarea readonly style='width:100%; height:100%; overflow: hidden'>{{article_bus.text}}</textarea>
+          </div>
+          <div>
+            <span id="views_{{article_bus.id}}" class="badge badge-light">Views {{article_bus.views}}</span>
+            <span id="likes_{{article_bus.id}}" onclick="likesUpdate({{article_bus.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article_bus.likes.count}}</span>
+            <span style="margin-left: 15%">shares</span>
+            <span style="margin-left: 15%">carrier</span>
+            <br>
+          </div>
+          <div style=" border: 0px solid orange; width: 100%; margin: 0 auto; text-align: center">
+            <a href="{% url 'tips:view_bus' pk=article_bus.id %}">
+            <button type="button" class="btn btn-primary" style="float:left" > 글보기 </button>
+            </a>
+            <button type="button" class="btn btn-warning" style="float: right"> 담기 </button>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Life</div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Food</div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Shopping</div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Tour</div>
+      <div style="border: 0px solid red ;width:100%;height:100%">Activity</div>
     </div>
   </div>
 </div>
@@ -701,8 +788,23 @@ function getCookie(cName) {
 </script>
 {% endblock %}
 
-{% block footer	%}
+{% block footer %}
 <div style="border: 0px solid red; height: 10%">
-	&copy Loen  2018
+  &copy Loen  2018
 </div>
 {% endblock %}
+
+
+<div class="row">
+              <div class="col-md-6" style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top: 10px"> 
+                <a href="{% url 'tips:view_{{cate}}' pk=articles.id %}">
+                <div style="margin-top:0px; border: 0px solid red; width:130px; height:95px; float:left">
+                  <img style="width:100%; height:100%" src="{{articles.image_set.first.thumnails.url}}"/>
+                </div>
+                <div style="border: 0px solid orange; width: 58%; height:70px; margin-left:7px; float:left; font-size: 15px;">
+                  <div style="border:0px solid blue; width:100%; font-weight: bold;">{{articles.title}}</div>
+                  <div style="font-size: 0.9em; margin-top:13px">{{articles.slug|_replace}}</div>
+                </div>
+                </a>
+              </div>
+          </div>
