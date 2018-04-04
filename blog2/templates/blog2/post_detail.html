@@ -23,7 +23,9 @@
 {% for comment in post_detail.comment_set.all %}
 	<li>
 	글쓴이:{{comment.author}} 내용:{{comment.message}} 
+	{% if request.user == comment.author %}
 	<a href="{% url 'blog2:comment_edit' post_detail.pk comment.pk %}">댓글수정</a>
+	{% endif %}
 	</li>
 {% endfor %}
 </ul>

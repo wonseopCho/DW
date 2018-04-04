@@ -62,7 +62,6 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
     def likes_counts(self, article):
         return '{}'.format(article.likes.count())
 
-
     def save_model(self, request, obj, form, change):
         if not obj.author:
             obj.author = request.user
@@ -78,7 +77,6 @@ class ImageAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
         if not obj.author:
             obj.author = request.user
         obj.save()
-
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'article','article_id', 'author', 'message']

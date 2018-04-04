@@ -1,8 +1,9 @@
 from django.db import models
+from django.urls import reverse
+from django.conf import settings
+from django.contrib.auth.models import User
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from django.contrib.auth.models import User
-from django.conf import settings
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -54,10 +55,19 @@ class Image(models.Model):
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    author = models.CharField(max_length=100)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.author
+    class Meta:
+        ordering = ['-id']
+
+    def get_absolute_url(self):
+        return reverse('tips:view_tips', args=[self.article.pk])
+
+    def get_edit_url(self):
+        return reverse('tips:comment_edit', args=[self.article.pk, self.pk])
+
+    def get_delete_url(self):
+        return reverse('tips:comment_delete', args=[self.article.pk, self.pk])

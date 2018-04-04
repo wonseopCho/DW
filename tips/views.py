@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
+
 from django.http import JsonResponse
 from .models import Comment, Article, Image
 from .forms import CommentForm
@@ -10,27 +12,15 @@ def subway(request):
 	args = { 'gallery' : Article.objects.filter(category='subway' or 'Subway') }
 	return render(request, 'tips/subway.html' , args)
 
-def view_subway_tip(request, pk):
-	updates = Article.objects.get(id=pk)
-	updates.views += 1
-	updates.save()
-	args = { 'article' : Article.objects.filter(id=pk) }
+def view_tips(request, pk):
+	article = Article.objects.get(id=pk)
+	article.views += 1
+	article.save()
+	category = article.category
+	args = { 'article' : Article.objects.filter(id=pk),
+			 'category' : category,
+	}
 	return render(request, 'tips/view_tip.html' , args)
-
-def view_taxi_tip(request, pk):
-	updates = Article.objects.get(id=pk)
-	updates.views += 1
-	updates.save()
-	args = { 'article' : Article.objects.filter(id=pk) }
-	return render(request, 'tips/view_tip.html' , args)
-
-def view_bus_tip(request, pk):
-	updates = Article.objects.get(id=pk)
-	updates.views += 1
-	updates.save()
-	args = { 'article' : Article.objects.filter(id=pk) }
-	return render(request, 'tips/view_tip.html' , args)
-
 
 # @csrf_exempt
 def likesUpdate(request):
@@ -77,15 +67,17 @@ def articleText_call(request):
 	else:
 		return HttpResponse('post_error')
 
+
+@login_required
 def comment_new(request, pk):
 	if request.method == 'POST':
-		form = CommentForm(request.POST)
+		form = CommentForm(request.POST, request.FILES)
 		if form.is_valid():
 			comment = form.save(commit=False)
 			comment.article = Article.objects.get(pk=pk)
-			comment.author = str(request.user)
+			comment.author = request.user
 			comment.save()
-			return redirect('tips:view_subway', pk)
+			return redirect('tips:view_tips', pk)
 	else:
 		form = CommentForm()
 	return render(request, 'tips/comment_form.html', {
@@ -94,16 +86,32 @@ def comment_new(request, pk):
 
 def comment_edit(request, post_pk, comment_pk):
 	comment = Comment.objects.get(pk=comment_pk)
+	if comment.author != request.user:
+		return redirect(comment)
+
 	if request.method == 'POST':
-		form = CommentForm(request.POST, instance=comment)
+		form = CommentForm(request.POST, request.FILES, instance=comment)
 		if form.is_valid():
 			comment = form.save(commit=False)
 			comment.post = Article.objects.get(pk=post_pk)
-			comment.author = str(request.user)
+			comment.author = request.user
 			comment.save()
-			return redirect('tips:view_subway', post_pk)
+			return redirect(comment)
 	else:
 		form = CommentForm(instance=comment)
 	return render(request, 'tips/comment_form.html', {
 		'form': form,
+		})
+
+def comment_delete(request, post_pk, comment_pk):
+	comment = Comment.objects.get(pk=comment_pk)
+	if comment.author != request.user:
+		return redirect(comment)
+
+	if request.method == 'POST':
+		comment.delete()
+		return redirect(comment)
+
+	return render(request, 'tips/comment_confirm_delete.html', {
+		'comment': comment,
 		})

@@ -48,26 +48,33 @@
         <br>
         <br>
         <p class="article_text">{{content.text}}</p>
-        <p>
-          
-        </p>
-        <ul>
-  
-         <a href="{% url 'tips:comment_new' content.pk %}">Comments</a>
-          {% for comment in content.comment_set.all %}
-            <li style="font-size:11px;">
-            글쓴이:{{comment.author}} 내용:{{comment.message}}
-
-
-            {% if request.user == comment.author %} 
-              yes
-              <a class='btn btn-primary' href="{% url 'tips:comment_edit' content.pk comment.pk %}">수정</a>
-        
-            {% endif %}
- 
-            </li>
-          {% endfor %}
-          </ul>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-default">
+            <div class="card-header">{{content.comment_set.all.count}} Comments</div>
+              <div class="card-body">
+                    {% if content.comment_set.all.count == 0 %}
+                      <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
+                    {% else %}
+                     {% for comment in content.comment_set.all %}
+                        <li style="font-size:11px;">
+                          <span style="font-weight: bold; font-size: 13px">{{comment.message}}</span> by {{comment.author}} at {{comment.updated_at}}
+                          {% if user.is_authenticated and request.user == comment.author %}
+                            <a class='text-primary' href="{{ comment.get_edit_url }}">수정</a>
+                            <a class='text-danger' href="{{ comment.get_delete_url }}">삭제</a>
+                          {% endif %}
+                        </li>
+                     {% endfor %}
+                    {% endif %}
+              </div>
+              <div class="card-footer">
+                <a href="{% url 'tips:comment_new' content.pk %}">Write Comments</a>
+              </div> 
+          </div>
+        </div>
       </div>
     </div>
 	</div>	
@@ -92,8 +99,9 @@ $(document).ready(function(){
   });
 });
 
-var category = document.location.href.split('/')[4];
-setCookie('p_page', category, 1); 
+// var category = document.location.href.split('/')[4];
+// console.log( document.location.href.split('/'));
+setCookie('p_page', '{{category}}', 1); 
 function setCookie(cName, cValue, cDay){
     var expire = new Date();
     expire.setDate(expire.getDate() + cDay);

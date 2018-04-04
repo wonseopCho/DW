@@ -130,12 +130,6 @@ div.listicle {
   margin-top: 10px
 }
 
- .slick_select {
-  border-bottom: 4px solid white ;
-  font-weight: bold;
-  text-decoration: none;
-}
-
 .main_nav_slick {
   border:0px solid red; 
   background-color:#4DC7A0; 
@@ -162,9 +156,16 @@ a * {
 .slick-list {
     margin-left:-1px;
   }
+
+.slick_select {
+    border-bottom: 4px solid white ;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
 #tips_ModalText {
     white-space: pre-wrap;
-}
+  }
 </style>
 {% endblock %}
 {% block title %} 
@@ -447,7 +448,7 @@ a * {
           <div class="row">
             {% for article in articles %}
               <div class="col-md-6" style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top: 10px"> 
-                <a href="{% url 'tips:view_'|add:category pk=article.id %}">
+                <a href="{% url 'tips:view_tips' pk=article.id %}">
                 <div style="margin-top:0px; border: 0px solid red; width:130px; height:95px; float:left">
                   <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
                 </div>
@@ -500,21 +501,22 @@ a * {
 <script>
 
 $(document).ready(function(){
-  var initial_slide;
+  var initial_slide, background_color;
   var p_page = getCookie('p_page');
   setCookie('p_page', '', -1);
-  if (p_page == 'subway') {initial_slide = 0 };
-  if (p_page == 'taxi') {initial_slide = 1 };
-  if (p_page == 'bus') {initial_slide = 2 };
-  if (p_page == 'life') {initial_slide = 3 };
-  if (p_page == 'food') {initial_slide = 4 };
-  if (p_page == 'shopping') {initial_slide = 5 };
-  if (p_page == 'tour') {initial_slide = 6 };
-  if (p_page == 'activity') {initial_slide = 7 };
-
+  if (p_page == 'subway') {initial_slide = 0; background_color = '#4DC7A0';};
+  if (p_page == 'taxi') {initial_slide = 1; background_color = '#1F65A1';};
+  if (p_page == 'bus') {initial_slide = 2; background_color = '#FF00BF';};
+  if (p_page == 'life') {initial_slide = 3; background_color = '#43A1B4';};
+  if (p_page == 'food') {initial_slide = 4; background_color = '#FFBF00';};
+  if (p_page == 'shopping') {initial_slide = 5; background_color = '#0000CC';};
+  if (p_page == 'tour') {initial_slide = 6; background_color = '#CC00FF';};
+  if (p_page == 'activity') {initial_slide = 7; background_color = '#FF6347';};
   $('#main_nav_slick').on('init', function(event, slick){
     if (initial_slide != undefined ){$('div').removeClass('slick_select');};
-    $("#main_nav_slick div:eq("+(parseInt(initial_slide)+2)+")").addClass('slick_select'); //when infinite mode is false
+    $("#main_nav_slick").css('background-color', background_color);
+    $("#main_nav_slick div:eq("+(parseInt(initial_slide)+2)+")").addClass('slick_select');
+     //when infinite mode is false
       // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
   });
 
