@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 
 from django.http import JsonResponse
-from .models import Comment, Article, Image
+from .models import Listicle, Comment, Article, Image
 from .forms import CommentForm
 import json
 
@@ -21,6 +21,11 @@ def view_tips(request, pk):
 			 'category' : category,
 	}
 	return render(request, 'tips/view_tip.html' , args)
+
+def view_listicle(request, pk):
+	listicle = Listicle.objects.get(id=pk)
+	args = {'listicle': listicle}
+	return render(request, 'tips/view_listicle.html', args)
 
 # @csrf_exempt
 def likesUpdate(request):

@@ -71,3 +71,23 @@ class Comment(models.Model):
 
     def get_delete_url(self):
         return reverse('tips:comment_delete', args=[self.article.pk, self.pk])
+
+class Listicle(models.Model):
+    title = models.CharField('Title', blank=False, unique=True, max_length=100)
+    category = models.ForeignKey(Category, blank=False, null=True, on_delete=models.CASCADE)
+    image = models.FileField(blank=False, null=False, upload_to='tips/listicle/images/%Y/%m/%d')
+    thumnails = ImageSpecField(source='image', 
+                               processors=[ResizeToFill(100,100)],
+                               format='JPEG',
+                               options={'quality': 80})
+    articles = models.ManyToManyField(Article, blank=False, related_name='listicle_articles')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, editable=False, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def get_listicle_url(self):
+        return reverse('tips:view_listicle', args=[self.pk])
+
+    def __str__(self):
+        return self.title
+

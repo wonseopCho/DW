@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
-from .models import Category, Article, Image, Comment
+from .models import Listicle, Category, Article, Image, Comment
 from multiupload.admin import MultiUploadAdmin
 
 
@@ -81,6 +81,19 @@ class ImageAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'article','article_id', 'author', 'message']
 
+class ListicleAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'category', '_articles', 'author', 'image', 'created_at', 'updated_at']
+    list_display_links = ['id', 'title']
+
+    def _articles(self, listicle):
+        return 'Total#: {}'.format(listicle.articles.count())
+
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        obj.save()
+
+admin.site.register(Listicle, ListicleAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Image, ImageAdmin)

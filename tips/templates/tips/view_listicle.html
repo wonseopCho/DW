@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% load embed_video_tags %}
+{% load imagekit %}
+{% load jb_replace %}
+
+{% block headAddon %}
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
+<style>
+.article_text {
+    white-space: pre-wrap;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+	{% for article in listicle.articles.all %}
+    <div class="jumbotron">
+      <div class="col-sm-8 mx-auto">
+        {% if article.video %}
+          <video width="320" height="240" controls>
+            <source src="{{article.video.url}}" type="video/mp4"> Your browser does not support the video tag.
+          </video>
+        {% endif %}
+        <h2>{{article.title}}</h2>
+		<div class="image_slick" style="border:0px solid red; width:100%;height:100%">
+		{%for pic in article.image_set.all %}
+			<div style="border: 0px solid red; width:100%; height:100%">
+				<img style="width:100%; height:100%"  src="{{pic.file.url}}">
+			</div>
+		{% endfor %}
+		</div>
+		<span id="views_{{article.id}}" class="badge badge-light">Views {{article.views}}</span>
+        <span id="likes_{{article.id}}" onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{article.likes.count}}</span>
+        <br><br>
+        <a href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{article.id}}&t={{article.title}}">
+          <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
+        </a>
+        <a href="https://twitter.com/share?text={{article.title}}&url={{request.build_absolute_uri}}{{article.id}}">
+          <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
+        </a>
+        <a href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{article.id}}&media={{image}}&description={{article.title}}">
+          <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
+        </a>
+        <a href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{article.id}}&redirect_uri={{request.build_absolute_uri}}">
+          <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
+        </a>
+        <br>
+        <br>
+        <p class="article_text">{{article.text}}</p>
+      </div>
+	</div>
+	<div class="row" style="margin-top:-30px; margin-bottom: 20px; border:0px solid red; " >
+		<div class="col-sm-12">
+		  <div class="card card-default">
+		    <div class="card-header">{{article.comment_set.all.count}} Comments</div>
+		      <div class="card-body">
+		            {% if article.comment_set.all.count == 0 %}
+		              <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
+		            {% else %}
+		             {% for comment in article.comment_set.all %}
+		                <li style="font-size:11px;">
+		                  <span style="font-weight: bold; font-size: 13px">{{comment.message}}</span> by {{comment.author}} at {{comment.updated_at}}
+		                  {% if user.is_authenticated and request.user == comment.author %}
+		                    <a class='text-primary' href="{{ comment.get_edit_url }}">수정</a>
+		                    <a class='text-danger' href="{{ comment.get_delete_url }}">삭제</a>
+		                  {% endif %}
+		                </li>
+		             {% endfor %}
+		            {% endif %}
+		      </div>
+		      <div class="card-footer">
+		        <a href="{% url 'tips:comment_new' article.pk %}">Write Comments</a>
+		      </div> 
+		  </div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+{% block additional_script %}
+
+<script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+  $('.image_slick').slick({
+    dots: true,
+    arrows: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    centerMode: false,
+    adaptiveHeight: true,
+    cssEase: 'linear',
+    centerPadding: '40px',
+  });
+});
+
+// var category = document.location.href.split('/')[4];
+// console.log( document.location.href.split('/'));
+setCookie('p_page', '{{category}}', 1); 
+function setCookie(cName, cValue, cDay){
+    var expire = new Date();
+    expire.setDate(expire.getDate() + cDay);
+    cookies = cName + '=' + escape(cValue) + '; path=/ ';
+    if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+    document.cookie = cookies;
+}
+
+function likesUpdate(pk){
+    var updates={}
+    updates.pk = parseInt(pk)
+    updates.csrfmiddlewaretoken = '{{csrf_token}}';
+    $.ajax({
+      url:"{% url 'tips:likesUpdate' %}",
+      method:"post",
+      data: updates,
+      success: function(res){
+        // console.log(res);
+        if (res == 'login_require') {
+          alert(res);
+        }
+        else if (res == 'post_error') {
+          // add.. process
+        }
+        else {
+        $('#likes_'+pk).html(res.likes_counts);
+        }
+      }, error: function(error){
+        console.log(error);
+        console.log("error");
+      }
+    });
+  }
+
+</script>
+{% endblock %}
