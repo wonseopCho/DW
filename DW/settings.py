@@ -25,7 +25,7 @@ SECRET_KEY = 'j)p9lo0zybdy77%2-6xzdps=spd0894+1dt9g*lczgd*_kkpjc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.11.17','.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.11.31','.pythonanywhere.com']
 
 # Application definition
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'embed_video',
     'imagekit',
     'multiupload',
+    'smart_selects',
     'blog',
     'blog2',
     'bookmark',
@@ -156,6 +157,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+#smart_seletct requirments
+# JQUERY_URL = True
+USE_DJANGO_JQUERY = True
+#------------------------------
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

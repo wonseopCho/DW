@@ -8,94 +8,156 @@
 .article_text {
     white-space: pre-wrap;
 }
+.slick-slide{
+  border: none;
+  outline:none;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="container">
+<div class="container" style="width:100%;">
 	{% for content in article %}
-    <div class="jumbotron">
-      <div class="col-sm-8 mx-auto">
-        {% if content.video %}
-          <video width="320" height="240" controls>
-            <source src="{{article.video.url}}" type="video/mp4"> Your browser does not support the video tag.
-          </video>
-        {% endif %}
-        <h2>{{content.title}}</h2>
-        <div class="image_slick" style="border:0px solid red; width:100%;height:100%">
-        {%for pic in content.image_set.all %}
-          <div style="border: 0px solid red; width:100%; height:100%">
-          <img style="width:100%; height:100%"  src="{{pic.file.url}}">
-          </div>
-        {% endfor %}
+	<div class="jumbotron" style="padding:25px 8px 8px 8px; margin-bottom: 0px">
+    <div style="width:100%;text-align: center;">
+      <h2>{{content.title}}</h2>
+    </div>
+    <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%;height:100%;">
+    {%for pic in content.image_set.all %}
+      <div style="border: 0px solid red; width:100%; height:100%; margin-bottom:5px">
+        <img style="width:100%; height:100%"  src="{{pic.file.url}}">
+      </div>
+    {% endfor %}
+    {% if content.video %}
+    <div class="show_slick_item">
+      <video style="width:100%" controls>
+        <source src="{{content.video.url}}" type="video/mp4"> Your browser does not support the video tag.
+      </video>
+    </div>
+    {% endif %}
+    </div>
+    <!-- thumnail-------------------------------------------  -->
+    <!-- {% if content.image_set.all.count > 1 %}
+      <div id="thumnail_slick" class="thumnail_slick" style="border:0px solid red; width:100%;height:100%;margin:0 auto;">
+      {%for pic in content.image_set.all %}
+        <div class="show_slick_item" style="border: 0px solid red; width:100%; height:100%">
+          <img style="width:98%; height:100%"  src="{{pic.thumnails.url}}">
         </div>
-        <span id="views_{{content.id}}" class="badge badge-light">Views {{content.views}}</span>
-        <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{content.likes.count}}</span>
-        <br><br>
-        <a href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{content.id}}&t={{content.title}}">
-          <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
-        </a>
-        <a href="https://twitter.com/share?text={{content.title}}&url={{request.build_absolute_uri}}{{content.id}}">
-          <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
-        </a>
-        <a href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
-          <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
-        </a>
-        <a href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
-          <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
-        </a>
-        <br>
-        <br>
-        <p class="article_text">{{content.text}}</p>
+      {% endfor %}
+      {% if content.video %}
+      <div class="show_slick_item">
+        <video style="width:100%;" >
+          <source src="{{content.video.url}}" type="video/mp4"> Your browser does not support the video tag.
+        </video>
+      </div>
+      {% endif %}
+      </div>
+    {% endif %} -->
+    <div style="margin-top: 20px">
+      <span id="views_{{content.id}}" class="badge badge-light">Views {{content.views}}</span>
+      <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{content.likes.count}}</span>
+    </div>
+    <div style="margin-top: 10px">
+      <a href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{content.id}}&t={{content.title}}">
+        <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
+      </a>
+      <a href="https://twitter.com/share?text={{content.title}}&url={{request.build_absolute_uri}}{{content.id}}">
+        <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
+      </a>
+      <a href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
+        <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
+      </a>
+      <a href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
+        <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
+      </a>
+    </div>
+    <div style="margin-top: 10px">
+      <p class="article_text">{{content.text}}</p>
+    </div>
+  </div>
+  <div class="row" >
+    <div class="col-sm-12">
+      <div class="card card-default">
+        <div class="card-header">{{content.comment_set.all.count}} Comments</div>
+          <div class="card-body">
+                {% if content.comment_set.all.count == 0 %}
+                  <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
+                {% else %}
+                 {% for comment in content.comment_set.all %}
+                    <li style="font-size:11px;">
+                      <span style="font-weight: bold; font-size: 13px">{{comment.message}}</span> by {{comment.author}} at {{comment.updated_at}}
+                      {% if user.is_authenticated and request.user == comment.author %}
+                        <a class='text-primary' href="{{ comment.get_edit_url }}">수정</a>
+                        <a class='text-danger' href="{{ comment.get_delete_url }}">삭제</a>
+                      {% endif %}
+                    </li>
+                 {% endfor %}
+                {% endif %}
+          </div>
+          <div class="card-footer">
+            {% if user.is_authenticated %}
+            <div>
+              <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Write"/>
+              </form>
+            </div>
+            <!-- <a href="{% url 'tips:comment_new' content.pk %}">Write Comments</a> -->
+            {% else %}
+            <div style="width:100%; margin:0 auto; text-align: center;" >
+              <a href="/login?next={{ request.path }}">
+                <p>To make a comment, Please Log-in</p>              
+              </a>
+            </div> 
+            {% endif %}
+          </div> 
       </div>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="card card-default">
-            <div class="card-header">{{content.comment_set.all.count}} Comments</div>
-              <div class="card-body">
-                    {% if content.comment_set.all.count == 0 %}
-                      <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
-                    {% else %}
-                     {% for comment in content.comment_set.all %}
-                        <li style="font-size:11px;">
-                          <span style="font-weight: bold; font-size: 13px">{{comment.message}}</span> by {{comment.author}} at {{comment.updated_at}}
-                          {% if user.is_authenticated and request.user == comment.author %}
-                            <a class='text-primary' href="{{ comment.get_edit_url }}">수정</a>
-                            <a class='text-danger' href="{{ comment.get_delete_url }}">삭제</a>
-                          {% endif %}
-                        </li>
-                     {% endfor %}
-                    {% endif %}
-              </div>
-              <div class="card-footer">
-                <a href="{% url 'tips:comment_new' content.pk %}">Write Comments</a>
-              </div> 
-          </div>
-        </div>
-      </div>
-    </div>
-	</div>	
+  </div>
 	{% endfor %}
+</div>  
 {% endblock %}
 
 {% block additional_script %}
-
 <script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
 <script>
 $(document).ready(function(){
-  $('.image_slick').slick({
+  $('#show_slick').slick({
+    arrows: false,
+    dots: true,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    adaptiveHeight: false,
+    centerMode: false,
+    focusOnSelect: true,
+    swipeToSlide: true,
+    accessibility: true,
+    edgeFriction: 0.0,
+  });
+
+  $('#thumnail_slick').slick({
     dots: true,
     arrows: false,
     infinite: false,
     speed: 300,
-    slidesToShow: 1,
+    slidesToShow: 3,
     centerMode: false,
+    lazyLoad: 'ondemand',
     adaptiveHeight: true,
     cssEase: 'linear',
     centerPadding: '40px',
+    edgeFriction: 0.0,
+  });
+
+  $('.show_slick_item').on('click',function(event) {
+    slideIndex = $(this).index();
+    console.log(slideIndex);
+    $('#show_slick').slick('slickGoTo', slideIndex, true );
+    $('#thumnail_slick').slick('slickGoTo', slideIndex, true ); 
   });
 });
 
@@ -111,8 +173,8 @@ function setCookie(cName, cValue, cDay){
 }
 
 function likesUpdate(pk){
-    var updates={}
-    updates.pk = parseInt(pk)
+    var updates={};
+    updates.pk = parseInt(pk);
     updates.csrfmiddlewaretoken = '{{csrf_token}}';
     $.ajax({
       url:"{% url 'tips:likesUpdate' %}",

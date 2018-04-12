@@ -6,6 +6,7 @@ from . import views
 app_name ='tips'
 urlpatterns = [
 	path('subway/', views.subway, name='subway'),
+	path('listicle_admin/', views.listicle_admin, name='listicle_admin'),
 	path('likesUpdate/', views.likesUpdate, name='likesUpdate'),
 	path('articleText_call/', views.articleText_call, name='articleText_call'),
 	re_path(r'^listicle/(?P<pk>\d+)/$', views.view_listicle, name='view_listicle'),

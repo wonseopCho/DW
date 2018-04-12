@@ -23,6 +23,7 @@ from DW import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('chaining/', include('smart_selects.urls')),
     path('', views.home_view, name='home'),
     path('blog/', include('blog.urls')),
     path('blog2/', include('blog2.urls')),

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from .models import Listicle, Category, Article, Image, Comment
+from .forms import ListicleForm
 from multiupload.admin import MultiUploadAdmin
 
 
@@ -82,6 +83,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'article','article_id', 'author', 'message']
 
 class ListicleAdmin(admin.ModelAdmin):
+    form = ListicleForm
     list_display = ['id', 'title', 'category', '_articles', 'author', 'image', 'created_at', 'updated_at']
     list_display_links = ['id', 'title']
 

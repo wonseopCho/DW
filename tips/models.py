@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from smart_selects.db_fields import ChainedManyToManyField
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -18,7 +19,7 @@ class Category(models.Model):
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
-    title = models.CharField('Title', unique=True, max_length=100)
+    title = models.CharField(unique=True, max_length=100)
     video = models.FileField(blank=True, upload_to='tips/video/%Y/%m/%d')
     slug = models.SlugField(max_length=41, unique=False, allow_unicode=True)
     text = models.TextField()
@@ -38,9 +39,9 @@ class Article(models.Model):
 class Image(models.Model):
     file = models.FileField(upload_to='tips/images/%Y/%m/%d')
     thumnails = ImageSpecField(source='file', 
-							   processors=[ResizeToFill(100,100)],
+							   processors=[ResizeToFill(200,112)],
 							   format='JPEG',
-							   options={'quality': 60})
+							   options={'quality': 100})
     article = models.ForeignKey(Article, blank=True, null=True, on_delete=models.CASCADE)
     author = models.ForeignKey(User, blank=True, null=True, editable=False, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -77,9 +78,9 @@ class Listicle(models.Model):
     category = models.ForeignKey(Category, blank=False, null=True, on_delete=models.CASCADE)
     image = models.FileField(blank=False, null=False, upload_to='tips/listicle/images/%Y/%m/%d')
     thumnails = ImageSpecField(source='image', 
-                               processors=[ResizeToFill(100,100)],
+                               processors=[ResizeToFill(200,100)],
                                format='JPEG',
-                               options={'quality': 80})
+                               options={'quality': 100})
     articles = models.ManyToManyField(Article, blank=False, related_name='listicle_articles')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, editable=False, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
