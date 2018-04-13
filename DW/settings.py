@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'imagekit',
     'multiupload',
     'smart_selects',
+    'widget_tweaks',
     'blog',
     'blog2',
     'bookmark',

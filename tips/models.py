@@ -56,13 +56,17 @@ class Image(models.Model):
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    parent = models.PositiveIntegerField(blank=False, null=True, default=None)
+    parent_author = models.CharField(blank=False, null=True, default=None, max_length=100)
+    group = models.PositiveIntegerField(blank=False, default=None)
+    depth = models.PositiveIntegerField(default=1)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-id']
+        ordering = [ 'group', 'id', 'parent_author' ]
 
     def get_absolute_url(self):
         return reverse('tips:view_tips', args=[self.article.pk])

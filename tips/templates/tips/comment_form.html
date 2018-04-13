@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load widget_tweaks %}
 {% block content %}
+<style>
+.noneDisplay{
+  display :none;
+}
+#id_message{
+  height: auto;
+}
+</style>
 <form action="" method="POST">
 	{% csrf_token %}
 	<table>
-	{{ form.as_table }}
+	{{ form.parent|add_class:"noneDisplay" }}
+    {{ form.message|add_class:"col-sm-12" }}
 	</table>
 	<input type="submit" />
 </form>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
+from django.db.models import Avg, F, Max, Min, Window
 from django.http import JsonResponse
 from .models import Listicle, Comment, Article, Image
 from .forms import CommentForm, ListicleForm
@@ -24,6 +25,20 @@ def view_tips(request, pk):
 				comment = form.save(commit=False)
 				comment.article = Article.objects.get(pk=pk)
 				comment.author = request.user
+				if comment.parent != 0:
+					parent = Comment.objects.get(pk=comment.parent)
+					comment.depth = parent.depth + 1
+					comment.group = parent.group
+					comment.parent_writer = parent.author
+					print(parent.author)
+				else:
+					group_max = Comment.objects.aggregate(Max('group'))
+					if group_max['group__max'] is None:
+						comment.group = 1
+					else:
+						comment.group = group_max['group__max']+1
+					comment.parent = None
+
 				comment.save()
 				return redirect('tips:view_tips', pk)
 		else:

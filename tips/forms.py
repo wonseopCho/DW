@@ -5,7 +5,7 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
 		#fields = '__all__'
-		fields = ['message']
+		fields = ['message', 'parent']
 
 class ListicleForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):

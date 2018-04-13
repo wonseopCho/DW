@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block headAddon %}
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
@@ -12,6 +13,17 @@
   border: none;
   outline:none;
 }
+.noneDisplay{
+  display :none;
+}
+textarea {
+  resize: none;
+  height: auto;
+}
+#id_message{
+  height: auto;
+}
+
 </style>
 {% endblock %}
 
@@ -91,16 +103,20 @@
                         <a class='text-primary' href="{{ comment.get_edit_url }}">수정</a>
                         <a class='text-danger' href="{{ comment.get_delete_url }}">삭제</a>
                       {% endif %}
+                      {% if user.is_authenticated %}
+                        <a class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{comment.id}})">댓글</a>
+                      {% endif %}
                     </li>
                  {% endfor %}
                 {% endif %}
           </div>
-          <div class="card-footer">
+          <div id="card-footer" class="card-footer">
             {% if user.is_authenticated %}
-            <div>
+            <div id="comment_form" class="comment_form">
               <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form.parent|add_class:"noneDisplay" }}
+                {{ form.message|add_class:"col-sm-12" }}
                 <input type="submit" value="Write"/>
               </form>
             </div>
@@ -159,7 +175,46 @@ $(document).ready(function(){
     $('#show_slick').slick('slickGoTo', slideIndex, true );
     $('#thumnail_slick').slick('slickGoTo', slideIndex, true ); 
   });
+
+  $("#id_message").attr("placeholder", "Type your comment here").blur();
+  $("#id_message").attr("rows", "2");
+
+  $('#comment_form').click(function(){
+    $('#comment_form #id_parent').val(0);
+  });
 });
+
+
+function replyOnComment(current, pk){
+  if ($(current).hasClass('remove')){
+    $(current).removeClass('remove');
+    $(current).next().remove();
+  }
+  else {
+    $('.replyForm').remove(); 
+    $(current).parent().append(`
+                  <div class="replyOnCommentForm replyForm">
+                    <form method="POST">
+                      {% csrf_token %}
+                      {{ form.parent |add_class:"noneDisplay"}}
+                      {{ form.message |add_class:"col-sm-12" }}
+                      <input type="submit" value="Write"/>
+                    </form>
+                  </div>`
+      );
+    $('#id_parent').val(pk);
+    $("#id_message").attr("rows", "2");
+    $("#id_message").focus();
+    $(current).addClass('remove');
+    console.log($('#id_parent').val())
+  } 
+  
+  // $('.remove').on('click',function(event) {
+  //   console.log(this);
+  //   $(current).remove();
+  // });
+
+};
 
 // var category = document.location.href.split('/')[4];
 // console.log( document.location.href.split('/'));
