@@ -80,7 +80,7 @@ class ImageAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
         obj.save()
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'article','article_id', 'parent', 'parent_author', 'group', 'depth', 'author', 'message', 'created_at', 'updated_at']
+    list_display = ['id', 'article','article_id', 'parent', 'parent_author', 'group', 'seq_in_group', 'depth', 'author', 'message', 'created_at', 'updated_at']
     list_display_links = ['id', 'article','article_id', 'parent', 'parent_author', 'group', 'depth', 'author', 'message']
 
 class ListicleAdmin(admin.ModelAdmin):

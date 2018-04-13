@@ -29,16 +29,25 @@ def view_tips(request, pk):
 					parent = Comment.objects.get(pk=comment.parent)
 					comment.depth = parent.depth + 1
 					comment.group = parent.group
-					comment.parent_writer = parent.author
-					print(parent.author)
+					comment.parent_author = parent.author
+					if parent.seq_in_group is 0:
+						seq_num = Comment.objects.filter(group=parent.group).aggregate(Max('seq_in_group'))
+						comment.seq_in_group = seq_num['seq_in_group__max'] + 1
+					else:
+						updates = Comment.objects.filter(group=parent.group, seq_in_group__gt=parent.seq_in_group)
+						for instance in updates:
+							print(instance.seq_in_group)
+							instance.seq_in_group +=1
+							instance.save()
+						comment.seq_in_group = parent.seq_in_group + 1
 				else:
 					group_max = Comment.objects.aggregate(Max('group'))
 					if group_max['group__max'] is None:
 						comment.group = 1
 					else:
 						comment.group = group_max['group__max']+1
+					comment.seq_in_group = 0
 					comment.parent = None
-
 				comment.save()
 				return redirect('tips:view_tips', pk)
 		else:

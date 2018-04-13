@@ -59,6 +59,7 @@ class Comment(models.Model):
     parent = models.PositiveIntegerField(blank=False, null=True, default=None)
     parent_author = models.CharField(blank=False, null=True, default=None, max_length=100)
     group = models.PositiveIntegerField(blank=False, default=None)
+    seq_in_group = models.PositiveIntegerField(blank=False, default=0)
     depth = models.PositiveIntegerField(default=1)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     message = models.TextField()
@@ -66,7 +67,7 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = [ 'group', 'id', 'parent_author' ]
+        ordering = [ 'group', 'seq_in_group' ]
 
     def get_absolute_url(self):
         return reverse('tips:view_tips', args=[self.article.pk])
