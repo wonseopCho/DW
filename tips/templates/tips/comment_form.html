@@ -10,12 +10,21 @@
   height: auto;
 }
 </style>
-<form action="" method="POST">
-	{% csrf_token %}
-	<table>
-	{{ form.parent|add_class:"noneDisplay" }}
-    {{ form.message|add_class:"col-sm-12" }}
-	</table>
-	<input type="submit" />
-</form>
+<script>
+$(document).ready(function(){
+	$('#comment_form').click(function(){
+	    $('#comment_form #id_parent').val(0);
+	  });
+});
+</script>
+<div id="comment_form" class="comment_form">
+	<form action="" method="POST">
+		{% csrf_token %}
+		<table>
+		{{ form.parent|add_class:"noneDisplay" }}
+	    {{ form.message|add_class:"col-sm-12" }}
+		</table>
+		<input type="submit" />
+	</form>
+</div>
 {% endblock %}

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% load embed_video_tags %}
+{% load imagekit %}
 {% load widget_tweaks %}
+{% load jb_replace %}
 
 {% block headAddon %}
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
@@ -22,6 +25,10 @@ textarea {
 }
 #id_message{
   height: auto;
+}
+
+td {
+  /*border: 1px solid black;*/
 }
 
 </style>
@@ -68,7 +75,7 @@ textarea {
     {% endif %} -->
     <div style="margin-top: 20px">
       <span id="views_{{content.id}}" class="badge badge-light">Views {{content.views}}</span>
-      <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left: 15%">Likes {{content.likes.count}}</span>
+      <span id="likes_{{content.id}}" onclick="likesUpdate()" class="badge badge-light" style="margin-left: 15%">Likes {{content.likes.count}}</span>
     </div>
     <div style="margin-top: 10px">
       <a href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{content.id}}&t={{content.title}}">
@@ -96,18 +103,30 @@ textarea {
                 {% if content.comment_set.all.count == 0 %}
                   <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
                 {% else %}
+                  <table class="table">
+                    <tbody>
                  {% for comment in content.comment_set.all %}
-                    <li style="font-size:11px;">
-                      <span style="font-weight: bold; font-size: 13px">{{comment.message}}</span> by {{comment.author}} at {{comment.updated_at}}
-                      {% if user.is_authenticated and request.user == comment.author %}
-                        <a class='text-primary' href="{{ comment.get_edit_url }}">수정</a>
-                        <a class='text-danger' href="{{ comment.get_delete_url }}">삭제</a>
-                      {% endif %}
-                      {% if user.is_authenticated %}
-                        <a class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{comment.id}})">댓글</a>
-                      {% endif %}
-                    </li>
+                      <tr>
+                        <td style="font-size: 12px">
+                          {{comment.author}}
+                        </td>
+                        <td style="font-size: 11px">
+                          <span style="font-size: 11px">{{comment.message}}</span>
+                          {% if user.is_authenticated and request.user == comment.author %}
+                            <a class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{content.id}}, {{comment.id}})">수정</a>
+                            <a class='text-danger' onclick="delete_comment(this, {{content.id}}, {{comment.id}})">삭제</a>
+                          {% endif %}
+                          {% if user.is_authenticated %}
+                            <a class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{content.id}}, {{ comment.id }})">댓글</a>
+                          {% endif %}
+                        </td>
+                        <td style="font-size: 11px; width:12%">
+                          {{comment.updated_at}}
+                        </td>
+                      </tr>
                  {% endfor %}
+                    </tbody>
+                  </table>
                 {% endif %}
           </div>
           <div id="card-footer" class="card-footer">
@@ -115,6 +134,7 @@ textarea {
             <div id="comment_form" class="comment_form">
               <form method="POST">
                 {% csrf_token %}
+                <input class="noneDisplay" type="text" id="article" name="article" value="{{content.id}}"/>
                 {{ form.parent|add_class:"noneDisplay" }}
                 {{ form.message|add_class:"col-sm-12" }}
                 <input type="submit" value="Write"/>
@@ -184,38 +204,137 @@ $(document).ready(function(){
   });
 });
 
-
-function replyOnComment(current, pk){
+function replyOnComment(current, article_pk, comment_pk){
+  var insert_td = $(current).parents('tr').children(":eq(1)");
   if ($(current).hasClass('remove')){
     $(current).removeClass('remove');
-    $(current).next().remove();
+    $('.replyForm').remove();
+    $('.edit_replyForm').remove();
   }
   else {
-    $('.replyForm').remove(); 
-    $(current).parent().append(`
+    $('.replyForm').remove();
+    $('.edit_replyForm').remove(); 
+    insert_td.append(`
                   <div class="replyOnCommentForm replyForm">
+                    <br>
                     <form method="POST">
                       {% csrf_token %}
+                      <input class="noneDisplay" type="text" id="article" name="article" value="`+article_pk+`"/>
                       {{ form.parent |add_class:"noneDisplay"}}
                       {{ form.message |add_class:"col-sm-12" }}
                       <input type="submit" value="Write"/>
                     </form>
                   </div>`
       );
-    $('#id_parent').val(pk);
+    $('#id_parent').val(comment_pk);
     $("#id_message").attr("rows", "2");
     $("#id_message").focus();
     $(current).addClass('remove');
     console.log($('#id_parent').val())
-  } 
-  
-  // $('.remove').on('click',function(event) {
-  //   console.log(this);
-  //   $(current).remove();
-  // });
-
+  }
 };
 
+function edit_replyOnComment(current, p_pk, c_pk){
+  var insert_td = $(current).parents('tr').children(":eq(1)");
+  if ($(current).hasClass('remove')){
+    $(current).removeClass('remove');
+    $('.edit_replyForm').remove();
+    $('.replyForm').remove();
+  }
+  else {
+    var edits={};
+    edits.p_pk = parseInt(p_pk);
+    edits.c_pk = parseInt(c_pk);
+    edits.csrfmiddlewaretoken = '{{csrf_token}}';
+    $.ajax({
+      url:"/tips/"+p_pk+"/comment/"+c_pk+"/edit_ajax/",
+      method:"post",
+      data: edits,
+      success: function(res){
+        if (res == 'login_require') {
+          alert(res);
+        }
+        else if (res == 'post_error') {
+          // add.. process
+        }
+        else {
+          $('.edit_replyForm').remove();
+          $('.replyForm').remove();
+          var edit = `<div class='edit_replyOnCommentForm edit_replyForm'>
+                        <br>
+                        <form method='POST' action='/tips/"`+p_pk+`"/"`+c_pk+`"/'>
+                        {% csrf_token %}
+                        <input class='noneDisplay' type='text' id='article' name='article' value='"+p_pk+"'/>
+                        {{ form.parent|add_class:"noneDisplay" }}
+                        {{ form.message|add_class:"col-sm-12" }}
+                        <input type='submit' value='Write'/></form>
+                      </div>`;
+          insert_td.append(edit);
+          if (res.comment_parent == null ){
+            $('#id_parent').val(0);
+          }
+          else {
+            $('#id_parent').val(res.comment_parent);
+          } 
+          $('#id_message').val(res.comment_message);
+          $("#id_message").attr("rows", "2");
+          $("#id_message").focus();
+          $(current).addClass('remove');
+        }
+      }, error: function(error){
+        console.log(error);
+        console.log("error");
+      }
+    });
+  } 
+};
+
+function delete_comment(current, p_pk, c_pk){
+  console.log(current);
+  swal({
+    title: "Detele!",
+    text: "Do you want to delete the comment?",
+    type: "info",
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true
+  }, function () {
+    setTimeout(function () {
+        var _delete={};
+        _delete.p_pk = parseInt(p_pk);
+        _delete.c_pk = parseInt(c_pk);
+        _delete.csrfmiddlewaretoken = '{{csrf_token}}';
+        $.ajax({
+          url:"/tips/"+p_pk+"/comment/"+c_pk+"/delete_ajax/",
+          method:"post",
+          data: _delete,
+          success: function(res){
+            // console.log(res);
+            if (res == 'login_require') {
+              swal(res);
+            }
+            else if (res == 'delete_error') {
+              // add.. process
+            }
+            else if(res.comment_count == 0){
+              $(current).parent().parent().remove();
+              $('.card-body').html("<span style='font-weight:bold; font-size: 13px'>You will be the first to make a comment. Be the one!</span>");
+            }
+            else {
+              $(current).parent().parent().remove();
+            }
+            $('.card-header').html(res.comment_count+" Comments");
+          }, error: function(error){
+            console.log(error);
+            console.log("error");
+          }
+        });
+        swal("Deleted!");
+      }, 2000);
+    
+  });
+
+}
 // var category = document.location.href.split('/')[4];
 // console.log( document.location.href.split('/'));
 setCookie('p_page', '{{category}}', 1); 
@@ -236,7 +355,6 @@ function likesUpdate(pk){
       method:"post",
       data: updates,
       success: function(res){
-        // console.log(res);
         if (res == 'login_require') {
           alert(res);
         }

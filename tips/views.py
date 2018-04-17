@@ -12,7 +12,7 @@ def subway(request):
 	args = { 'gallery' : Article.objects.filter(category='subway' or 'Subway') }
 	return render(request, 'tips/subway.html' , args)
 
-def view_tips(request, pk):
+def view_tips(request, pk, comment_pk=None):
 	article = Article.objects.get(id=pk)
 	article.views += 1
 	article.save()
@@ -25,8 +25,27 @@ def view_tips(request, pk):
 				comment = form.save(commit=False)
 				comment.article = Article.objects.get(pk=pk)
 				comment.author = request.user
-				if comment.parent != 0:
+				try:
 					parent = Comment.objects.get(pk=comment.parent)
+				except:
+					parent = None
+				if comment.parent is 0 and comment_pk is None:
+					group_max = Comment.objects.aggregate(Max('group'))
+					if group_max['group__max'] is None:
+						comment.group = 1
+					else:
+						comment.group = group_max['group__max']+1
+					comment.seq_in_group = 0
+					comment.parent = None
+				elif comment_pk:
+					comment = Comment.objects.get(pk=comment_pk)
+					form = CommentForm(request.POST, request.FILES, instance=comment)
+					if form.is_valid():
+						if parent:
+							comment.parent_author = parent.parent_author
+						else:
+							comment.parent_author = 'deleted'
+				else:
 					comment.depth = parent.depth + 1
 					comment.group = parent.group
 					comment.parent_author = parent.author
@@ -40,14 +59,6 @@ def view_tips(request, pk):
 							instance.seq_in_group +=1
 							instance.save()
 						comment.seq_in_group = parent.seq_in_group + 1
-				else:
-					group_max = Comment.objects.aggregate(Max('group'))
-					if group_max['group__max'] is None:
-						comment.group = 1
-					else:
-						comment.group = group_max['group__max']+1
-					comment.seq_in_group = 0
-					comment.parent = None
 				comment.save()
 				return redirect('tips:view_tips', pk)
 		else:
@@ -60,12 +71,64 @@ def view_tips(request, pk):
 	}
 	return render(request, 'tips/view_tip.html' , args)
 
-def view_listicle(request, pk):
-	listicle = Listicle.objects.get(id=pk)
+def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
+	listicle = Listicle.objects.get(id=listicle_pk)
 	for article in listicle.articles.all():
 		article.views += 1
 		article.save()
-	args = {'listicle': listicle}
+	form = CommentForm(request.POST, request.FILES)
+	articleNum = form['article'].value()
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = CommentForm(request.POST, request.FILES)
+			if form.is_valid():
+				comment = form.save(commit=False)
+				comment.article = Article.objects.get(pk=articleNum)
+				comment.author = request.user
+				try:
+					parent = Comment.objects.get(pk=comment.parent)
+				except:
+					parent = None
+				if comment.parent is 0 and comment_pk is None:
+					group_max = Comment.objects.aggregate(Max('group'))
+					if group_max['group__max'] is None:
+						comment.group = 1
+					else:
+						comment.group = group_max['group__max']+1
+					comment.seq_in_group = 0
+					comment.parent = None
+				elif comment_pk:
+					comment = Comment.objects.get(pk=comment_pk)
+					form = CommentForm(request.POST, request.FILES, instance=comment)
+					if form.is_valid():
+						if parent:
+							comment.parent_author = parent.parent_author
+						else:
+							comment.parent_author = 'deleted'
+				else:
+					comment.depth = parent.depth + 1
+					comment.group = parent.group
+					comment.parent_author = parent.author
+					if parent.seq_in_group is 0:
+						seq_num = Comment.objects.filter(group=parent.group).aggregate(Max('seq_in_group'))
+						comment.seq_in_group = seq_num['seq_in_group__max'] + 1
+					else:
+						updates = Comment.objects.filter(group=parent.group, seq_in_group__gt=parent.seq_in_group)
+						for instance in updates:
+							print(instance.seq_in_group)
+							instance.seq_in_group +=1
+							instance.save()
+						comment.seq_in_group = parent.seq_in_group + 1
+				comment.save()
+				return redirect('tips:view_listicle', listicle_pk)
+		else:
+			form = CommentForm()
+	else:
+		form = CommentForm()
+	args = {
+			'listicle': listicle,
+			'form' : form
+			}
 	return render(request, 'tips/view_listicle.html', args)
 
 def listicle_admin(request):
@@ -133,6 +196,13 @@ def comment_new(request, pk):
 			comment = form.save(commit=False)
 			comment.article = Article.objects.get(pk=pk)
 			comment.author = request.user
+			group_max = Comment.objects.aggregate(Max('group'))
+			if group_max['group__max'] is None:
+				comment.group = 1
+			else:
+				comment.group = group_max['group__max']+1
+			comment.seq_in_group = 0
+			comment.parent = None
 			comment.save()
 			return redirect('tips:view_tips', pk)
 	else:
@@ -142,6 +212,43 @@ def comment_new(request, pk):
 			 'form': form,
 	}
 	return render(request, 'tips/comment_form.html', args)
+
+
+def comment_edit_ajax(request, post_pk, comment_pk):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			pk = request.POST['c_pk']
+			comment = Comment.objects.get(id=pk)
+			res = {
+				"comment_parent": comment.parent,
+				"comment_message": comment.message
+			}
+			return JsonResponse(res, safe=False)
+			# return HttpResponse(res['result'])
+		else:
+			return HttpResponse('post_error')
+	return HttpResponse('login_require')
+
+def comment_delete_ajax(request, post_pk, comment_pk):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			pk = request.POST['c_pk']
+			comment = Comment.objects.get(id=pk)
+			print("comment.paretnm", comment.id)
+			updates = Comment.objects.filter(parent=comment.id)
+			for update in updates:
+				update.parent_author = 'deleted'
+				update.save()
+			comment.delete()
+			comment_count = Comment.objects.filter(article=post_pk).count()
+			res = {
+				"comment_count": comment_count,
+				"comment_message": 'success',
+			}
+			return JsonResponse(res, safe=False)
+		else:
+			return HttpResponse('delete_error')
+	return HttpResponse('login_require')
 
 def comment_edit(request, post_pk, comment_pk):
 	comment = Comment.objects.get(pk=comment_pk)
