@@ -44,7 +44,7 @@ def view_tips(request, pk, comment_pk=None):
 						if parent:
 							comment.parent_author = parent.parent_author
 						else:
-							comment.parent_author = 'deleted'
+							comment.parent_author = 'deleted comment'
 				else:
 					comment.depth = parent.depth + 1
 					comment.group = parent.group
@@ -104,7 +104,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 						if parent:
 							comment.parent_author = parent.parent_author
 						else:
-							comment.parent_author = 'deleted'
+							comment.parent_author = 'deleted comment'
 				else:
 					comment.depth = parent.depth + 1
 					comment.group = parent.group
@@ -237,7 +237,7 @@ def comment_delete_ajax(request, post_pk, comment_pk):
 			print("comment.paretnm", comment.id)
 			updates = Comment.objects.filter(parent=comment.id)
 			for update in updates:
-				update.parent_author = 'deleted'
+				update.parent_author = 'deleted comment'
 				update.save()
 			comment.delete()
 			comment_count = Comment.objects.filter(article=post_pk).count()
