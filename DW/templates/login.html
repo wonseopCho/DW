@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load widget_tweaks %}
+{% load socialaccount %}
 
 {% block headAddon %}
 {% endblock %}
@@ -178,23 +179,19 @@ input,.btn {
 			<a href="#" class="twitter btn">
 			 	<i class="fa fa-twitter fa-fw"></i> Login with Twitter
 			</a>
-			<a href="#" class="google btn"><i class="fa fa-google fa-fw">
-			  	</i> Login with Google+
-			</a>
+      <a href="{% provider_login_url 'google' %}" class="google btn"><i class="fa fa-google fa-fw"></i>Login with Google+</a>
 		</div>
 		<div class="col"> 
 			<div class="hide-md-lg">
 		      <p>Or sign in manually:</p>
 		    </div>
 			<form method="post">
-			<div>
+			<div style="text-align:center">
 			  {% csrf_token %}
 			  <input type="text" placeholder="Username" name="username" id="id_username"required>
 			  <input type="password" placeholder="Password" name="password" id="id_password" required>      
 			  <button type="submit">Login</button>
-			  <label>
-			    <input type="checkbox" checked="checked" name="remember"> Remember me
-			  </label>
+			  <label >Remember me</label><input type="checkbox" checked="checked" name="remember">
 			</div>
 			</form>
 		</div>
@@ -212,15 +209,12 @@ input,.btn {
 </div>
 {% endblock %}
 
-
-
 {% block additional_script %}
 <script>
 $(document).ready(function(){
 	$('#id_username').focus();
 });
 </script>
-
 
 {% endblock %}
 {% block footer %}{% endblock %}

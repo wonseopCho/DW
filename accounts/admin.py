@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import UserProfile, Friend
 
 class UserProfileAdmin(admin.ModelAdmin):
-	list_display = ['pk', 'id', 'user']
+	list_display = ['pk', 'id', 'user', 'gender', 'locale']
 
 admin.site.register(UserProfile,UserProfileAdmin)
 

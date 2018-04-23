@@ -1,22 +1,162 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block headAddon %}
+<style>
+.outtercontainer {
+    padding: 16px;
+    background-color: white;
+    border:5px solid black;
+}
+/* Full-width input fields */
+input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus ,input[type=email]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+.registerbtn:hover {
+    opacity: 1;
+}
+
+.signin {
+    background-color: #f1f1f1;
+    text-align: center;
+}
+/* Style the input container */
+.input-container {
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Style the form icons */
+.icon {
+  padding: 10px;
+  background: dodgerblue;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Style the input fields */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid dodgerblue;
+}
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-<br>
-<h1> Register </h1>
-<form method="post"> 
-	{% csrf_token %}
-	<table>
-	{{form.as_table}}
-	</table>
-	<button type="submit">Submit
-</form>
+		
+	<div class="outtercontainer">
+	    <h1>Register</h1>
+	    <p>Please fill in this form to create an account.</p>
+	    <hr>		  
+	    <form method="post">
+	    	{% csrf_token %}
+	    	
+		    <label for="id_username"><b>Username</b></label>
+		    <br>
+		    <span class="username_helptext">
+		    	<span style="color:#f97f7f">*Required*</span> 
+		    	<ul style="padding-left:20px">
+		    		<li>150 characters or fewer.<br> 
+		    		Letters, digits and @/./+/-/_ only.
+		    		</li>
+		    	</ul>
+	    	</span>
+			<input type="text" name="username" placeholder="Enter User Name" maxlength="150" autofocus="" required="" id="id_username">
+			
+			<label for="id_first_name"><b>First name</b></label>
+			<input type="text" name="first_name" maxlength="30" id="id_first_name">
+
+			<label for="id_last_name"><b>Last name</b></label>
+			<input type="text" name="last_name" maxlength="150" id="id_last_name">
+		    
+		    <label for="id_email"><b>Email</b></label>
+		    <input type="email" name="email" placeholder="Enter Email" required="" id="id_email">
+
+		    <label for="password1"><b>Password</b></label>
+		    <input class="password" type="password" placeholder="Enter Password" name="password1" required="" id="id_password1">
+
+		    <label for="password2"><b>Repeat Password</b></label>
+		    <input class="password" type="password" placeholder="Repeat Password" name="password2" required="" id="id_password2">
+		    <span class="password_helptext" style="display: none">
+		    	<ul style="padding-left:20px">
+		    		<li>Your password<span style="color:#f97f7f"> can't be too similar</span> to your other personal information.</li>
+		    		<li>Your password must contain<span style="color:#f97f7f"> at least 8</span> characters.</li>
+		    		<li>Your password<span style="color:#f97f7f"> can't be a commonly used</span> password.</li>
+		    		<li>Your password can't be<span style="color:#f97f7f"> entirely</span> numeric.</li>
+		    	</ul>
+		    </span>
+		    <hr>
+		    <p>By creating an account you agree to our <a href="#" style="color: dodgerblue">Terms & Privacy</a>.</p>
+
+			<label for="id_terms">Terms of sevice:</label>
+			<input type="checkbox" name="terms" required="" id="id_terms">
+
+			<label for="id_privacy">Privacy policy:</label>
+			<input type="checkbox" name="privacy" required="" id="id_privacy">
+
+		    <button type="submit" class="registerbtn">Register</button>
+		</form>
+	    <div class="container signin" style="padding: 16px">
+	      <p>Already have an account? <a href="{% url 'accounts:account_login' %}" style="color: dodgerblue">Sign in</a>.</p>
+	    </div>
+	  </div>
 </div>
 {% endblock %}
 
-{% block additional_script %}{% endblock %}
+{% block additional_script %}
+<script>
+$(document).ready(function(){
+
+	$('#id_username').focusin(function(){
+		$('.username_helptext').show();
+	});
+	$('#id_username').focusout(function(){
+		$('.username_helptext').hide();
+	});
+	$('.password').focusin(function(){
+		$('.password_helptext').show();
+	});
+	$('.password').focusout(function(){
+		$('.password_helptext').hide();
+	});
+});
+</script>
+{% endblock %}
 {% block footer %}{% endblock %}

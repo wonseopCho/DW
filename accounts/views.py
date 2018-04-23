@@ -22,6 +22,7 @@ from .models import Friend, UserProfile
 from .forms import (
 					EditProfileForm, 
 					RegistrationForm,
+					ExtraUserForm,
 					)
 from .tokens import account_activation_token
 
@@ -97,12 +98,12 @@ def view_profile(request, pk=None):
 	return render(request, 'accounts/view_profile.html', args)
 
 @login_required
-def edit_profile(request):
+def edit_profile(request, pk):
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
 		if form.is_valid():
 			form.save()
-			return redirect('accounts:edit_profile')
+			return redirect('accounts:view_profile')
 	else:
 		form = EditProfileForm(instance=request.user)
 		args = {'form': form}

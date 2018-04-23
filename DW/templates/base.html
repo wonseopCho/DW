@@ -5,10 +5,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block headAddon %}
+{% endblock %}
 <title >{% block title %}DUCKWHO{% endblock %}</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="{% static 'popper.js/1.14.0/popper.min.js' %}"></script>
 <script src="{% static 'bootstrap/4.0.0-beta.3/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'Sortable/Sortable.js' %}"></script>
 <script src="{% static 'sweetalert/sweetalert.js' %}"></script>
@@ -20,14 +23,12 @@
 <link rel="stylesheet" type="text/css" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
 
-{% block headAddon %}
-{% endblock %}
+
 <style>
 body{
   padding-top: 0;
 }
 a, a:active, a:link {
-  color: #333333;
   text-decoration: none;
 }
 
@@ -84,6 +85,20 @@ a, a:active, a:link {
     border-radius: 50%;
 }
 
+.pageload {
+  width: 100%;
+  height: 2px;
+  background-color: #ddd;
+}
+
+.pageloadbar {
+  width: 10%;
+  height: 2px;
+  background-color: #4CAF50;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
 @media only screen and (max-width: 450px) {
   a {
     color: #333333;
@@ -99,9 +114,34 @@ a, a:active, a:link {
   }
 }
 </style>
+<script>
+$(document).ready(function(){
+  var width = 100, // width of a progress bar in percentage
+      perfData = window.performance.timing, // The PerformanceTiming interface
+      EstimatedTime = -(perfData.loadEventEnd - perfData.navigationStart), // Calculated Estimated Time of Page Load which returns negative value.
+      time = parseInt((EstimatedTime/1000)%60)*100; //Converting EstimatedTime from miliseconds to seconds.
+  // Loadbar Animation
+  $(".pageloadbar").animate({
+    width: width + "%"
+  }, time/5, 
+  function(){
+    $(".pageload").css("background-color" , "white");
+    $(".pageloadbar").css("display" , "none");
+  });
+});
+
+function onLoad() { 
+  var now = new Date().getTime();
+  var page_load_time = now - performance.timing.navigationStart;
+  console.log("User-perceived page loading time: " + page_load_time);
+}
+</script>
 </head>
 <body>
   <header>
+    <div class="pageload">
+      <div class="pageloadbar"></div>
+    </div>
     <!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <a class="navbar-brand" href="/">Home</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -173,7 +213,9 @@ a, a:active, a:link {
               </a>
             </div>
             <div style="text-align: left">
-              <a href="{% url 'accounts:change_password' %}">Change Password</a>
+              <a href="{% url 'accounts:change_password' %}">
+                Change Password
+              </a>
             </div>
           {% else %}
             <a href="/login?next={{ request.path }}">
@@ -189,7 +231,7 @@ a, a:active, a:link {
             </div>  
             <div style="text-align: left">
               <a href="{% url 'accounts:reset_password' %}">
-                Reset Password
+                Forgot Password?
               </a>
             </div>
           {% endif%}
@@ -210,7 +252,6 @@ a, a:active, a:link {
         <a class="nav-link" href="/blog">Blog</a>
         <a class="nav-link" href="/blog2">Blog2</a>
         <a class="nav-link" href="/bookmark">Bookmark</a>
-       
       </div>
     </div>
     <div style="border:0px solid red; width:100%; height:54px">
@@ -226,7 +267,7 @@ a, a:active, a:link {
         <span style="font-size:35px;cursor:pointer">&#9983;</span>
       </div>
     </div>
-    <script>
+    <script>  
     function openNav() {
         // document.getElementById("myNav").style.width = "100%";
         $("#myNav").animate({left: '0px'}, 30);

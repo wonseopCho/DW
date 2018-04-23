@@ -17,6 +17,7 @@
 			<p> First Name :{{user.first_name}} </p>
 			<p> Last Name : {{user.last_name}} </p>
 			<p> Email : {{user.email}} </p>
+			<a href="{% url 'accounts:edit_profile' pk=user.pk %}"><input type="button" name="edit" value="edit" /></a>
 		</div>
 		<div class="col-md-6">
 			<h2>other people</h2>

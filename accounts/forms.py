@@ -9,7 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from .tokens import account_activation_token
-
+from .models import UserProfile
 
 class RegistrationForm(UserCreationForm):
 	email = forms.EmailField(required=True)
@@ -72,6 +72,9 @@ class RegistrationForm(UserCreationForm):
 	# 		email.send()
 
 		return user
+class ExtraUserForm(forms.ModelForm):
+	model = UserProfile
+	exclude = ['user']
 
 class EditProfileForm(UserChangeForm):
 	class Meta:

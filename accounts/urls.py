@@ -18,10 +18,10 @@ urlpatterns = [
 	path('register/done', views.UserCreateDoneTemplate.as_view(), name='register_done'),
 	# path('register/activate/<uidb64>/<token>/', views.UserActivate, name='register_activate'),
 	re_path(r'^register/activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.UserActivate, name='register_activate'),
-	path('register/activate/complete', views.register_complete, name='register_complete'),
+	path('register/activate/complete/', views.register_complete, name='register_complete'),
 	path('profile/', views.view_profile, name='view_profile'),
-	path('profile/<pk>', views.view_profile, name='view_profile_with_pk'),
-	path('profile/edit/', views.edit_profile, name='edit_profile'),
+	path('profile/<pk>/', views.view_profile, name='view_profile_with_pk'),
+	path('profile/edit/<pk>/', views.edit_profile, name='edit_profile'),
 	path('profile/password/', views.change_password),
 	path('change-password/', views.change_password, name='change_password'),
 	path('reset-password/', password_reset, {
