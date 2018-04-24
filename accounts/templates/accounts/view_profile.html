@@ -17,7 +17,9 @@
 			<p> First Name :{{user.first_name}} </p>
 			<p> Last Name : {{user.last_name}} </p>
 			<p> Email : {{user.email}} </p>
+			{% if user == authenticated_user.user %}
 			<a href="{% url 'accounts:edit_profile' pk=user.pk %}"><input type="button" name="edit" value="edit" /></a>
+			{% endif %}
 		</div>
 		<div class="col-md-6">
 			<h2>other people</h2>

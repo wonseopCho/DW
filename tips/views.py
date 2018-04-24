@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 from django.db.models import Avg, F, Max, Min, Window
 from django.http import JsonResponse
+from accounts.models import UserProfile
 from .models import Listicle, Comment, Article, Image
 from .forms import CommentForm, ListicleForm
 import json
@@ -16,6 +17,9 @@ def view_tips(request, pk, comment_pk=None):
 	article = Article.objects.get(id=pk)
 	article.views += 1
 	article.save()
+	authenticated_user = ''
+	if request.user.is_authenticated:
+		authenticated_user = UserProfile.objects.get(user=request.user)
 	category = article.category
 	form = CommentForm(request.POST, request.FILES)
 	if request.user.is_authenticated:
@@ -68,6 +72,7 @@ def view_tips(request, pk, comment_pk=None):
 	args = { 'article' : Article.objects.filter(id=pk),
 			 'category' : category,
 			 'form': form,
+			 'authenticated_user' : authenticated_user,
 	}
 	return render(request, 'tips/view_tip.html' , args)
 
@@ -76,6 +81,9 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 	for article in listicle.articles.all():
 		article.views += 1
 		article.save()
+	authenticated_user = ''
+	if request.user.is_authenticated:
+		authenticated_user = UserProfile.objects.get(user=request.user)
 	form = CommentForm(request.POST, request.FILES)
 	articleNum = form['article'].value()
 	if request.user.is_authenticated:
@@ -127,7 +135,8 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 		form = CommentForm()
 	args = {
 			'listicle': listicle,
-			'form' : form
+			'form' : form,
+			'authenticated_user' : authenticated_user,
 			}
 	return render(request, 'tips/view_listicle.html', args)
 

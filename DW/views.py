@@ -6,6 +6,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.conf import settings
 from tips.models import Listicle, Category, Article, Image
+from accounts.models import UserProfile
 from urllib import parse
 import json
 
@@ -27,12 +28,16 @@ def home_view(request):
 	args= {'p_page' : p_page}
 	category_articles={}
 	category_listicle={}
+	authenticated_user = ''
+	if request.user.is_authenticated:
+		authenticated_user = UserProfile.objects.get(user=request.user)
 	for cate in Category.objects.all():
 		category = Category.objects.get(category=cate.category).id
 		category_articles.update({ cate.category : Article.objects.filter(category=category)})
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
 	args.update({'category_articles' : category_articles,
 				 'category_listicle' : category_listicle,
+				 'authenticated_user' : authenticated_user,
 		})
 	print(args)
 	return render(request, 'home.html', args)

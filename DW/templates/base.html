@@ -201,15 +201,19 @@ function onLoad() {
           <a href='/'>&#127968;</a>
         </div>
           {% if user.is_authenticated %}
-            <a href="/logout?next={{ request.path }}">
+            <a href="{% url 'accounts:view_profile' %}">
               <div style="text-align: left">
-                <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
-                Click to log-out
+                {% if authenticated_user.photo_url %}
+                  <img src="{{authenticated_user.photo_url}}" class="avatar" style="margin-right: 10px;">
+                {% else %}
+                  <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
+                {% endif %}
+                {{authenticated_user.user}}'s Profile
               </div>
             </a>
             <div style="text-align: left">
-              <a href="{% url 'accounts:view_profile' %}">
-                Profile
+              <a href="/logout?next={{ request.path }}">
+                Log-Out
               </a>
             </div>
             <div style="text-align: left">

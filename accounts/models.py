@@ -23,10 +23,14 @@ def create_profile(sender, **kwargs):
 def save_profile(sender, instance, **kwargs):
 	username = User.objects.get(username=instance)
 	user_profile = UserProfile.objects.get(user=username)
-	print('--->',instance.extra_data)
-	user_profile.photo_url = instance.extra_data['picture']
-	user_profile.gender = instance.extra_data['gender']
-	user_profile.locale = instance.extra_data['locale']
+	user_profile.photo_url = instance.get_avatar_url()
+	try :
+		user_profile.gender = instance.extra_data['gender']
+		user_profile.locale = instance.extra_data['locale']
+	except :
+		user_profile.gender = ''
+		user_profile.locale = ''
+
 	user_profile.save()
 
 post_save.connect(create_profile, sender=User)
@@ -42,7 +46,6 @@ class Friend(models.Model):
 		friend, created = cls.objects.get_or_create(
 			current_user = current_user
 		)
-		print('////////////////', friend, created)
 		friend.users.add(new_friend)
 
 	@classmethod

@@ -84,6 +84,7 @@ def view_profile(request, pk=None):
 		user = User.objects.get(pk=pk)
 	else :
 		user = request.user
+	authenticated_user = UserProfile.objects.get(user=request.user)
 	others = User.objects.exclude(id = request.user.id)
 	if Friend.objects.filter(current_user=request.user).count() != 1:
 		Friend.make_friend(current_user=request.user, new_friend=request.user)
@@ -93,12 +94,14 @@ def view_profile(request, pk=None):
 	args = {
 			'user': user, 
 			'others':others, 
-			'friends_list':friends_list
+			'friends_list':friends_list,
+			'authenticated_user':authenticated_user,
 			}
 	return render(request, 'accounts/view_profile.html', args)
 
 @login_required
 def edit_profile(request, pk):
+	authenticated_user = UserProfile.objects.get(user=request.user)
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
 		if form.is_valid():
@@ -106,22 +109,29 @@ def edit_profile(request, pk):
 			return redirect('accounts:view_profile')
 	else:
 		form = EditProfileForm(instance=request.user)
-		args = {'form': form}
+		args = {
+				'form': form,
+				'authenticated_user':authenticated_user,
+				}
 		return render(request, 'accounts/edit_profile.html', args)
 
 @login_required
 def change_password(request):
+	authenticated_user = UserProfile.objects.get(user=request.user)
 	if request.method == 'POST':
 		form = PasswordChangeForm(data = request.POST, user=request.user)
 		if form.is_valid():
 			form.save()
 			update_session_auth_hash(request, form.user)
-			return redirect('accounts:edit_profile')
+			return redirect('accounts:view_profile')
 		else:
 			return redirect('accounts:change_password')
 	else:
 		form = PasswordChangeForm(user=request.user)
-		args = {'form': form }
+		args = {
+				'form': form,
+				'authenticated_user':authenticated_user,
+				}
 		return render(request, 'accounts/change_password.html', args)
 
 def change_friends(request, operation, pk):
