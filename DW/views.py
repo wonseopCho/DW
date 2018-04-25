@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from tips.models import Listicle, Category, Article, Image
 from accounts.models import UserProfile
+from allauth.socialaccount.models import SocialAccount
 from urllib import parse
 import json
 
@@ -29,8 +30,13 @@ def home_view(request):
 	category_articles={}
 	category_listicle={}
 	authenticated_user = ''
+	socialaccount = None
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
+		try :
+			socialaccount = SocialAccount.objects.get(user=request.user)
+		except :
+			socialaccount = None
 	for cate in Category.objects.all():
 		category = Category.objects.get(category=cate.category).id
 		category_articles.update({ cate.category : Article.objects.filter(category=category)})
@@ -38,6 +44,7 @@ def home_view(request):
 	args.update({'category_articles' : category_articles,
 				 'category_listicle' : category_listicle,
 				 'authenticated_user' : authenticated_user,
+				 'socialaccount': socialaccount,
 		})
 	print(args)
 	return render(request, 'home.html', args)

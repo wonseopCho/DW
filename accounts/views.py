@@ -72,6 +72,31 @@ def register(request):
 			'form': form
 			})
 
+def usernameCheckAjax(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		try :
+			User.objects.get(username=username)
+			res = 'exist'
+		except :
+			res = 'good'
+		return HttpResponse(res)
+	else:
+		return HttpResponse('post_error')
+
+def emailCheckAjax(request):
+	if request.method == 'POST':
+		email = request.POST['email']
+		try :
+			User.objects.get(email=email)
+			print(User.objects.get(email=email))
+			res = 'exist'
+		except :
+			res = 'good'
+		return HttpResponse(res)
+	else:
+		return HttpResponse('post_error')
+
 def register_complete(request):
 	return render(request, 'manual_registration/user_activate_complete.html' )
 

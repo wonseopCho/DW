@@ -197,9 +197,9 @@ function onLoad() {
         <div class="closebtn" onclick="closeNav()" style="width:52px;">
           &times;
         </div>
-        <div style="text-align: left">
+        <!-- <div style="text-align: left">
           <a href='/'>&#127968;</a>
-        </div>
+        </div> -->
           {% if user.is_authenticated %}
             <a href="{% url 'accounts:view_profile' %}">
               <div style="text-align: left">
@@ -208,7 +208,7 @@ function onLoad() {
                 {% else %}
                   <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
                 {% endif %}
-                {{authenticated_user.user}}'s Profile
+                {{authenticated_user.user}}'s Profile 
               </div>
             </a>
             <div style="text-align: left">
@@ -216,11 +216,13 @@ function onLoad() {
                 Log-Out
               </a>
             </div>
+            {% if socialaccount is None %}
             <div style="text-align: left">
               <a href="{% url 'accounts:change_password' %}">
                 Change Password
               </a>
             </div>
+            {% endif %}
           {% else %}
             <a href="/login?next={{ request.path }}">
               <div style="text-align: left">

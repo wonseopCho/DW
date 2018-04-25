@@ -5,6 +5,7 @@ from django.core.serializers import serialize
 from django.db.models import Avg, F, Max, Min, Window
 from django.http import JsonResponse
 from accounts.models import UserProfile
+from allauth.socialaccount.models import SocialAccount
 from .models import Listicle, Comment, Article, Image
 from .forms import CommentForm, ListicleForm
 import json
@@ -18,8 +19,13 @@ def view_tips(request, pk, comment_pk=None):
 	article.views += 1
 	article.save()
 	authenticated_user = ''
+	socialaccount = None
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
+		try :
+			socialaccount = SocialAccount.objects.get(user=request.user)
+		except :
+			socialaccount = None
 	category = article.category
 	form = CommentForm(request.POST, request.FILES)
 	if request.user.is_authenticated:
@@ -73,6 +79,7 @@ def view_tips(request, pk, comment_pk=None):
 			 'category' : category,
 			 'form': form,
 			 'authenticated_user' : authenticated_user,
+			 'socialaccount': socialaccount,
 	}
 	return render(request, 'tips/view_tip.html' , args)
 
@@ -82,8 +89,13 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 		article.views += 1
 		article.save()
 	authenticated_user = ''
+	socialaccount = None
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
+		try :
+			socialaccount = SocialAccount.objects.get(user=request.user)
+		except :
+			socialaccount = None
 	form = CommentForm(request.POST, request.FILES)
 	articleNum = form['article'].value()
 	if request.user.is_authenticated:
@@ -137,6 +149,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 			'listicle': listicle,
 			'form' : form,
 			'authenticated_user' : authenticated_user,
+			'socialaccount': socialaccount,
 			}
 	return render(request, 'tips/view_listicle.html', args)
 
