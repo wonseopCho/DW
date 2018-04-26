@@ -9,6 +9,13 @@
 
 {% block content %}
 <style>
+
+.sticky {
+	position: -webkit-sticky; /* Safari */
+  	position: sticky;
+  	top: 0;
+ 	
+}
 .picture {
 	width:60%;
 	border-radius:10px;
@@ -26,32 +33,33 @@ table tr:last-child {
 }
 </style>
 
-<br>
-
 <div class="container" style="width:100%">
 	<div class="row">
-		<div class="col-md-6" style="border-radius: 10px; background-color: #F8F8F8; border: 1px solid #ddd; border-bottom: 3px solid #ddd; margin-bottom: 10px">
-			<div id="picture" style="border:0px solid green; text-align: center">
-			{% if authenticated_user.picture %}
-			  <img src="{{authenticated_user.picture.url}}" class="picture" />
-			{% elif authenticated_user.photo_url %}
-			  <img src="{{authenticated_user.photo_url}}" class="picture" />
-			{% else %}
-				{% if authenticated_user.gender == 'female' %}
-			  		<img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="picture" alt="Avatar" />
+		<div class="col-md-6" >
+			<div class="sticky" style="border-radius: 10px; background-color: #F8F8F8; border: 1px solid #ddd; border-bottom: 3px solid #ddd; margin-bottom: 10px">
+				<div id="picture" style="border:0px solid green; text-align: center">
+				{% if authenticated_user.picture %}
+				  <img src="{{authenticated_user.picture.url}}" class="picture" />
+				{% elif authenticated_user.photo_url %}
+				  <img src="{{authenticated_user.photo_url}}" class="picture" />
 				{% else %}
-					<img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="picture" alt="Avatar" />
+					{% if authenticated_user.gender == 'female' %}
+				  		<img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="picture" alt="Avatar" />
+					{% else %}
+						<img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="picture" alt="Avatar" />
+					{% endif %}
 				{% endif %}
-			{% endif %}
-
+				</div>
+				<div style="border:0px solid red; padding-left: 10px;padding-bottom: 10px">
+					<p> UserName : {{authenticated_user.user}} </p>
+					<p><a href="mailto:{{user.email}}">Email : {{user.email}}</a></p>
+					<p> First Name :{{authenticated_user.firstname}} </p>
+					<p> Last Name : {{authenticated_user.lastname}} </p>
+					{% if user == authenticated_user.user %}
+					<a href="{% url 'accounts:edit_profile' pk=user.pk %}"><input type="button" name="edit" class="btn btn-primary" value="Edit" /></a>
+					{% endif %}
+				</div>
 			</div>
-			<p> UserName : {{authenticated_user.user}} </p>
-			<p><a href="mailto:{{user.email}}">Email : {{user.email}}</a></p>
-			<p> First Name :{{authenticated_user.firstname}} </p>
-			<p> Last Name : {{authenticated_user.lastname}} </p>
-			{% if user == authenticated_user.user %}
-			<a href="{% url 'accounts:edit_profile' pk=user.pk %}"><input type="button" name="edit" value="edit" /></a>
-			{% endif %}
 		</div>
 		<div class="col-md-6" style="border:0px solid red;text-align: center">
 			{% if userarticle.count > 0 %}
