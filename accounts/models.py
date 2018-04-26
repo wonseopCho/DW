@@ -2,16 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from allauth.socialaccount.models import SocialAccount
+from tips.models import Article
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	description = models.CharField(max_length=100, default='')
-	city = models.CharField(max_length=100, default='')
+	description = models.CharField(max_length=100, blank=True, null=True)
+	city = models.CharField(max_length=100, blank=True, null=True)
+	firstname = models.CharField(max_length=50, blank=True, null=True)
+	lastname = models.CharField(max_length=50, blank=True, null=True)
 	phone = models.IntegerField(default=0)
 	picture = models.ImageField(blank=True, null=True, upload_to="accounts/user_profile/%Y/%m/%d")
 	photo_url = models.CharField(max_length=200, blank=True, null=True)
 	gender = models.CharField(max_length=10, blank=True, null=True)
 	locale = models.CharField(max_length=50, blank=True, null=True)
+	article_cart = models.ManyToManyField(Article, blank=False, related_name='user_articles')
 
 def create_profile(sender, **kwargs):
 	if kwargs['created'] == True : # True = when created , False = when updated

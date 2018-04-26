@@ -8,20 +8,103 @@
 {% endblock %}
 
 {% block content %}
+<style>
+.picture {
+	width:60%;
+	border-radius:10px;
+}
+table tr:last-child {
+    border-bottom:1px solid #ECECEC;
+  }
+@media only screen and (max-width: 600px){
+	table th{
+		font-size:13px;
+	}
+	table td{
+		font-size:10px;
+	}
+}
+</style>
+
 <br>
 
-<div class="container">
+<div class="container" style="width:100%">
 	<div class="row">
-		<div class="col-md-6">
-			<p> UserName : {{user}} </p>
-			<p> First Name :{{user.first_name}} </p>
-			<p> Last Name : {{user.last_name}} </p>
-			<p> Email : {{user.email}} </p>
+		<div class="col-md-6" style="border-radius: 10px; background-color: #F8F8F8; border: 1px solid #ddd; border-bottom: 3px solid #ddd; margin-bottom: 10px">
+			<div id="picture" style="border:0px solid green; text-align: center">
+			{% if authenticated_user.picture %}
+			  <img src="{{authenticated_user.picture.url}}" class="picture" />
+			{% elif authenticated_user.photo_url %}
+			  <img src="{{authenticated_user.photo_url}}" class="picture" />
+			{% else %}
+				{% if authenticated_user.gender == 'female' %}
+			  		<img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="picture" alt="Avatar" />
+				{% else %}
+					<img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="picture" alt="Avatar" />
+				{% endif %}
+			{% endif %}
+
+			</div>
+			<p> UserName : {{authenticated_user.user}} </p>
+			<p><a href="mailto:{{user.email}}">Email : {{user.email}}</a></p>
+			<p> First Name :{{authenticated_user.firstname}} </p>
+			<p> Last Name : {{authenticated_user.lastname}} </p>
 			{% if user == authenticated_user.user %}
 			<a href="{% url 'accounts:edit_profile' pk=user.pk %}"><input type="button" name="edit" value="edit" /></a>
 			{% endif %}
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-6" style="border:0px solid red;text-align: center">
+			{% if userarticle.count > 0 %}
+			<div class="card" style="width:100%; margin-bottom: 10px">
+				<p>Tips made by {{authenticated_user.user}}</p>
+				<table class="table table-striped table-hover" style="border:0px solid red">
+					<thead>
+					  <tr>
+					    <th scope="col">Category</th>
+					    <th scope="col">Title</th>
+					    <th scope="col">Views</th>
+					    <th scope="col">Created_at</th>
+					  </tr>
+					</thead>
+					<tbody>
+				{% for article in userarticle %}
+				    <tr>
+				      <td>{{article.category}}</td>
+				      <td><a href="{% url 'tips:view_tips' pk=article.id %}">{{article.title}}</a></td>
+				      <td>{{article.views}}</td>
+				      <td>{{article.created_at}}</td>				  
+				    </tr>
+				{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+			{% if authenticated_user.article_cart.count > 0 %}
+			<div class="card" style="width:100%; margin-bottom: 10px">
+				<p>{{authenticated_user.user}}'s article cart</p>
+				<table class="table table-striped table-hover" style="border:0px solid red;width:100%">
+					<thead>
+					  <tr>
+					    <th scope="col">Category</th>
+					    <th scope="col">Title</th>					   
+					    <th scope="col">Remove</th>
+					  </tr>
+					</thead>
+					<tbody>
+				{% for article in authenticated_user.article_cart.all|dictsort:"title" %}
+					<tr>
+				      <td>{{article.category}}</td>
+				      <td><a href="{% url 'tips:view_tips' pk=article.id %}">{{article.title}}</a></td>
+				      <td><input type="button" class="btn btn-danger" value="Remove" onclick="remove_ajax({{authenticated_user.id}},{{article.id}}, this)"/></td>
+				    </tr>
+				{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+		</div>
+
+		<!-- <div class="col-md-6">
 			<h2>other people</h2>
 			{% for other in others %}
 				<a href="{% url 'accounts:view_profile_with_pk' other.pk %}">
@@ -43,11 +126,44 @@
 				<button type="button" class="btn btn-default">Remove</button>
 				</a>
 			{% endfor%}
-		</div>
+		</div> -->
 	</div>
 </div>
-
 {% endblock %}
 
-{% block additional_script %}{% endblock %}
+{% block additional_script %}
+<script>
+function remove_ajax(user_id, id, current){
+	console.log(id);
+	swal({
+	    title: "Remove!",
+	    text: "Do you want to remove the tip?",
+	    type: "info",
+	    showCancelButton: true,
+	    closeOnConfirm: false,
+	    showLoaderOnConfirm: true
+	  }, function () {
+	    setTimeout(function () {
+	        var _delete={};
+	        _delete.user = parseInt(user_id); 
+	        _delete.pk = parseInt(id);
+	        _delete.csrfmiddlewaretoken = '{{csrf_token}}';
+	        $.ajax({
+	          url:"{% url 'accounts:articleRemove' %}",
+	          method:"post",
+	          data: _delete,
+	          success: function(res){
+	            $(current).parent().parent().remove();
+	          }, error: function(error){
+	            console.log(error);
+	            console.log("error");
+	          }
+	        });
+	        swal("Removed!");
+	      }, 2000);
+	  });
+}
+</script>
+
+{% endblock %}
 {% block footer %}{% endblock %}

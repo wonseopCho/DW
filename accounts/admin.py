@@ -2,7 +2,10 @@ from django.contrib import admin
 from .models import UserProfile, Friend
 
 class UserProfileAdmin(admin.ModelAdmin):
-	list_display = ['pk', 'id', 'user', 'gender', 'locale']
+	list_display = ['pk','id','user','firstname','lastname','article_cart_counts','gender', 'locale']
+
+	def article_cart_counts(self, userProfile):
+	        return '{}'.format(userProfile.article_cart.count())
 
 admin.site.register(UserProfile,UserProfileAdmin)
 

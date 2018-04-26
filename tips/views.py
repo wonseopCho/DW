@@ -303,3 +303,20 @@ def comment_delete(request, post_pk, comment_pk):
 	return render(request, 'tips/comment_confirm_delete.html', {
 		'comment': comment,
 		})
+
+def add_to_cart_ajax(request):
+	if request.user.is_authenticated:
+		if request.method == "POST":
+			user_id = request.POST['user_id']
+			article_id = request.POST['article_id']
+			user = UserProfile.objects.get(id=user_id)
+			article = Article.objects.get(id=article_id)
+			if article in user.article_cart.all():
+				return HttpResponse(0)
+			else:
+				user.article_cart.add(article)
+				return HttpResponse(1)
+		else:
+			return HttpResponse('Post error')
+	else:
+		return HttpResponse('login_require')

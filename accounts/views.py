@@ -18,6 +18,8 @@ from django.contrib.auth.forms import (
 										UserChangeForm, 
 										UserCreationForm,
 										)
+from allauth.socialaccount.models import SocialAccount
+from tips.models import Article
 from .models import Friend, UserProfile
 from .forms import (
 					EditProfileForm, 
@@ -109,7 +111,12 @@ def view_profile(request, pk=None):
 		user = User.objects.get(pk=pk)
 	else :
 		user = request.user
+	try :
+		socialaccount = SocialAccount.objects.get(user=request.user)
+	except :
+		socialaccount = None
 	authenticated_user = UserProfile.objects.get(user=request.user)
+	userarticle = Article.objects.filter(author=request.user).order_by('category')	
 	others = User.objects.exclude(id = request.user.id)
 	if Friend.objects.filter(current_user=request.user).count() != 1:
 		Friend.make_friend(current_user=request.user, new_friend=request.user)
@@ -121,12 +128,18 @@ def view_profile(request, pk=None):
 			'others':others, 
 			'friends_list':friends_list,
 			'authenticated_user':authenticated_user,
+			'socialaccount': socialaccount,
+			'userarticle' : userarticle,
 			}
 	return render(request, 'accounts/view_profile.html', args)
 
 @login_required
 def edit_profile(request, pk):
 	authenticated_user = UserProfile.objects.get(user=request.user)
+	try :
+		socialaccount = SocialAccount.objects.get(user=request.user)
+	except :
+		socialaccount = None
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
 		if form.is_valid():
@@ -137,14 +150,19 @@ def edit_profile(request, pk):
 		args = {
 				'form': form,
 				'authenticated_user':authenticated_user,
+				'socialaccount': socialaccount,
 				}
 		return render(request, 'accounts/edit_profile.html', args)
 
 @login_required
 def change_password(request):
 	authenticated_user = UserProfile.objects.get(user=request.user)
+	try :
+		socialaccount = SocialAccount.objects.get(user=request.user)
+	except :
+		socialaccount = None
 	if request.method == 'POST':
-		form = PasswordChangeForm(data = request.POST, user=request.user)
+		form = PasswordChangeForm(data=request.POST, user=request.user)
 		if form.is_valid():
 			form.save()
 			update_session_auth_hash(request, form.user)
@@ -156,8 +174,21 @@ def change_password(request):
 		args = {
 				'form': form,
 				'authenticated_user':authenticated_user,
+				'socialaccount': socialaccount,
 				}
 		return render(request, 'accounts/change_password.html', args)
+
+@login_required
+def articleRemove(request):
+	if request.method == 'POST':
+		user_pk = request.POST['user']
+		article_pk = request.POST['pk']
+		user = UserProfile.objects.get(pk=user_pk)
+		article = Article.objects.get(id=article_pk)
+		user.article_cart.remove(article)
+		return HttpResponse(article.id)
+	else:
+		return HttpResponse('post_error')
 
 def change_friends(request, operation, pk):
 	friend = User.objects.get(pk=pk)

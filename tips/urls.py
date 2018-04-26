@@ -9,6 +9,7 @@ urlpatterns = [
 	path('listicle_admin/', views.listicle_admin, name='listicle_admin'),
 	path('likesUpdate/', views.likesUpdate, name='likesUpdate'),
 	path('articleText_call/', views.articleText_call, name='articleText_call'),
+	path('addToCart/', views.add_to_cart_ajax, name="add_to_cart"),
 	re_path(r'^(?P<pk>\d+)/$', views.view_tips, name='view_tips'),
 	re_path(r'^(?P<pk>\d+)/(?P<comment_pk>\d+)/$', views.view_tips, name='view_tips_withcomment'),
 	re_path(r'^listicle/(?P<listicle_pk>\d+)/$', views.view_listicle, name='view_listicle'),

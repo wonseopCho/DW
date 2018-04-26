@@ -25,6 +25,7 @@ urlpatterns = [
 	path('profile/<pk>/', views.view_profile, name='view_profile_with_pk'),
 	path('profile/edit/<pk>/', views.edit_profile, name='edit_profile'),
 	path('profile/password/', views.change_password),
+	path('profile/articleRemove', views.articleRemove, name="articleRemove"),
 	path('change-password/', views.change_password, name='change_password'),
 	path('reset-password/', password_reset, {
 		'template_name': 'manual_registration/password_reset_form.html',

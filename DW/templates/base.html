@@ -203,10 +203,16 @@ function onLoad() {
           {% if user.is_authenticated %}
             <a href="{% url 'accounts:view_profile' %}">
               <div style="text-align: left">
-                {% if authenticated_user.photo_url %}
+                {% if authenticated_user.picture %}
+                  <img src="{{authenticated_user.picture.url}}" class="avatar" style="margin-right: 10px;">
+                {% elif authenticated_user.photo_url %}
                   <img src="{{authenticated_user.photo_url}}" class="avatar" style="margin-right: 10px;">
                 {% else %}
-                  <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
+                  {% if authenticated_user.gender == 'female' %}
+                    <img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="avatar" alt="Avatar" />
+                  {% else %}
+                    <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="avatar" alt="Avatar" />
+                  {% endif %}
                 {% endif %}
                 {{authenticated_user.user}}'s Profile 
               </div>
