@@ -228,6 +228,11 @@ a * {
     font-size: 9vw;
 }
 
+.sticky2 {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+}
 </style>
 {% endblock %}
 {% block title %} 
@@ -488,7 +493,7 @@ a * {
       </div>
     </div>
   </div>
-  <div style="border:0px solid red; background-color: grey; width:100%; height:200px">
+  <div style="border:0px solid red; background-color: grey; width:100%; height:100px">
     {{ p_page }}
     <br>
   </div>
@@ -549,48 +554,49 @@ a * {
 
       {% endfor %} -->
 <!-- ============================================================================== -->
-
+    
         {% for art_category, articles in category_articles.items %}
           <div class="{{art_category}}" style="border: 0px solid red; margin-top: 1px; width:100%; height:100%;">
+            <div class="row ">
             {% for lis_category, listicles in category_listicle.items %}
-              {% if lis_category == art_category %}
-                  <div class="row ">
+              {% if lis_category == art_category %}                  
                     {% if listicles %}
-                    <div class="col-md-12 owl-carousel owl-theme" style="border:0px solid blue; width:100% height:100%">
-                    {% for listicle in listicles %}
-                      <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
-                        <div style="width:100%; border: 0px solid blue; position:relative;"> 
-                          <div class="listicle_title">
-                            {{listicle.title}}
+                    <div class="col-md-6 owl-carousel owl-theme" style="border:0px solid blue; width:100%; height:100%">
+                      {% for listicle in listicles %}
+                        <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
+                          <div style="width:100%; border: 0px solid blue; position:relative;"> 
+                            <div class="listicle_title">
+                              {{listicle.title}}
+                            </div>
+                            <div>
+                              <img style="width:100%; height:100%" src="{{listicle.thumnails.url}}" />
+                            </div>
                           </div>
-                          <div>
-                            <img style="width:100%; height:100%" src="{{listicle.thumnails.url}}" />
-                          </div>
-                        </div>
-                      </a>
-                    {% endfor %}
+                        </a>
+                      {% endfor %}
                     </div>
-                    {% endif %} 
-                  </div>       
+                    {% endif %}   
               {% endif %}
             {% endfor %}
-            <div class="row" style="width:100%; margin: 0 auto; border:0px solid red;">
-              {% for article in articles %}
-                <div class="col-md-6" style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top: 10px"> 
+              <div class="col-md-6" > 
+            {% for article in articles %}
+                <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
                   <a href="{% url 'tips:view_tips' pk=article.id %}">
-                  <div style="margin-top:0px; margin-left:-15px; border: 0px solid red; width:130px; height:95px; float:left">
+                  <div style=" border: 0px solid red; margin-top:0px; width:130px; height:95px; float:left">
                     <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
                   </div>
-                  <div style="border: 0px solid orange; width: 63%; height:70px; margin-left:7px; float:left; font-size: 15px;">
+                  <div style="border: 0px solid orange; width: 60%; height:70px; margin-left:7px; float:left; font-size: 15px;">
                     <div style="border:0px solid blue; width:100%; font-weight: bold;">{{article.title}}</div>
-                    <div style="font-size: 0.9em; margin-top:5px">{{article.slug|_replace}}</div>
+                    <div style="font-size: 0.9em; margin-top:5px;">{{article.slug|_replace}}</div>
                   </div>
                   </a>
                 </div>
-                {% endfor %}
+            {% endfor %}
+              </div>
             </div>
           </div>
         {% endfor %}
+      
 
 
     <!--   <div class="taxi" style="border: 0px solid red ;height:100%">

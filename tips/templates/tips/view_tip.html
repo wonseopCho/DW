@@ -151,6 +151,47 @@ table th {
   }
 }
 
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
 </style>
 {% endblock %}
 
@@ -214,7 +255,12 @@ table th {
     <div style="margin-top: 10px">
       <p class="article_text">{{content.text}}</p>
     </div>
-    <input type="button" class="btn btn-info" value="Add to card" onclick="addToCart({{authenticated_user.id}},{{content.id}})"/>
+    {% if user.is_authenticated %}
+    <input type="button" class="btn btn-info" value="Add to Cart" onclick="addToCart({{authenticated_user.id}},{{content.id}})"/>
+    {% else %}
+    <input type="button" class="btn btn-info" value="Add to Cart" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
+    {% endif %}
+    <div id="snackbar"></div>
   </div>
   <div class="row" >
     <div class="col-sm-12">
@@ -508,38 +554,65 @@ function likesUpdate(pk){
       }
     });
   }
+
+// function addToCart(user_id, article_id){
+//   console.log(user_id, article_id);
+//   swal({
+//     title: "Add",
+//     text: "Do you want to Add to your card?",
+//     type: "info",
+//     showCancelButton: true,
+//     closeOnConfirm: false,
+//     showLoaderOnConfirm: true
+//   }, function () {
+//     setTimeout(function () {
+//         var _add={};
+//         _add.user_id = parseInt(user_id);
+//         _add.article_id = parseInt(article_id);
+//         _add.csrfmiddlewaretoken = '{{csrf_token}}';
+//         $.ajax({
+//           url:"{% url 'tips:add_to_cart' %}",
+//           method:"post",
+//           data: _add,
+//           success: function(res){
+//             if(res==1){
+//               swal("Added to your cart.")
+//             }
+//             else{
+//               swal("You added it aleady.")
+//             }
+//           }, error: function(error){
+//             console.log(error);
+//             console.log("error");
+//           }
+//         });
+//       }, 1000);
+//   });
+// }
+
 function addToCart(user_id, article_id){
   console.log(user_id, article_id);
-  swal({
-    title: "Add",
-    text: "Do you want to Add to your card?",
-    type: "info",
-    showCancelButton: true,
-    closeOnConfirm: false,
-    showLoaderOnConfirm: true
-  }, function () {
-    setTimeout(function () {
-        var _add={};
-        _add.user_id = parseInt(user_id);
-        _add.article_id = parseInt(article_id);
-        _add.csrfmiddlewaretoken = '{{csrf_token}}';
-        $.ajax({
-          url:"{% url 'tips:add_to_cart' %}",
-          method:"post",
-          data: _add,
-          success: function(res){
-            if(res==1){
-              swal("Added to your cart.")
-            }
-            else{
-              swal("You added it aleady.")
-            }
-          }, error: function(error){
-            console.log(error);
-            console.log("error");
-          }
-        });
-      }, 1000);
+  var _add={};
+  _add.user_id = parseInt(user_id);
+  _add.article_id = parseInt(article_id);
+  _add.csrfmiddlewaretoken = '{{csrf_token}}';
+  $.ajax({
+    url:"{% url 'tips:add_to_cart' %}",
+    method:"post",
+    data: _add,
+    success: function(res){
+      if(res==1){
+        $('#snackbar').html('Added!');
+        $('#snackbar').addClass('show');
+        setTimeout(function(){ $('#snackbar').removeClass('show'); }, 1500);
+      }
+      else{
+        swal("You added it aleady.")
+      }
+    }, error: function(error){
+      console.log(error);
+      console.log("error");
+    }
   });
 }
 </script>

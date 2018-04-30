@@ -33,4 +33,7 @@ urlpatterns = [
     path('login/', login, {'template_name':'login.html'} ,name='login'),
     path('logout/', logout, {'template_name':'logout.html'}, name='logout'),
     path('tips/', include('tips.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

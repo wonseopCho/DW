@@ -46,5 +46,5 @@ def home_view(request):
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
 		})
-	print(args)
+	# print(args)
 	return render(request, 'home.html', args)
