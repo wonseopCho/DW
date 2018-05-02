@@ -9,6 +9,7 @@ from tips.models import Listicle, Category, Article, Image
 from accounts.models import UserProfile
 from allauth.socialaccount.models import SocialAccount
 from urllib import parse
+from tips.forms import ArticleForm
 import json
 
 #CVB
@@ -31,6 +32,7 @@ def home_view(request):
 	category_listicle={}
 	authenticated_user = ''
 	socialaccount = None
+	articleForm = ArticleForm()
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
 		try :
@@ -45,6 +47,7 @@ def home_view(request):
 				 'category_listicle' : category_listicle,
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
+				 'form' : articleForm,
 		})
 	# print(args)
 	return render(request, 'home.html', args)

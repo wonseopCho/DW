@@ -1,5 +1,15 @@
 from django import forms
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from .models import Comment, Category, Article, Listicle
+
+class ArticleForm(forms.ModelForm):
+	class Meta:
+		model = Article
+		fields = ['category', 'title', 'video', 'text']
+		widgets = {
+				'text' : SummernoteWidget(attrs={'width': '100%', 'height': '400px'}),
+		}
+
 
 class CommentForm(forms.ModelForm):	
 	class Meta:

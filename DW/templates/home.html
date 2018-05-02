@@ -470,10 +470,6 @@ a * {
     </div>
   </div> -->
 
-<!--   <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-    Launch demo modal
-  </button> -->
-
   <!-- Modal -->
   <div class="modal fade" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
     <div class="modal-dialog">
@@ -485,14 +481,17 @@ a * {
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="z-index:999;  color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
         </div>
         <div id='tips_ModalText' class="modal-body" style="color:black">
-         
+         <form method="post">
+          {{form.as_p}}
+        </form>
         </div>
-       <!--  <div class="modal-footer">
+        <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
+
   <div style="border:0px solid red; background-color: grey; width:100%; height:100px">
     {{ p_page }}
     <br>
@@ -583,7 +582,18 @@ a * {
                 <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
                   <a href="{% url 'tips:view_tips' pk=article.id %}">
                   <div style=" border: 0px solid red; margin-top:0px; width:130px; height:95px; float:left">
-                    <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
+                    {% if article.image_set.first.thumnails.url %}
+                      <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
+                    {% else %}
+                      <img id= "{{article}}_main_image" style="width:100%; height:100%" src=""/ >
+                      <script>
+                        var parser = new DOMParser(); 
+                        var a = parser.parseFromString(`{{article.text|safe}}`, 'text/html');
+                        var src = a.querySelector('img').src; 
+                        $("#{{article}}_main_image").attr('src',src);
+                      </script>
+                    {% endif %}
+
                   </div>
                   <div style="border: 0px solid orange; width: 60%; height:70px; margin-left:7px; float:left; font-size: 15px;">
                     <div style="border:0px solid blue; width:100%; font-weight: bold;">{{article.title}}</div>
@@ -630,6 +640,16 @@ a * {
     </div>
   </div>
   <a href="https://www.google.com/maps/search/편의점/">test map search</a>
+  {% if user.is_authenticated %}
+  <div id="tip_write" style="border: 0px solid red; border-radius:40px; background-color: rgba( 255, 191, 0, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;  ">
+    <div data-toggle="modal" data-target="#tips" style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
+  </div>
+ 
+  {% else %}
+  <div style="border: 0px solid red; border-radius:40px; background-color: rgba( 192, 192, 192, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})">
+    <div style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
 
@@ -639,6 +659,20 @@ a * {
 <script src="{% static 'owlcarousel/2-2.3.3/dist/owl.carousel.min.js' %}"></script>
 <script>
 $(document).ready(function(){
+  var lastScrollTop = 0;
+  $(window).on('scroll', function() {
+      st = $(this).scrollTop();
+      if(st < lastScrollTop) {
+        $("#tip_write").show();
+      }
+      else {
+        $("#tip_write").hide();            
+      }
+      lastScrollTop = st;
+  });
+  $("#tip_write").on('click', function(){
+    console.log("tes");
+  });
 
   $(".owl-carousel").owlCarousel({
       margin:10,

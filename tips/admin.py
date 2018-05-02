@@ -65,10 +65,10 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         return '{}'.format(article.likes.count())
 
     def save_model(self, request, obj, form, change):
-        slug = slugify(strip_tags(obj.text))
         max_length = 100
+        slug = slugify(strip_tags(obj.text))
         if len(slug) <= max_length:
-            return slug
+            obj.slug = slug
         trimmed_slug = slug[:max_length].rsplit('-', 1)[0]
         if len(trimmed_slug) <= max_length:
             obj.slug = trimmed_slug
