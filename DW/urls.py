@@ -32,7 +32,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('login/', login, {'template_name':'login.html'} ,name='login'),
     path('logout/', logout, {'template_name':'logout.html'}, name='logout'),
-    path('tips/', include('tips.urls'))
+    path('tips/', include('tips.urls')),
+    path('summernote/', include('django_summernote.urls')),
 ]
 
 if settings.DEBUG:

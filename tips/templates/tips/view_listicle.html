@@ -238,7 +238,7 @@ table th {
       </a>
     </div>
     <div style="margin-top: 10px">
-      <p class="article_text">{{article.text}}</p>
+      <p class="article_text">{{article.text|safe}}</p>
     </div>
     {% if user.is_authenticated %}
     <input type="button" class="btn btn-info" value="Add to Cart" onclick="addToCart({{authenticated_user.id}},{{article.id}})"/>

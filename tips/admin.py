@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from .models import Listicle, Category, Article, Image, Comment
 from .forms import ListicleForm
 from multiupload.admin import MultiUploadAdmin
+from django_summernote.admin import SummernoteModelAdmin
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -42,16 +43,18 @@ class ImagesMultiuploadMixing(object):
                 obj.author = request.user
             obj.save()
 
-class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
+class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdmin):
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True
     search_fields = ['article','title']
     list_display = ['id', 'category', 'title', 'video', 'slug', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'title']
+    summernote_fields = ['text']
     prepopulated_fields = {
         'slug' : ['text']
     }
+    
 
     def delete_file(self, pk, request):
         '''

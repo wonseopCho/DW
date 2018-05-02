@@ -18,7 +18,7 @@ class Category(models.Model):
 
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
-    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, blank=False, null=False, on_delete=models.CASCADE)
     title = models.CharField(unique=True, max_length=100)
     video = models.FileField(blank=True, upload_to='tips/video/%Y/%m/%d')
     slug = models.SlugField(max_length=41, unique=False, allow_unicode=True)
