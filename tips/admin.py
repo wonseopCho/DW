@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
+from django.utils.html import strip_tags
 from .models import Listicle, Category, Article, Image, Comment
 from .forms import ListicleForm
 from multiupload.admin import MultiUploadAdmin
@@ -51,11 +53,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
     list_display = ['id', 'category', 'title', 'video', 'slug', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'title']
     summernote_fields = ['text']
-    prepopulated_fields = {
-        'slug' : ['text']
-    }
-    
-
+   
     def delete_file(self, pk, request):
         '''
         Delete an image.
@@ -67,6 +65,15 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         return '{}'.format(article.likes.count())
 
     def save_model(self, request, obj, form, change):
+        slug = slugify(strip_tags(obj.text))
+        max_length = 100
+        if len(slug) <= max_length:
+            return slug
+        trimmed_slug = slug[:max_length].rsplit('-', 1)[0]
+        if len(trimmed_slug) <= max_length:
+            obj.slug = trimmed_slug
+        # First word is > max_length chars, so we have to break it
+        obj.slug = slug[:max_length]
         if not obj.author:
             obj.author = request.user
         obj.save()
