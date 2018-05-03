@@ -65,15 +65,16 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         return '{}'.format(article.likes.count())
 
     def save_model(self, request, obj, form, change):
-        max_length = 100
-        slug = slugify(strip_tags(obj.text))
+        max_length = 48
+        slug = slugify(strip_tags(obj.text), allow_unicode=True)
+        slug = slug.replace('nbsp','-')
         if len(slug) <= max_length:
             obj.slug = slug
         trimmed_slug = slug[:max_length].rsplit('-', 1)[0]
         if len(trimmed_slug) <= max_length:
             obj.slug = trimmed_slug
         # First word is > max_length chars, so we have to break it
-        obj.slug = slug[:max_length]
+        obj.slug = slug[:max_length]+'...'
         if not obj.author:
             obj.author = request.user
         obj.save()

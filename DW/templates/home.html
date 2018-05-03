@@ -135,6 +135,11 @@ div.listicle {
   margin-top: 0px
 }
 
+.sticky2 {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+}
 .main_nav_slick {
   border-bottom:6px solid #dddbdb; 
   background-color:#4DC7A0; 
@@ -153,12 +158,14 @@ a * {
   text-decoration: none;
 }
 
-
-.slick-slider * { outline: none; }
+.slick-slider * { 
+  outline: none; 
+}
 
 .slick-slide {
     margin-left:1px;
   }
+
 .slick-list {
     margin-left:-1px;
   }
@@ -167,10 +174,6 @@ a * {
     border-bottom: 6px solid white ;
     font-weight: bold;
     text-decoration: none;
-  }
-
-#tips_ModalText {
-    white-space: pre-wrap;
   }
 
 /* Style the tab */
@@ -228,11 +231,54 @@ a * {
     font-size: 9vw;
 }
 
-.sticky2 {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 0;
+#id_video {
+  width: 100%;
 }
+
+input[type=text], select {
+    width: 100%;
+    padding: 15px;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, select {
+    background-color: #ddd;
+    outline: none;
+}
+
+#submitbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    
+}
+#submitcancel {
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    
+}
+#submitbtn:hover {
+    opacity: 1;
+}
+
+.form-bg-img {
+  background-image: url("{% static 'images/Seoul.jpg' %}");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 </style>
 {% endblock %}
 {% block title %} 
@@ -471,22 +517,31 @@ a * {
   </div> -->
 
   <!-- Modal -->
-  <div class="modal fade" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-    <div class="modal-dialog">
-      <div class="modal-content" style="height:100%">
-        <div class="modal-header">
-          <div style="border: 0px solid red; float:left"> 
-            <h4 class="modal-title" id="tips_ModalTitle" style="color:black">Modal title</h4>
+  <div style="border:0px solid red" class="modal fade form-bg-img" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="border:0px solid red; max-width: 1000px; ">
+      <div class="modal-content" style="height:100%;">
+        <div class="modal-header" style="border:0px solid red;">
+          <div style="border: 0px solid red; float:left; width:100%; text-align: center"> 
+            <h4 class="modal-title" id="tips_ModalTitle" style="color:black;"></h4>
           </div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="z-index:999;  color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
         </div>
         <div id='tips_ModalText' class="modal-body" style="color:black">
-         <form method="post">
-          {{form.as_p}}
-        </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         <form method="post" enctype="multipart/form-data" action='/tips/write/'>
+          {% csrf_token %}
+          <label for="id_category" style="width:100%; margin-bottom:0"><b>Category</b></label>
+          {{form.category}}
+          <label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
+          <input type="text" name="title" maxlength="100" required="" autofocus="" id="id_title">
+          <label for="id_video" style="width:100%; margin-bottom:0"><b>Video</b></label>
+          {{form.video}}
+          <br><br>
+          {{form.text}}
+          <div class="modal-footer">
+            <button id="submitbtn" type="submit" class="btn btn-default" style="width:100%">Submit</button>
+            <button id="submitcancel" type="button" class="btn btn-default" data-dismiss="modal" style="width:100%">Close</button>
+          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -556,7 +611,7 @@ a * {
     
         {% for art_category, articles in category_articles.items %}
           <div class="{{art_category}}" style="border: 0px solid red; margin-top: 1px; width:100%; height:100%;">
-            <div class="row ">
+            <div class="row">
             {% for lis_category, listicles in category_listicle.items %}
               {% if lis_category == art_category %}                  
                     {% if listicles %}
@@ -589,11 +644,12 @@ a * {
                       <script>
                         var parser = new DOMParser(); 
                         var a = parser.parseFromString(`{{article.text|safe}}`, 'text/html');
-                        var src = a.querySelector('img').src; 
-                        $("#{{article}}_main_image").attr('src',src);
+                        if (a.querySelector('img') != null) {
+                          var src = a.querySelector('img').src; 
+                          $("#{{article}}_main_image").attr('src',src);
+                        }
                       </script>
                     {% endif %}
-
                   </div>
                   <div style="border: 0px solid orange; width: 60%; height:70px; margin-left:7px; float:left; font-size: 15px;">
                     <div style="border:0px solid blue; width:100%; font-weight: bold;">{{article.title}}</div>
@@ -606,9 +662,7 @@ a * {
             </div>
           </div>
         {% endfor %}
-      
-
-
+  
     <!--   <div class="taxi" style="border: 0px solid red ;height:100%">
         {% for article_taxi in taxi %}
         <div class="card" style="border: 0px solid red; background-color: #ccccb3; width:100%; margin-top: 15px">
@@ -637,6 +691,7 @@ a * {
         </div>
       {% endfor %}
       </div> -->
+
     </div>
   </div>
   <a href="https://www.google.com/maps/search/편의점/">test map search</a>
@@ -670,8 +725,12 @@ $(document).ready(function(){
       }
       lastScrollTop = st;
   });
+
   $("#tip_write").on('click', function(){
-    console.log("tes");
+    var value = $('#id_title').val();
+    tipTitleCheckAjax(value);
+    var id = "tips_ModalTitle"
+    typeWriter();
   });
 
   $(".owl-carousel").owlCarousel({
@@ -787,6 +846,12 @@ $(document).ready(function(){
       $('html,body').animate({scrollTop: 190}, 400);
      }
   });
+
+  $("#id_title").keyup(function(e){
+    var value = $(this).val();
+    console.log(value);
+    tipTitleCheckAjax(value);
+  });    
 });
 </script>
 <script>
@@ -817,6 +882,51 @@ var sticky = navbar.offsetTop;
 // }
 // document.getElementById('defaultOpen').click(); // <-Default tap Initialiaing
 // =====================================================
+
+
+var i = 0;
+var speed = 100;
+var txt = "Write & Share your own Tips about Korea";
+function typeWriter(){  
+  if (i < txt.length) {
+    document.getElementById("tips_ModalTitle").innerHTML += txt.charAt(i);
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
+function tipTitleCheckAjax(value) {
+  var tip_title = {};
+  tip_title.csrfmiddlewaretoken = '{{csrf_token}}';
+  tip_title.title = value;
+  if (value ==''){
+    $('#id_title').text("");
+    $('#id_title').css('background-color','#F1F1F1');
+  }
+  else {
+      $.ajax({
+        url:"{% url 'tips:title_check_ajax' %}",
+        method:"post",
+        data: tip_title,
+        success: function(res){
+          console.log(res)
+          if (res == 1){
+            $('#title_feeback_text').css('color', '#FF7878');
+            $('#title_feeback_text').text('A article exists aleady with the title you have entered');
+            $('#id_title').css('background-color', '#FF7878'); 
+            $('#submitbtn').prop("disabled", true);
+          }
+          else {
+            $('#title_feeback_text').text('');
+            $('#id_title').css('background-color', '#7CFFBB');
+            $('#submitbtn').prop("disabled", false);
+          }
+        },error: function(error){
+          console.log("error",error);
+        }
+    }); 
+  }
+};
 
 function myFunction() {
   if (window.pageYOffset >= sticky) {

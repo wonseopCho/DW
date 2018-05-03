@@ -558,41 +558,6 @@ function likesUpdate(pk){
     });
   }
 
-// function addToCart(user_id, article_id){
-//   console.log(user_id, article_id);
-//   swal({
-//     title: "Add",
-//     text: "Do you want to Add to your card?",
-//     type: "info",
-//     showCancelButton: true,
-//     closeOnConfirm: false,
-//     showLoaderOnConfirm: true
-//   }, function () {
-//     setTimeout(function () {
-//         var _add={};
-//         _add.user_id = parseInt(user_id);
-//         _add.article_id = parseInt(article_id);
-//         _add.csrfmiddlewaretoken = '{{csrf_token}}';
-//         $.ajax({
-//           url:"{% url 'tips:add_to_cart' %}",
-//           method:"post",
-//           data: _add,
-//           success: function(res){
-//             if(res==1){
-//               swal("Added to your cart.")
-//             }
-//             else{
-//               swal("You added it aleady.")
-//             }
-//           }, error: function(error){
-//             console.log(error);
-//             console.log("error");
-//           }
-//         });
-//       }, 1000);
-//   });
-// }
-
 function addToCart(user_id, article_id){
   console.log(user_id, article_id);
   var _add={};

@@ -35,6 +35,9 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('tips:view_tips', args=[self.pk])
+
 
 class Image(models.Model):
     file = models.FileField(upload_to='tips/images/%Y/%m/%d')

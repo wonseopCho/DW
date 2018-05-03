@@ -4,10 +4,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 from django.db.models import Avg, F, Max, Min, Window
 from django.http import JsonResponse
+from django.utils.text import slugify
+from django.utils.html import strip_tags
 from accounts.models import UserProfile
 from allauth.socialaccount.models import SocialAccount
 from .models import Listicle, Comment, Article, Image
-from .forms import CommentForm, ListicleForm
+from .forms import CommentForm, ListicleForm, ArticleForm
 import json
 
 def subway(request):
@@ -317,6 +319,46 @@ def add_to_cart_ajax(request):
 				user.article_cart.add(article)
 				return HttpResponse(1)
 		else:
-			return HttpResponse('Post error')
+			return HttpResponse(4) #post error
 	else:
-		return HttpResponse('login_require')
+		return HttpResponse(5) #login require
+
+def user_write_tip(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = ArticleForm(request.POST, request.FILES)
+			if form.is_valid():
+				article = form.save(commit=False)
+				text = strip_tags(request.POST['text'])
+				slug = slugify(text, allow_unicode=True)
+				slug = slug.replace('nbsp', '-')
+				max_length = 48
+				if len(slug) <= max_length:
+				    article.slug = slug
+				trimmed_slug = slug[:max_length].rsplit('-', 1)[0]
+				if len(trimmed_slug) <= max_length:
+				    article.slug = trimmed_slug
+				article.slug = slug[:max_length]+'...'
+				article.author = request.user				
+				article.save()
+				return redirect(article)
+		else:
+			return redirect('home')
+		form = ArticleForm()
+	else:
+		return redirect('home')
+
+def title_check_ajax(request):
+	if request.user.is_authenticated:
+		if request.method == "POST":
+			title = request.POST['title']
+			try :
+				article = Article.objects.get(title=title)
+				res = 1
+			except:
+				res = 0
+			return HttpResponse(res)
+		else:
+			return HttpResponse(4) #post error
+	else:
+		return HttpResponse(5) #login require
