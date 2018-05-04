@@ -258,14 +258,24 @@ table th {
     <div style="margin-top: 10px">
       <p class="article_text">{{content.text|safe}}</p>
     </div>
-    {% if user.is_authenticated %}
-    <input type="button" class="btn btn-info" value="Add to Cart" onclick="addToCart({{authenticated_user.id}},{{content.id}})"/>
-    {% else %}
-    <input type="button" class="btn btn-info" value="Add to Cart" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
-    {% endif %}
+    <div style="border:0px solid blue; width:100%;height:40px">
+      <div style="border:1px solid #E9ECEF; width:50%;display:inline-block;float:left">
+        {% if user.is_authenticated and user != content.author %}
+        <input type="button" class="btn btn-info" value="Add to Cart" onclick="addToCart({{authenticated_user.id}},{{content.id}})"/>
+        {% elif not user.is_authenticated %}
+        <input type="button" class="btn btn-info" value="Add to Cart" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
+        {% endif %}
+      </div>
+        {% if user.is_authenticated and user == content.author %}
+      <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
+        <input id="content_edit" type="button" class="btn btn-warning" style="width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
+        <input id="content_delete" type="button" class="btn btn-danger" style="width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
+      </div>
+        {% endif %}
+    </div>
     <div id="snackbar"></div>
   </div>
-  <div class="row" >
+  <div class="row">
     <div class="col-sm-12">
       <div class="card card-default">
         <div class="card-header">{{content.comment_set.all.count}} Comments</div>
@@ -388,7 +398,36 @@ $(document).ready(function(){
   $('#comment_form').click(function(){
     $('#comment_form #id_parent').val(0);
   });
+
 });
+
+function contentDelete(author, article_pk){ 
+  swal({
+    title: 'Delete?',
+    text: "Do you want to delete ?",
+    type: "info",
+    showCancelButton: true,
+    closeOnConfirm: true,
+    },function(){
+        console.log(author, article_pk);
+        location.replace("/tips/articleRemove/"+author+"/"+article_pk+"/"); 
+    }
+  );
+}
+
+function contentEdit(author, article_pk){ 
+  swal({
+    title: 'Edit?',
+    text: "Do you want to edit ?",
+    type: "info",
+    showCancelButton: true,
+    closeOnConfirm: true,
+    },function(){
+        console.log(author, article_pk);
+        location.replace("/tips/articleEdit/"+author+"/"+article_pk+"/"); 
+    }
+  );
+}
 
 function replyOnComment(current, article_pk, comment_pk){
   var insert_td = $(current).parents('tr').children(":eq(1)");
@@ -479,7 +518,7 @@ function edit_replyOnComment(current, p_pk, c_pk){
 function delete_comment(current, p_pk, c_pk){
   console.log(current);
   swal({
-    title: "Detele!",
+    title: "Delete!",
     text: "Do you want to delete the comment?",
     type: "info",
     showCancelButton: true,

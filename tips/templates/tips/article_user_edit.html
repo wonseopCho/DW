@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<style>
+body{
+	padding-bottom: 0;
+}
+input[type=text], select {
+    width: 100%;
+    padding: 15px;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, select {
+    background-color: #ddd;
+    outline: none;
+}
+
+#submitbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    
+}
+label {
+	font-weight: bold;
+}
+
+#edit_body {
+  background-image: url("{% static 'images/south-korea.jpg' %}");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+
+</style>
+<script>
+$(document).ready(function(){
+	$("#id_title").keyup(function(e){
+    var value = $(this).val();
+    console.log(value);
+    tipTitleCheckAjax(value);
+  }); 
+});
+
+function tipTitleCheckAjax(value) {
+  var tip_title = {};
+  tip_title.csrfmiddlewaretoken = '{{csrf_token}}';
+  tip_title.title = value;
+  if (value ==''){
+    $('#id_title').text("");
+    $('#id_title').css('background-color','#F1F1F1');
+  }
+  else if (value == '{{form.instance}}'){
+  	$('#title_feeback_text').text('');
+    $('#id_title').css('background-color', '#7CFFBB');
+    $('#submitbtn').prop("disabled", false);
+  }
+  else {
+      $.ajax({
+        url:"{% url 'tips:title_check_ajax' %}",
+        method:"post",
+        data: tip_title,
+        success: function(res){
+          console.log(res)
+          if (res == 1){
+            $('#title_feeback_text').css('color', '#FF7878');
+            $('#title_feeback_text').text('A article exists aleady with the title you have entered');
+            $('#id_title').css('background-color', '#FF7878'); 
+            $('#submitbtn').prop("disabled", true);
+          }
+          else {
+            $('#title_feeback_text').text('');
+            $('#id_title').css('background-color', '#7CFFBB');
+            $('#submitbtn').prop("disabled", false);
+          }
+        },error: function(error){
+          console.log("error",error);
+        }
+    }); 
+  }
+};
+</script>
+<div id="edit_body" style="border:0px solid blue;padding:10px;">
+	<div style="border:0px solid red; border-radius:10px; width:95%; margin:0 auto; padding:5px; background-color: white">
+		<span style="text-align:center"><h4>Tip Edit</h4></span>
+		<form action="" enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+			<label for="id_category" style="width:100%; margin-bottom:0"><b>Category</b></label>
+			{{form.category}}
+			<label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
+			{{form.title}}
+			<label for="id_video" style="width:100%; margin-bottom:0"><b>Video</b></label>
+			{{form.video}}
+			<br><br>
+			{{form.text}}
+			
+			<button id="submitbtn" type="submit" class="btn btn-default" style="width:100%">Submit</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

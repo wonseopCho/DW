@@ -348,7 +348,7 @@ def user_write_tip(request):
 	else:
 		return redirect('home')
 
-def title_check_ajax(request):
+def title_check_ajax(request, article_pk=None):
 	if request.user.is_authenticated:
 		if request.method == "POST":
 			title = request.POST['title']
@@ -362,3 +362,38 @@ def title_check_ajax(request):
 			return HttpResponse(4) #post error
 	else:
 		return HttpResponse(5) #login require
+
+def article_remove(request, author, article_pk):
+	article = Article.objects.get(id=article_pk)
+	if request.user.is_authenticated and article.author == request.user:
+		article.delete()
+		return redirect('home')
+	else:
+		return redirect("tips:view_tips", article_pk )
+
+def article_edit(request, author, article_pk):
+	article = Article.objects.get(id=article_pk)
+	if request.method != 'POST' and request.user.is_authenticated and article.author == request.user:
+		form = ArticleForm(instance=article)
+		return render(request, 'tips/article_user_edit.html', {
+			'form': form,
+		})
+	if request.method == 'POST' :
+		form = ArticleForm(request.POST, request.FILES, instance=article)
+		if form.is_valid():
+			article = form.save(commit=False)
+			text = strip_tags(request.POST['text'])
+			slug = slugify(text, allow_unicode=True)
+			slug = slug.replace('nbsp', '-')
+			max_length = 48
+			if len(slug) <= max_length:
+			    article.slug = slug
+			trimmed_slug = slug[:max_length].rsplit('-', 1)[0]
+			if len(trimmed_slug) <= max_length:
+			    article.slug = trimmed_slug
+			article.slug = slug[:max_length]+'...'
+			article.author = request.user				
+			article.save()
+			return redirect(article)		
+	else:
+		return redirect("tips:view_tips", article_pk)
