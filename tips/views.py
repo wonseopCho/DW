@@ -8,7 +8,7 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from accounts.models import UserProfile
 from allauth.socialaccount.models import SocialAccount
-from .models import Listicle, Comment, Article, Image
+from .models import Listicle, Category, Comment, Article, Image
 from .forms import CommentForm, ListicleForm, ArticleForm
 import json
 
@@ -82,6 +82,7 @@ def view_tips(request, pk, comment_pk=None):
 			 'form': form,
 			 'authenticated_user' : authenticated_user,
 			 'socialaccount': socialaccount,
+			 'categories' : Category.objects.all(),
 	}
 	return render(request, 'tips/view_tip.html' , args)
 
@@ -152,6 +153,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 			'form' : form,
 			'authenticated_user' : authenticated_user,
 			'socialaccount': socialaccount,
+			'categories' : Category.objects.all(),
 			}
 	return render(request, 'tips/view_listicle.html', args)
 
@@ -373,11 +375,24 @@ def article_remove(request, author, article_pk):
 
 def article_edit(request, author, article_pk):
 	article = Article.objects.get(id=article_pk)
+	authenticated_user = ''
+	socialaccount = None
+	if request.user.is_authenticated:
+		authenticated_user = UserProfile.objects.get(user=request.user)
+		try :
+			socialaccount = SocialAccount.objects.get(user=request.user)
+		except :
+			socialaccount = None
+
 	if request.method != 'POST' and request.user.is_authenticated and article.author == request.user:
 		form = ArticleForm(instance=article)
 		return render(request, 'tips/article_user_edit.html', {
 			'form': form,
+			'authenticated_user' : authenticated_user,
+			'socialaccount': socialaccount,
+			'categories' : Category.objects.all(),
 		})
+
 	if request.method == 'POST' :
 		form = ArticleForm(request.POST, request.FILES, instance=article)
 		if form.is_valid():

@@ -5,21 +5,23 @@ from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.conf import settings
+from accounts.models import UserProfile
+from allauth.socialaccount.models import SocialAccount
+from tips.models import Category
 from .models import MapAddress
 import json
 
-
-# Create your views here.
-'''
-class LazyEncoder(DjangoJSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, 'json'):
-            return str(obj)
-        return super().default(obj)
-'''
 def mapShow(request):
 	values = MapAddress.objects.values('lat', 'lng', 'type')
 	markers = []
+	authenticated_user = ''
+	socialaccount = None
+	if request.user.is_authenticated:
+		authenticated_user = UserProfile.objects.get(user=request.user)
+		try :
+			socialaccount = SocialAccount.objects.get(user=request.user)
+		except :
+			socialaccount = None
 	if len(values) != 0:
 		for i in range(len(values)):
 			if values[i]['type'] == 'restaurant': values[i]['type'] = 'R'
@@ -31,7 +33,10 @@ def mapShow(request):
 		#'testJson' : json.dumps(serialize('json', MapAddress.objects.all(), cls=LazyEncoder)),
 		'addresses' : json.dumps(serialize('json', MapAddress.objects.all())),
 		'markers' : markers,
-		'Google_key': settings.GOOGLE_API_KEY
+		'Google_key': settings.GOOGLE_API_KEY,
+		'authenticated_user' : authenticated_user,
+		'socialaccount': socialaccount,
+		'categories' : Category.objects.all(),
 	})
 
 #@csrf_exempt

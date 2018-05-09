@@ -5,10 +5,13 @@ from django.contrib.auth.models import User
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from smart_selects.db_fields import ChainedManyToManyField
+from colorful.fields import RGBColorField
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     category = models.CharField(max_length=50, unique=True, blank=False)
+    image = models.FileField(upload_to='tips/category/images/')
+    color = RGBColorField()
     author = models.ForeignKey(User, blank=True, null=True, editable=False, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

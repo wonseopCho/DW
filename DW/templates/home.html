@@ -140,8 +140,7 @@ div.listicle {
   position: sticky;
   top: 0;
 }
-.main_nav_slick {
-  border-bottom:6px solid #dddbdb; 
+.main_nav_slick { 
   background-color:#4DC7A0; 
   text-align:center;
 }
@@ -548,7 +547,7 @@ input[type=text]:focus, select {
   </div>
 
   <div style="border:0px solid red; background-color: grey; width:100%; height:100px">
-    {{ p_page }}
+    <!-- {{ p_page }} -->
     <br>
   </div>
   
@@ -610,8 +609,8 @@ input[type=text]:focus, select {
 <!-- ============================================================================== -->
     
         {% for art_category, articles in category_articles.items %}
-          <div class="{{art_category}}" style="border: 0px solid red; margin-top: 1px; width:100%; height:100%;">
-            <div class="row">
+          <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
+            <div class="row" style="border-top:6px solid #dddbdb;">
             {% for lis_category, listicles in category_listicle.items %}
               {% if lis_category == art_category %}                  
                     {% if listicles %}
@@ -633,10 +632,10 @@ input[type=text]:focus, select {
               {% endif %}
             {% endfor %}
               <div class="col-md-6" > 
-            {% for article in articles %}
+              {% for article in articles %}
                 <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
                   <a href="{% url 'tips:view_tips' pk=article.id %}">
-                  <div style=" border: 0px solid red; margin-top:0px; width:130px; height:95px; float:left">
+                  <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
                     {% if article.image_set.first.thumnails.url %}
                       <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
                     {% else %}
@@ -657,7 +656,7 @@ input[type=text]:focus, select {
                   </div>
                   </a>
                 </div>
-            {% endfor %}
+              {% endfor %}
               </div>
             </div>
           </div>
@@ -749,14 +748,11 @@ $(document).ready(function(){
   var initial_slide, background_color;
   var p_page = getCookie('p_page');
   setCookie('p_page', '', -1);
-  if (p_page == 'subway') {initial_slide = 0; background_color = '#4DC7A0';};
-  if (p_page == 'taxi') {initial_slide = 1; background_color = '#1F65A1';};
-  if (p_page == 'bus') {initial_slide = 2; background_color = '#FF00BF';};
-  if (p_page == 'life') {initial_slide = 3; background_color = '#43A1B4';};
-  if (p_page == 'food') {initial_slide = 4; background_color = '#FFBF00';};
-  if (p_page == 'shopping') {initial_slide = 5; background_color = '#0000CC';};
-  if (p_page == 'tour') {initial_slide = 6; background_color = '#CC00FF';};
-  if (p_page == 'activity') {initial_slide = 7; background_color = '#FF6347';};
+
+{% for cate in categories %}
+  if (p_page == '{{cate.category}}') {initial_slide = {{forloop.counter}}-1; background_color = '{{cate.color}}';};
+{% endfor %}
+
   $('#main_nav_slick').on('init', function(event, slick){
     if (initial_slide != undefined ){$('div').removeClass('slick_select');};
     $("#main_nav_slick").css('background-color', background_color);
@@ -826,14 +822,9 @@ $(document).ready(function(){
   
   $('#body_div_slick').on('afterChange', function(event, slick, currentSlide){
     var background_color = '';
-    if (currentSlide == 1){background_color = '#1F65A1'}
-    else if (currentSlide == 2){background_color = '#FF00BF'}
-    else if (currentSlide == 3){background_color = '#43A1B4'}
-    else if (currentSlide == 4){background_color = '#FFBF00'}
-    else if (currentSlide == 5){background_color = '#0000CC'}
-    else if (currentSlide == 6){background_color = '#CC00FF'}
-    else if (currentSlide == 7){background_color = '#FF6347'}
-    else {background_color = '#4DC7A0'};
+    {% for cate in categories %}
+      if (currentSlide == {{forloop.counter}}-1){background_color = '{{cate.color}}'};
+    {% endfor %}
     $('#main_nav_slick').css('background-color', background_color);
     $('#main_nav_slick').slick('slickGoTo', currentSlide-1, true );
     if ($('.main_nav_item').hasClass('slick-current')) {
@@ -859,6 +850,7 @@ window.onscroll = function() {myFunction()};
 var navbar = document.getElementById("main_nav_slick");
 var sticky = navbar.offsetTop;
 
+//<!CDATA[
 // =================================================== Slide Multi-tap call function openTap
 // function openTap(evt, tapName) {
 //   console.log(evt, tapName);
@@ -882,7 +874,7 @@ var sticky = navbar.offsetTop;
 // }
 // document.getElementById('defaultOpen').click(); // <-Default tap Initialiaing
 // =====================================================
-
+// ]]>
 
 var i = 0;
 var speed = 100;

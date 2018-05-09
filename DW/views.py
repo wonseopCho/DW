@@ -33,13 +33,14 @@ def home_view(request):
 	authenticated_user = ''
 	socialaccount = None
 	articleForm = ArticleForm()
+	categories = Category.objects.all()
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
 		try :
 			socialaccount = SocialAccount.objects.get(user=request.user)
 		except :
 			socialaccount = None
-	for cate in Category.objects.all():
+	for cate in categories:
 		category = Category.objects.get(category=cate.category).id
 		category_articles.update({ cate.category : Article.objects.filter(category=category)})
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
@@ -48,6 +49,7 @@ def home_view(request):
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
 				 'form' : articleForm,
+				 'categories' : categories,
 		})
 	# print(args)
 	return render(request, 'home.html', args)

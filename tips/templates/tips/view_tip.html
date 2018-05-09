@@ -15,6 +15,13 @@ img {
 .article_text{
     white-space: pre-wrap;
 }
+
+#article_text > p > a{
+    border-radius: 5px;
+    background-color : #28a745;
+    color:white;
+    padding:10px;
+}
 .slick-slide{
   border: none;
   outline:none;
@@ -255,8 +262,8 @@ table th {
         <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
       </a>
     </div>
-    <div style="margin-top: 10px">
-      <p class="article_text">{{content.text|safe}}</p>
+    <div id="article_text" style="margin-top: 10px">
+      <p>{{content.text|safe}}</p>
     </div>
     <div style="border:0px solid blue; width:100%;height:40px">
       <div style="border:1px solid #E9ECEF; width:50%;display:inline-block;float:left">
@@ -268,8 +275,8 @@ table th {
       </div>
         {% if user.is_authenticated and user == content.author %}
       <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
-        <input id="content_edit" type="button" class="btn btn-warning" style="width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
-        <input id="content_delete" type="button" class="btn btn-danger" style="width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
+        <input id="content_edit" type="button" class="btn btn-warning" style="width:45%; max-width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
+        <input id="content_delete" type="button" class="btn btn-danger" style="width:50%; max-width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
       </div>
         {% endif %}
     </div>

@@ -23,6 +23,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
 
+<link rel="apple-touch-icon" href="{% static '/Images/gps.png' %}" />
+<link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
+<link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
 
 <style>
 body{
@@ -115,6 +118,21 @@ a, a:active, a:link {
 }
 </style>
 <script>
+var userAgent = navigator.userAgent.toLowerCase();
+console.log(userAgent);
+
+if(userAgent.match('iphone')) {
+    document.write(`<link href="{% static '/Images/gps.png' %}" rel="apple-touch-icon">`) 
+} else if(userAgent.match('ipad')) { // sizes="72*72"
+    document.write(`<link href="{% static '/Images/gps.png' %}" rel="apple-touch-icon" >`)
+} else if(userAgent.match('ipod')) {
+    document.write(`<link href="{% static '/Images/gps.png' %}" rel="apple-touch-icon">`) 
+} else if(userAgent.match('android')) {
+    document.write(`<link href="{% static '/Images/gps.png' %}" rel="shortcut icon">`) 
+} else {
+    document.write(`<link href="{% static '/Images/gps.png' %}" rel="shortcut icon">`) 
+};
+
 $(document).ready(function(){
   var width = 100, // width of a progress bar in percentage
       perfData = window.performance.timing, // The PerformanceTiming interface
@@ -246,18 +264,18 @@ function onLoad() {
                 Forgot Password?
               </a>
             </div>
-          {% endif%}
-        <div style="border:1px solid #dddbdb; height: 100px;">
-          <div style="border: 1px solid black; width:33.3%; float:left">a</div>
-          <div style="border: 1px solid black; width:33.3%; float:left">b</div>
-          <div style="border: 1px solid black; width:33.3%; float:left">c</div>
+          {% endif %}
+        <div id='categories' style="border:1px solid #dddbdb; height: 250px; padding:0 ">
+          {% for category in categories %}
+            <div style="border: 0px solid black; width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('{{category}}')">
+              <img style="width:40px; height:40px" src="{{category.image.url}}"/>
+              <span style="display:block;border:0px solid red; font-size: 13px">{{category|capfirst}}</span>
+            </div>
+          {% endfor %}
         </div>
         <div style="border:1px solid #dddbdb; height: 70px; ">
-          <div style="border: 0px solid black; width:33.3%; float:left; font-size: 17px;">
-            <a href="/login?next={{ request.path }}">Log In</a>
-          </div>
-          <div style="border: 0px solid black; width:33.3%; float:left; font-size: 17px;">Announcement</div>
-          <div style="border: 0px solid black; width:33.3%; float:left; font-size: 17px;">
+          <div style="border: 0px solid black; width:50%; float:left; font-size: 17px;">Announcement</div>
+          <div style="border: 0px solid black; width:50%; float:left; font-size: 17px;">
             <a id="mapAPI" href="/mapAPI">MAP</a>
           </div>
         </div>
@@ -281,7 +299,21 @@ function onLoad() {
         </a>
       </div>
     </div>
-    <script>  
+    <script>
+
+    function gotoCategory(category){
+      setCookie('p_page', category, 1);
+      location.href = '/';
+    }
+
+    function setCookie(cName, cValue, cDay){
+        var expire = new Date();
+        expire.setDate(expire.getDate() + cDay);
+        cookies = cName + '=' + escape(cValue) + '; path=/ ';
+        if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+        document.cookie = cookies;
+    }  
+
     function openNav() {
         // document.getElementById("myNav").style.width = "100%";
         $("#myNav").animate({left: '0px'}, 30);
@@ -301,7 +333,8 @@ function onLoad() {
     </script>
   </header>
   	{% block content %}{% endblock %}
-    {% block additional_script %}{% endblock %}
+    {% block additional_script %}
+    {% endblock %}
   	{% block footer %}{% endblock %}
 </body>
 </html>

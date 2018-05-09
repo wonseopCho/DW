@@ -19,7 +19,7 @@ from django.contrib.auth.forms import (
 										UserCreationForm,
 										)
 from allauth.socialaccount.models import SocialAccount
-from tips.models import Article
+from tips.models import Article, Category
 from .models import Friend, UserProfile
 from .forms import (
 					EditProfileForm, 
@@ -130,6 +130,7 @@ def view_profile(request, pk=None):
 			'authenticated_user':authenticated_user,
 			'socialaccount': socialaccount,
 			'userarticle' : userarticle,
+			'categories' : Category.objects.all(),
 			}
 	return render(request, 'accounts/view_profile.html', args)
 
@@ -151,6 +152,7 @@ def edit_profile(request, pk):
 				'form': form,
 				'authenticated_user':authenticated_user,
 				'socialaccount': socialaccount,
+				'categories' : Category.objects.all(),
 				}
 		return render(request, 'accounts/edit_profile.html', args)
 
@@ -175,6 +177,7 @@ def change_password(request):
 				'form': form,
 				'authenticated_user':authenticated_user,
 				'socialaccount': socialaccount,
+				'categories' : Category.objects.all(),
 				}
 		return render(request, 'accounts/change_password.html', args)
 

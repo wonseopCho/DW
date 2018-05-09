@@ -9,7 +9,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'category', 'author', 'created_at', 'updated_at']
+    list_display = ['id', 'category', 'image', 'color', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category']
 
     def save_model(self, request, obj, form, change):
