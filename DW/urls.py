@@ -15,15 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
+from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse, HttpResponseNotFound
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth.views import login, logout
 from DW import views
 
+def staticView(request):
+    with open(settings.BASE_DIR+"/service-worker.js") as fp:
+        return HttpResponse(fp.read())
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('service-worker.js/', staticView),
+    path('service-worker.js', views.service_worker_js),
     path('', views.home_view, name='home'),
+    path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
     path('blog2/', include('blog2.urls')),
     path('bookmark/', include('bookmark.urls')),

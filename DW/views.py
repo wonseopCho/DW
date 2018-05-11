@@ -53,3 +53,13 @@ def home_view(request):
 		})
 	# print(args)
 	return render(request, 'home.html', args)
+
+@csrf_exempt
+def service_worker_js(request):
+	absAppPath = settings.BASE_DIR
+	filename = '/service-worker.js'
+	jsfile = open(absAppPath+filename, 'rb')
+	response = HttpResponse(content=jsfile)
+	response['Content-Type'] = 'text/javascript'
+	response['Content-Disposition'] = 'attachment; filename="%s"'%(absAppPath+filename)
+	return response

@@ -245,9 +245,9 @@ table th {
       <p class="article_text">{{article.text|safe}}</p>
     </div>
     {% if user.is_authenticated %}
-    <input type="button" class="btn btn-info" value="Add to Cart" onclick="addToCart({{authenticated_user.id}},{{article.id}})"/>
+    <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{article.id}})"/>
     {% else %}
-    <input type="button" class="btn btn-info" value="Add to Cart" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
+    <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
     {% endif %}
     <div id="snackbar"></div>
 	</div>
@@ -517,7 +517,7 @@ function likesUpdate(pk){
     });
   }
 
-function addToCart(user_id, article_id){
+function articleSave(user_id, article_id){
   console.log(user_id, article_id);
   var _add={};
   _add.user_id = parseInt(user_id);

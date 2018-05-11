@@ -1,31 +1,36 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- set a web app capable website -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="{% static 'js/manifest.json' %}">
+<link rel="apple-touch-icon" href="{% static '/Images/gps.png' %}" />
+<link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
+<link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
+
 {% block headAddon %}
 {% endblock %}
-<title >{% block title %}DUCKWHO{% endblock %}</title>
+
+<title >{% block title %}Tripticle{% endblock %}</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="{% static 'popper.js/1.14.0/popper.min.js' %}"></script>
 <script src="{% static 'bootstrap/4.0.0-beta.3/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'Sortable/Sortable.js' %}"></script>
 <script src="{% static 'sweetalert/sweetalert.js' %}"></script>
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{% static 'add-to-homescreen-master/src/addtohomescreen.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/4.0.0-beta.3/css/bootstrap.min.css' %}" />
-<!--<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/4.0.0-beta.3/css/bootstrap-theme.min.css' %}" /> -->
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/additionalCSS/carousel.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
-
-<link rel="apple-touch-icon" href="{% static '/Images/gps.png' %}" />
-<link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
-<link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}" />
 
 <style>
 body{
@@ -122,16 +127,33 @@ var userAgent = navigator.userAgent.toLowerCase();
 console.log(userAgent);
 
 if(userAgent.match('iphone')) {
-    document.write(`<link href="{% static '/Images/gps.png' %}" rel="apple-touch-icon">`) 
+    console.log(1);
+    document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>"); 
 } else if(userAgent.match('ipad')) { // sizes="72*72"
-    document.write(`<link href="{% static '/Images/gps.png' %}" rel="apple-touch-icon" >`)
+    console.log(2);
+    document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>");
 } else if(userAgent.match('ipod')) {
-    document.write(`<link href="{% static '/Images/gps.png' %}" rel="apple-touch-icon">`) 
+    console.log(3);
+    document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>"); 
 } else if(userAgent.match('android')) {
-    document.write(`<link href="{% static '/Images/gps.png' %}" rel="shortcut icon">`) 
+    console.log(4);
+    document.write("<link href='{% static '/Images/gps.png' %}' rel='shortcut icon'>"); 
 } else {
-    document.write(`<link href="{% static '/Images/gps.png' %}" rel="shortcut icon">`) 
+    console.log(5);
+    document.write("<link href='{% static '/Images/gps.png' %}' rel='shortcut icon'>"); 
 };
+
+addToHomescreen();// Especially for IOS
+
+if ('serviceWorker' in navigator) {
+    console.log("Will the service worker register?");
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(function(reg){
+        console.log("Yes, it did.");
+     }).catch(function(err) {
+        console.log("No it didn't. This happened:", err)
+    });
+ }
 
 $(document).ready(function(){
   var width = 100, // width of a progress bar in percentage

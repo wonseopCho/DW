@@ -54,6 +54,7 @@
                 customPaging: function(slider, i) {
                     return $('<button type="button" />').text(i + 1);
                 },
+                customOnChange:null,
                 dots: false,
                 dotsClass: 'slick-dots',
                 draggable: true,
@@ -2580,6 +2581,11 @@
             _.postSlide(animSlide);
         }
 
+        if(_.options.customOnChange !== null){
+
+        _.options.customOnChange.call();
+
+        }
     };
 
     Slick.prototype.startLoad = function() {

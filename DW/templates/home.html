@@ -6,8 +6,8 @@
 
 {% block headAddon %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.3/dist/assets/owl.carousel.css' %}">
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.3/dist/assets/owl.theme.default.css' %}">
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/dist/assets/owl.carousel.css' %}">
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/dist/assets/owl.theme.default.css' %}">
 <!-- <link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.3/docs/assets/css/docs.theme.min.css' %}"> -->
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
@@ -281,12 +281,11 @@ input[type=text]:focus, select {
 </style>
 {% endblock %}
 {% block title %} 
-  DUCKWHO
+  Tripticle
 {% endblock %}
 
 {% block content %}
 <div /*class="container"*/ style="border: 0px solid blue; width:100%; height: 90%">
-  
   <!-- 
   <div class="tips">
     <h4>Tips</h4>
@@ -552,29 +551,24 @@ input[type=text]:focus, select {
   </div>
   
   <div id="main_nav_slick" class="main_nav_slick">
-    <div class="main_nav_item slick_select" style="display: table"><span style="display: table-cell; vertical-align: middle">Subway</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Taxi</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Bus</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Life</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Food</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Shopping</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Tour</span></div>
-    <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">Activity</span></div>
+    {% for category in categories %}
+      {% if forloop.first %}
+        <div class="main_nav_item slick_select" style="display: table"><span style="display: table-cell; vertical-align: middle">{{category|capfirst}}</span></div>
+      {% else %}
+        <div class="main_nav_item" style="display: table"><span style="display: table-cell; vertical-align: middle">{{category|capfirst}}</span></div>
+      {% endif %}
+    {% endfor %}
   </div>  
   <div /*class="container"*/ style="border: 0px solid red ;width:100% ;height:100%;">
     <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
-
-      
 <!-- ============================================================================= Multi-tap in slide -->
 <!--       {% for category, articles in category_articles.items %}
         <div class="{{category}}" style="border: 0px solid red; margin-top: 7px; width:100%; height:100%;">
-         
             <div class="tab">
               <button id="defaultOpen" class="tablinks defaultOpen" onclick="openTap(event, '{{category}}_a')">A</button>
               <button class="tablinks" onclick="openTap(event, '{{category}}_b')">B</button>
               <button class="tablinks" onclick="openTap(event, '{{category}}_c')">C</button>
             </div>
-
             <div id="{{category}}_a" class="tabcontent">
               <div class="row">
                 {% for article in articles %}
@@ -592,7 +586,6 @@ input[type=text]:focus, select {
                   {% endfor %}
               </div>
             </div>
-
             <div id="{{category}}_b" class="tabcontent">
               <h3>Paris</h3>
               <p>Paris is the capital of France.</p> 
@@ -602,9 +595,7 @@ input[type=text]:focus, select {
               <h3>Tokyo</h3>
               <p>Tokyo is the capital of Japan.</p>
             </div>
-       
         </div>
-
       {% endfor %} -->
 <!-- ============================================================================== -->
     
@@ -614,7 +605,7 @@ input[type=text]:focus, select {
             {% for lis_category, listicles in category_listicle.items %}
               {% if lis_category == art_category %}                  
                     {% if listicles %}
-                    <div class="col-md-6 owl-carousel owl-theme" style="border:0px solid blue; width:100%; height:100%">
+                    <div class="col-md-6 owl-carousel owl-theme" style="border:0px solid blue; width:100%; height:100%;">
                       {% for listicle in listicles %}
                         <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
                           <div style="width:100%; border: 0px solid blue; position:relative;"> 
@@ -700,7 +691,7 @@ input[type=text]:focus, select {
   </div>
  
   {% else %}
-  <div style="border: 0px solid red; border-radius:40px; background-color: rgba( 192, 192, 192, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})">
+  <div id="tip_write" style="border: 0px solid red; border-radius:40px; background-color: rgba( 192, 192, 192, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})">
     <div style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
   </div>
   {% endif %}
@@ -708,9 +699,8 @@ input[type=text]:focus, select {
 {% endblock %}
 
 {% block additional_script %}
-<script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
-<script src="{% static 'owlcarousel/2-2.3.3/dist/owl.carousel.min.js' %}"></script>
-<script src="{% static 'owlcarousel/2-2.3.3/dist/owl.carousel.min.js' %}"></script>
+<script src="{% static 'slick/1.8.0/slick/slick.js' %}"></script>
+<script src="{% static 'owlcarousel/2-2.3.4/dist/owl.carousel.min.js' %}"></script>
 <script>
 $(document).ready(function(){
   var lastScrollTop = 0;
@@ -733,25 +723,41 @@ $(document).ready(function(){
   });
 
   $(".owl-carousel").owlCarousel({
-      margin:10,
-      nav:true,
+      margin:0,
+      nav:false,
+      dots: true,
       items:1,
-      margin:10,
-      loop: true,
+      margin:0,
+      loop: false,
       autoplay: false,
       autoplayTimeout: 4000,
       autoHeight: true,
       autoHeightClass: true,
-      touchDrag: false,
+      touchDrag: true,
       });
+
+  //  $('.owl-carousel').slick({
+  //   arrows: false,
+  //   dots: true,
+  //   infinite: false,
+  //   speed: 300,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  //   adaptiveHeight: true,
+  //   centerMode: false,
+  //   focusOnSelect: true,
+  //   swipeToSlide: true,
+  //   accessibility: true,
+  //   edgeFriction: 0.0,
+  // });
 
   var initial_slide, background_color;
   var p_page = getCookie('p_page');
   setCookie('p_page', '', -1);
 
-{% for cate in categories %}
-  if (p_page == '{{cate.category}}') {initial_slide = {{forloop.counter}}-1; background_color = '{{cate.color}}';};
-{% endfor %}
+  {% for cate in categories %}
+    if (p_page == '{{cate.category}}') {initial_slide = {{forloop.counter}}-1; background_color = '{{cate.color}}';};
+  {% endfor %}
 
   $('#main_nav_slick').on('init', function(event, slick){
     if (initial_slide != undefined ){$('div').removeClass('slick_select');};
