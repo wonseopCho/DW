@@ -6,8 +6,8 @@
 
 {% block headAddon %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/dist/assets/owl.carousel.css' %}">
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/dist/assets/owl.theme.default.css' %}">
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.carousel.css' %}">
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.theme.default.css' %}">
 <!-- <link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.3/docs/assets/css/docs.theme.min.css' %}"> -->
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
@@ -272,10 +272,28 @@ input[type=text]:focus, select {
 }
 
 .form-bg-img {
-  background-image: url("{% static 'images/Seoul.jpg' %}");
+  background-image: url("{% static 'Images/Seoul.jpg' %}");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+div.scrollmenu {
+    -ms-overflow-style: none;
+    background-color: black;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    text-align: center;
+    padding: 14px;
+    color:white;
+}
+
+::-webkit-scrollbar {
+display:none;
 }
 
 </style>
@@ -549,7 +567,15 @@ input[type=text]:focus, select {
     <!-- {{ p_page }} -->
     <br>
   </div>
-  
+  <div class="scrollmenu main_nav_test">
+   {% for category in categories %}
+      {% if forloop.first %}
+        <a class="main_nav_test_item slick_select" style="color:white;">{{category|capfirst}}</a>
+      {% else %}
+        <a class="main_nav_test_item" style="color:white;">{{category|capfirst}}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
   <div id="main_nav_slick" class="main_nav_slick">
     {% for category in categories %}
       {% if forloop.first %}
@@ -700,7 +726,7 @@ input[type=text]:focus, select {
 
 {% block additional_script %}
 <script src="{% static 'slick/1.8.0/slick/slick.js' %}"></script>
-<script src="{% static 'owlcarousel/2-2.3.4/dist/owl.carousel.min.js' %}"></script>
+<script src="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/owl.carousel.min.js' %}"></script>
 <script>
 $(document).ready(function(){
   var lastScrollTop = 0;
@@ -730,10 +756,10 @@ $(document).ready(function(){
     if (p_page == '{{cate.category}}') {initial_slide = {{forloop.counter}}-1; background_color = '{{cate.color}}';};
   {% endfor %}
 
-  $('#main_nav_slick').on('init', function(event, slick){
+  $('.main_nav_slick').on('init', function(event, slick){
     if (initial_slide != undefined ){$('div').removeClass('slick_select');};
-    $("#main_nav_slick").css('background-color', background_color);
-    $("#main_nav_slick div:eq("+(parseInt(initial_slide)+2)+")").addClass('slick_select');
+    $(".main_nav_slick").css('background-color', background_color);
+    $(".main_nav_slick div:eq("+(parseInt(initial_slide)+2)+")").addClass('slick_select');
      //when infinite mode is false
       // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
   });
@@ -754,7 +780,6 @@ $(document).ready(function(){
     edgeFriction: 0.0,
   });
   
-
   $('#body_div_slick').slick({
     initialSlide: initial_slide,
     slidesToShow: 1,
@@ -786,8 +811,16 @@ $(document).ready(function(){
     // =========================================
     slideIndex = $(this).index();
     $('div').removeClass('slick_select');
+    $('a').removeClass('slick_select');
     $(this).addClass('slick_select');
-    $('#main_nav_slick').slick('slickGoTo', slideIndex-1, true );
+    $('#body_div_slick').slick('slickGoTo', slideIndex, true ); 
+  });
+
+  $('.main_nav_test_item').on('click',function(event) {
+    event.preventDefault();
+    slideIndex = $(this).index();
+    $('a').removeClass('slick_select');
+    $(this).addClass('slick_select');
     $('#body_div_slick').slick('slickGoTo', slideIndex, true ); 
   });
  
@@ -802,14 +835,19 @@ $(document).ready(function(){
     {% for cate in categories %}
       if (currentSlide == {{forloop.counter}}-1){background_color = '{{cate.color}}'};
     {% endfor %}
-    $('#main_nav_slick').css('background-color', background_color);
-    $('#main_nav_slick').slick('slickGoTo', currentSlide-1, true );
+    $('.main_nav_test').css('background-color', background_color);
+    $('.main_nav_slick').css('background-color', background_color);
+    $('.main_nav_slick').slick('slickGoTo', currentSlide-1, true );
     if ($('.main_nav_item').hasClass('slick-current')) {
       $('div').removeClass('slick_select');
-      $("#main_nav_slick div:eq("+(parseInt(currentSlide)+2)+")").addClass('slick_select'); //when infinite mode is false
+      $(".main_nav_slick div:eq("+(parseInt(currentSlide)+2)+")").addClass('slick_select'); //when infinite mode is false
       // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
     }
-    else {    };
+    if ($('.main_nav_test_item').hasClass('slick_select')) {
+      $('a').removeClass('slick_select');
+      console.log('yer');
+      $(".main_nav_test a:eq("+(parseInt(currentSlide))+")").addClass('slick_select'); 
+    }
     if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
      }
@@ -849,7 +887,6 @@ window.onscroll = function() {myFunction()};
 var navbar = document.getElementById("main_nav_slick");
 var sticky = navbar.offsetTop;
 
-//<!CDATA[
 // =================================================== Slide Multi-tap call function openTap
 // function openTap(evt, tapName) {
 //   console.log(evt, tapName);
@@ -873,7 +910,6 @@ var sticky = navbar.offsetTop;
 // }
 // document.getElementById('defaultOpen').click(); // <-Default tap Initialiaing
 // =====================================================
-// ]]>
 
 var i = 0;
 var speed = 100;

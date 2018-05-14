@@ -51,7 +51,7 @@ def register(request):
 		form = RegistrationForm(request.POST)
 		if form.is_valid():
 			user = form.save(commit=False)
-			user.active = False
+			user.is_active = False
 			user.save()
 			current_site = get_current_site(request)
 			mail_subject = 'Activate your account'
