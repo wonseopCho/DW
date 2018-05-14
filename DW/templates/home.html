@@ -722,35 +722,6 @@ $(document).ready(function(){
     typeWriter();
   });
 
-  $(".owl-carousel").owlCarousel({
-      margin:0,
-      nav:false,
-      dots: true,
-      items:1,
-      margin:0,
-      loop: false,
-      autoplay: false,
-      autoplayTimeout: 4000,
-      autoHeight: true,
-      autoHeightClass: true,
-      touchDrag: true,
-      });
-
-  //  $('.owl-carousel').slick({
-  //   arrows: false,
-  //   dots: true,
-  //   infinite: false,
-  //   speed: 300,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   adaptiveHeight: true,
-  //   centerMode: false,
-  //   focusOnSelect: true,
-  //   swipeToSlide: true,
-  //   accessibility: true,
-  //   edgeFriction: 0.0,
-  // });
-
   var initial_slide, background_color;
   var p_page = getCookie('p_page');
   setCookie('p_page', '', -1);
@@ -848,10 +819,32 @@ $(document).ready(function(){
     var value = $(this).val();
     console.log(value);
     tipTitleCheckAjax(value);
-  });    
+  });
+
+  $(".owl-carousel").owlCarousel({
+      margin:0,
+      nav:false,
+      dots: true,
+      items:1,
+      margin:0,
+      loop: false,
+      autoplay: false,
+      autoplayTimeout: 4000,
+      autoHeight: true,
+      autoHeightClass: true,
+      touchDrag: true,
+      });
+
+  $('.owl-carousel').on('touchstart touchmove mousemove mouseenter', function(e) {
+    $('#body_div_slick').slick('slickSetOption', 'swipe', false, false);
+  });
+
+  $('.owl-carousel').on('touchend mouseover mouseout', function(e) {
+    $('#body_div_slick').slick('slickSetOption', 'swipe', true, false);
+  });
+
 });
-</script>
-<script>
+
 window.onscroll = function() {myFunction()};
 var navbar = document.getElementById("main_nav_slick");
 var sticky = navbar.offsetTop;
