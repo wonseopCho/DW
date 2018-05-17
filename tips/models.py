@@ -29,6 +29,7 @@ class Article(models.Model):
     views = models.PositiveIntegerField(default=0)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL ,blank=True, editable=False, related_name='category_likes')
     author = models.ForeignKey(User, blank=True, null=True, editable=False, on_delete=models.CASCADE)
+    push_update = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -94,8 +95,10 @@ class Listicle(models.Model):
                                options={'quality': 100})
     articles = models.ManyToManyField(Article, blank=False, related_name='listicle_articles')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, editable=False, on_delete=models.CASCADE)
+    push_update = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     def get_listicle_url(self):
         return reverse('tips:view_listicle', args=[self.pk])

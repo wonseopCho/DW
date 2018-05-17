@@ -23,7 +23,6 @@ import json
 def home_view(request):
 	return render(request, 'home.html')
 '''
-
 def home_view(request):
 	# p_page = request.META['HTTP_REFERER']
 	p_page = parse.urlparse(request.META.get('HTTP_REFERER')).path

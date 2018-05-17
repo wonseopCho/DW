@@ -1,0 +1,7 @@
+Collecting mock
+  Downloading https://files.pythonhosted.org/packages/e6/35/f187bdf23be87092bd0f1200d43d23076cee4d0dec109f195173fd3ebc79/mock-2.0.0-py2.py3-none-any.whl (56kB)
+Requirement already satisfied: six>=1.9 in c:\web\dw\venv1\lib\site-packages (from mock) (1.11.0)
+Collecting pbr>=0.11 (from mock)
+  Downloading https://files.pythonhosted.org/packages/2d/9d/7bfab757977067556c7ca5fe437f28e8b8843c95564fca504de79df63b25/pbr-4.0.3-py2.py3-none-any.whl (98kB)
+Installing collected packages: pbr, mock
+Successfully installed mock-2.0.0 pbr-4.0.3

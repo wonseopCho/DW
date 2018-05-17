@@ -107,6 +107,19 @@ a, a:active, a:link {
   line-height: 30px;
   color: white;
 }
+
+.is-invisible {
+  opacity: 0;
+}
+
+.subscription-details {
+  transition: opacity 1s;
+}
+
+pre code {
+  word-break: break-word;
+}
+
 @media only screen and (max-width: 450px) {
   a {
     color: #333333;
@@ -145,16 +158,6 @@ if(userAgent.match('iphone')) {
 
 addToHomescreen();// Especially for IOS
 
-if ('serviceWorker' in navigator) {
-    console.log("Will the service worker register?");
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(function(reg){
-        console.log("Yes, it did.");
-     }).catch(function(err) {
-        console.log("No it didn't. This happened:", err)
-    });
- }
-
 $(document).ready(function(){
   var width = 100, // width of a progress bar in percentage
       perfData = window.performance.timing, // The PerformanceTiming interface
@@ -182,56 +185,7 @@ function onLoad() {
     <div class="pageload">
       <div class="pageloadbar"></div>
     </div>
-    <!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="/">Home</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        {% if user.is_authenticated %}
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/logout?next={{ request.path }}">Logout</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/blog">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/blog2">Blog2</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/bookmark">Bookmark</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/mapAPI">MAP</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'accounts:view_profile' %}">Profile</a>
-          </li>
-        </ul>
-        {% else %}
-        <ul class="navbar-nav mr-auto">
-           <li class="nav-item">
-            <a class="nav-link" href="/login?next={{ request.path }}">login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'accounts:register' %}">Register<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/mapAPI">MAP</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Tips</a>
-          </li>
-        </ul>
-        {% endif %}
-        <form class="form-inline mt-2 mt-md-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav> -->
-
+    
     <div id="myNav" class="overlay">
       <div class="overlay-content">
         <div class="closebtn" onclick="closeNav()" style="width:52px;">
@@ -241,6 +195,7 @@ function onLoad() {
           <a href='/'>&#127968;</a>
         </div> -->
           {% if user.is_authenticated %}
+            <button type="button" id="myBtn"></button>
             <a href="{% url 'accounts:view_profile' %}">
               <div style="text-align: left">
                 {% if authenticated_user.picture %}
@@ -270,6 +225,7 @@ function onLoad() {
             </div>
             {% endif %}
           {% else %}
+            <button type="button" id="myBtn" style="display:none"></button>
             <a href="/login?next={{ request.path }}">
               <div style="text-align: left">
                 <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
@@ -322,6 +278,152 @@ function onLoad() {
       </div>
     </div>
     <script>
+      var pushButton = document.getElementById("myBtn");
+
+      const applicationServerPublicKey = 'BJajdmG_VQMSmpSMvjLWLowdqN-Rn1hkBwpz-Nkb2ZTI9y_rFfH1TBw3A4eMha4hm9P429Dl5AqONqVfZsmPHqI';
+      
+      let isSubscribed = false;
+      let swRegistration = null;
+
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+          console.log('Service Worker and Push is supported');
+          navigator.serviceWorker.register("/service-worker.js")
+            .then(function(swReg){
+              console.log('Service Worker is registered', swReg);
+              swRegistration = swReg;
+              initialiseUI();
+           }).catch(function(err) {
+              console.error('Service Worker Error', err)
+          });
+       } else {
+          console.warn('Push messaging is not supported');
+          pushButton.textContent = 'Push Not Supported';
+      }
+
+      function initialiseUI() {
+        pushButton.addEventListener('click', function() {
+            pushButton.disabled = true;
+            if (isSubscribed) {
+              // TODO: Unsubscribe user
+              unsubscribeUser();
+            } else {
+              subscribeUser();
+            }
+          });
+
+        // Set the initial subscription value
+        swRegistration.pushManager.getSubscription()
+        .then(function(subscription) {
+          isSubscribed = !(subscription === null);
+
+          if (isSubscribed) {
+            console.log('User IS subscribed.');
+          } else {
+            console.log('User is NOT subscribed.');
+          }
+
+          updateBtn();
+        });
+      }
+
+      function subscribeUser() {
+        const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+        swRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: applicationServerKey
+        })
+        .then(function(subscription) {
+          console.log('User is subscribed:', subscription);
+
+          updateSubscriptionOnServer(subscription);
+
+          isSubscribed = true;
+
+          updateBtn();
+        })
+        .catch(function(err) {
+          console.log('Failed to subscribe the user: ', err);
+          updateBtn();
+        });
+      }
+
+      function unsubscribeUser() {
+        swRegistration.pushManager.getSubscription()
+        .then(function(subscription) {
+          if (subscription) {
+            return subscription.unsubscribe();
+          }
+        })
+        .catch(function(error) {
+          console.log('Error unsubscribing', error);
+        })
+        .then(function() {
+          updateSubscriptionOnServer(null);
+
+          console.log('User is unsubscribed.');
+          isSubscribed = false;
+
+          updateBtn();
+        });
+      }
+
+      function updateBtn() {
+        if (Notification.permission === 'denied') {
+            pushButton.textContent = 'Push Messaging Blocked.';
+            pushButton.disabled = true;
+            updateSubscriptionOnServer(null);
+            return;
+          }
+
+        if (isSubscribed) {
+          pushButton.textContent = 'Disable Push Messaging';
+        } else {
+          pushButton.textContent = 'Enable Push Messaging';
+        }
+
+        pushButton.disabled = false;
+      }
+
+      function urlB64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+          .replace(/\-/g, '+')
+          .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      }
+
+      function updateSubscriptionOnServer(subscription) {
+        // TODO: Send subscription to application server
+        if (subscription) {
+          console.log(JSON.stringify(subscription));
+
+          var subscribe = {};
+          subscribe.csrfmiddlewaretoken = '{{csrf_token}}';
+          subscribe.subscription = JSON.stringify(subscription);
+          $.ajax({
+            url:"{% url 'accounts:subscribe' %}",
+            method:"post",
+            data: subscribe,
+            success: function(res){
+              if (res == 1){
+                console.log("subscription success");
+              }
+              else{
+                console.log("subscription failed");
+              }
+            },error: function(error){
+              console.log("error",error);
+            }
+          });
+        }
+      }
 
     function gotoCategory(category){
       setCookie('p_page', category, 1);
@@ -337,14 +439,12 @@ function onLoad() {
     }  
 
     function openNav() {
-        // document.getElementById("myNav").style.width = "100%";
         $("#myNav").animate({left: '0px'}, 30);
         $('body').addClass('noneScroll');
 
     }
 
     function closeNav() {
-        // document.getElementById("myNav").style.width = "0%";
         $("#myNav").animate({left: '-100%'}, 30);
         $('body').removeClass('noneScroll');
     }

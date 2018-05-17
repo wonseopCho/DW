@@ -200,3 +200,13 @@ def change_friends(request, operation, pk):
 	elif operation == 'remove':
 		Friend.lose_friend(request.user, friend)
 	return redirect('accounts:view_profile')
+
+@login_required
+def subscribe(request):
+	if request.method == 'POST':
+		user = UserProfile.objects.get(user=request.user)
+		user.subscription = request.POST['subscription'].replace('null', '"null"')
+		user.save()
+		return HttpResponse(1) #sucess
+	else:
+		return HttpResponse(0) #failed

@@ -7,13 +7,15 @@ from django.contrib.auth.views import(
 	)
 from django.contrib import admin
 from django.urls import path, re_path
+from tips.models import Article, Category
 from . import views
 
 app_name = 'accounts'
+args = {'categories' : Category.objects.all()}
 urlpatterns = [
 	re_path(r'^\w*$', views.login_redirect, name='login_redirect'),
 	path('connect/<operation>/<pk>', views.change_friends, name='change_friends'),
-	path('login/', login, {'template_name':'login.html'}, name='account_login'),
+	path('login/', login, {'template_name':'login.html','extra_context': args}, name='account_login'),
 	path('register/', views.register, name='register'),
 	path('register/done', views.UserCreateDoneTemplate.as_view(), name='register_done'),
 	path('register/usernameCheckAjax', views.usernameCheckAjax, name='usernameCheckAjax'),
@@ -52,5 +54,6 @@ urlpatterns = [
 		'template_name': 'manual_registration/password_reset_complete.html',
 		}, 
 		name='password_reset_complete'),
+	path('subscribe/', views.subscribe, name='subscribe')
 
 ]

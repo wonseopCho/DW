@@ -2,11 +2,14 @@ from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.html import strip_tags
-from .models import Listicle, Category, Article, Image, Comment
-from .forms import ListicleForm
 from multiupload.admin import MultiUploadAdmin
 from django_summernote.admin import SummernoteModelAdmin
-
+from pywebpush import webpush, WebPushException
+from accounts.models import UserProfile
+from .models import Listicle, Category, Article, Image, Comment
+from .forms import ListicleForm
+from DW import keys
+import json
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'category', 'image', 'color', 'author', 'created_at', 'updated_at']
@@ -77,6 +80,30 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         obj.slug = slug[:max_length]+'...'
         if not obj.author:
             obj.author = request.user
+
+        if obj.push_update:
+            users = UserProfile.objects.all()
+            for user in users:
+                if user.subscription != None:                 
+                    try:
+                        webpush(
+                            subscription_info=json.loads(user.subscription),
+                            data=obj.title+"has been Newly Added!",
+                            vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
+                            vapid_claims={"sub": "mailto:YourNameHere@example.org",}
+                        )
+                        print("push",obj.push_update, change)
+                    except WebPushException as ex:
+                        print("I'm sorry, Dave, but I can't do that: {}", repr(ex))
+                        # Mozilla returns additional information in the body of the response.
+                        if ex.response and ex.response.json():
+                            extra = ex.response.json()
+                            print("Remote service replied with a {}:{}, {}",
+                                  extra.code,
+                                  extra.errno,
+                                  extra.message
+                                  )
+        obj.push_update = False
         obj.save()
 
 class ImageAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
@@ -105,6 +132,29 @@ class ListicleAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not obj.author:
             obj.author = request.user
+        if obj.push_update:
+            users = UserProfile.objects.all()
+            for user in users:
+                if user.subscription != None:                 
+                    try:
+                        webpush(
+                            subscription_info=json.loads(user.subscription),
+                            data=obj.title+"has been Newly Added!",
+                            vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
+                            vapid_claims={"sub": "mailto:YourNameHere@example.org",}
+                        )
+                        print("push",obj.push_update, change)
+                    except WebPushException as ex:
+                        print("I'm sorry, Dave, but I can't do that: {}", repr(ex))
+                        # Mozilla returns additional information in the body of the response.
+                        if ex.response and ex.response.json():
+                            extra = ex.response.json()
+                            print("Remote service replied with a {}:{}, {}",
+                                  extra.code,
+                                  extra.errno,
+                                  extra.message
+                                  )
+        obj.push_update = False
         obj.save()
 
 admin.site.register(Listicle, ListicleAdmin)

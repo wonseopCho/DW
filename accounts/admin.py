@@ -2,10 +2,16 @@ from django.contrib import admin
 from .models import UserProfile, Friend
 
 class UserProfileAdmin(admin.ModelAdmin):
-	list_display = ['pk','id','user','firstname','lastname','article_cart_counts','gender', 'locale']
+	list_display = ['pk','id','user', 'subscribe', 'article_cart_counts','gender', 'locale']
+
+	def subscribe(self, userProfile):
+		if userProfile.subscription != None :
+			return 'Yes'
+		else:
+			return 'No' 
 
 	def article_cart_counts(self, userProfile):
-	        return '{}'.format(userProfile.article_cart.count())
+	    return '{}'.format(userProfile.article_cart.count())
 
 admin.site.register(UserProfile,UserProfileAdmin)
 

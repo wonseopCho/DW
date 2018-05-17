@@ -15,7 +15,8 @@ class UserProfile(models.Model):
 	photo_url = models.CharField(max_length=200, blank=True, null=True)
 	gender = models.CharField(max_length=10, blank=True, null=True)
 	locale = models.CharField(max_length=50, blank=True, null=True)
-	article_cart = models.ManyToManyField(Article, blank=False, related_name='user_articles')
+	article_cart = models.ManyToManyField(Article, blank=True, related_name='user_articles')
+	subscription = models.CharField(max_length=500, blank=True, null=True)
 
 def create_profile(sender, **kwargs):
 	if kwargs['created'] == True : # True = when created , False = when updated
