@@ -5,7 +5,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 	list_display = ['pk','id','user', 'subscribe', 'article_cart_counts','gender', 'locale']
 
 	def subscribe(self, userProfile):
-		if userProfile.subscription != None :
+		print(userProfile.subscription)
+		if userProfile.subscription != None and userProfile.subscription != "":
 			return 'Yes'
 		else:
 			return 'No' 

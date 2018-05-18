@@ -41,7 +41,7 @@ def home_view(request):
 			socialaccount = None
 	for cate in categories:
 		category = Category.objects.get(category=cate.category).id
-		category_articles.update({ cate.category : Article.objects.filter(category=category)})
+		category_articles.update({ cate.category : Article.objects.filter(category=category).order_by('id')})
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
 	args.update({'category_articles' : category_articles,
 				 'category_listicle' : category_listicle,

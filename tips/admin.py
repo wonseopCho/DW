@@ -84,7 +84,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         if obj.push_update:
             users = UserProfile.objects.all()
             for user in users:
-                if user.subscription != None:                 
+                if userProfile.subscription != None and userProfile.subscription != "":                 
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
@@ -135,7 +135,7 @@ class ListicleAdmin(admin.ModelAdmin):
         if obj.push_update:
             users = UserProfile.objects.all()
             for user in users:
-                if user.subscription != None:                 
+                if userProfile.subscription != None and userProfile.subscription != "":                 
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),

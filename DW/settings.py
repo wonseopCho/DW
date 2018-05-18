@@ -239,3 +239,29 @@ EMAIL_HOST_PASSWORD = 'mys3cr3tp4ssw0rd'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'TestSite Team <noreply@example.com>'
 '''
+
+SUMMERNOTE_CONFIG = {
+
+    'iframe': True,
+    'airMode': False,
+    'styleWithSpan': True,
+    'direction': 'ltr',
+    'empty': ('<p><br/></p>', '<p><br></p>'),
+
+    'toolbar': [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'superscript', 'subscript',
+                  'strikethrough', 'clear']],
+        # ['fontname', ['fontname']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video', 'hr']],
+        ['view', ['fullscreen', 'codeview']],
+        ['help', ['help']],
+    ],
+
+    'attachment_filesize_limit': 1024 * 1024,
+}

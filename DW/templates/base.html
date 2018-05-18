@@ -25,16 +25,20 @@
 <script src="{% static 'Sortable/Sortable.js' %}"></script>
 <script src="{% static 'sweetalert/sweetalert.js' %}"></script>
 <script src="{% static 'add-to-homescreen-master/src/addtohomescreen.js' %}"></script>
+<script src="{% static 'bootstrap/bootstrap-toggle-master/js/bootstrap-toggle.min.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap-toggle-master/css/bootstrap-toggle.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/4.0.0-beta.3/css/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/additionalCSS/carousel.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" > 
 
 <style>
 body{
   padding-top: 0;
+  font-family: 'Open Sans', sans-serif;
 }
 a, a:active, a:link {
   text-decoration: none;
@@ -116,6 +120,48 @@ a, a:active, a:link {
   transition: opacity 1s;
 }
 
+.btn-default.active, .open>.dropdown-toggle.btn-default {
+    color: white;
+    background-color: #adadad;
+    border-color: #adadad;
+}
+
+.btn:active, .btn.active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.toggle-handle {
+  margin-top: -24px; 
+  width:26px;
+  height:32px;
+ }
+
 pre code {
   word-break: break-word;
 }
@@ -195,7 +241,6 @@ function onLoad() {
           <a href='/'>&#127968;</a>
         </div> -->
           {% if user.is_authenticated %}
-            <button type="button" id="myBtn"></button>
             <a href="{% url 'accounts:view_profile' %}">
               <div style="text-align: left">
                 {% if authenticated_user.picture %}
@@ -225,7 +270,6 @@ function onLoad() {
             </div>
             {% endif %}
           {% else %}
-            <button type="button" id="myBtn" style="display:none"></button>
             <a href="/login?next={{ request.path }}">
               <div style="text-align: left">
                 <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
@@ -251,9 +295,17 @@ function onLoad() {
             </div>
           {% endfor %}
         </div>
-        <div style="border:1px solid #dddbdb; height: 70px; ">
-          <div style="border: 0px solid black; width:50%; float:left; font-size: 17px;">Announcement</div>
-          <div style="border: 0px solid black; width:50%; float:left; font-size: 17px;">
+        <div id="push_and_map" style="border:1px solid #dddbdb; height: 70px; ">
+          
+          <div style="border:0px solid black; width:51%; float:left; font-size: 17px;">
+            {% if user.is_authenticated %}
+              <input id="pushBtn"  type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="danger" data-width="130" data-height="32">
+            {% else %}
+              <input id="pushBtn_dummy"  type="checkbox" disabled data-toggle="toggle" data-width="130" data-height="32">
+            {% endif %}
+          </div>
+          
+          <div style="border: 0px solid black; width:49%; float:left; font-size: 17px;">
             <a id="mapAPI" href="/mapAPI">MAP</a>
           </div>
         </div>
@@ -278,8 +330,6 @@ function onLoad() {
       </div>
     </div>
     <script>
-      var pushButton = document.getElementById("myBtn");
-
       const applicationServerPublicKey = 'BJajdmG_VQMSmpSMvjLWLowdqN-Rn1hkBwpz-Nkb2ZTI9y_rFfH1TBw3A4eMha4hm9P429Dl5AqONqVfZsmPHqI';
       
       let isSubscribed = false;
@@ -297,12 +347,13 @@ function onLoad() {
           });
        } else {
           console.warn('Push messaging is not supported');
-          pushButton.textContent = 'Push Not Supported';
+          // pushButton.textContent = 'Push Not Supported';
       }
 
       function initialiseUI() {
-        pushButton.addEventListener('click', function() {
-            pushButton.disabled = true;
+        $('#pushBtn').change(function() {
+            console.log("coliock");
+            $('#pushBtn').attr('disabled', true);
             if (isSubscribed) {
               // TODO: Unsubscribe user
               unsubscribeUser();
@@ -310,6 +361,7 @@ function onLoad() {
               subscribeUser();
             }
           });
+
 
         // Set the initial subscription value
         swRegistration.pushManager.getSubscription()
@@ -369,19 +421,27 @@ function onLoad() {
 
       function updateBtn() {
         if (Notification.permission === 'denied') {
-            pushButton.textContent = 'Push Messaging Blocked.';
-            pushButton.disabled = true;
+            console.log('Push Messaging Blocked.');
+            $('#pushBtn').bootstrapToggle('disable');
             updateSubscriptionOnServer(null);
             return;
           }
-
+        console.log(isSubscribed);
         if (isSubscribed) {
-          pushButton.textContent = 'Disable Push Messaging';
+          $('#pushBtn').attr('checked', true);
+          $('#pushBtn').bootstrapToggle({
+              on: 'Alarm Enabled',
+              off: 'Alarm Disabled'
+            });
         } else {
-          pushButton.textContent = 'Enable Push Messaging';
-        }
+          $('#pushBtn').attr('checked', false);
+          $('#pushBtn').bootstrapToggle({
+              on: 'Alarm Enabled',
+              off: 'Alarm Disabled'
+            });
+        };
 
-        pushButton.disabled = false;
+        $('#pushBtn').bootstrapToggle('enable');
       }
 
       function urlB64ToUint8Array(base64String) {
@@ -401,12 +461,10 @@ function onLoad() {
 
       function updateSubscriptionOnServer(subscription) {
         // TODO: Send subscription to application server
-        if (subscription) {
-          console.log(JSON.stringify(subscription));
-
           var subscribe = {};
+          if (subscription == null) {subscribe.subscription = null;}
+          else {subscribe.subscription = JSON.stringify(subscription);};
           subscribe.csrfmiddlewaretoken = '{{csrf_token}}';
-          subscribe.subscription = JSON.stringify(subscription);
           $.ajax({
             url:"{% url 'accounts:subscribe' %}",
             method:"post",
@@ -422,7 +480,7 @@ function onLoad() {
               console.log("error",error);
             }
           });
-        }
+        
       }
 
     function gotoCategory(category){
@@ -452,6 +510,7 @@ function onLoad() {
     $("#mapAPI").click(function(){
       $("#myNav").animate({left: '-100%'}, 30);
     });
+
     </script>
   </header>
   	{% block content %}{% endblock %}
