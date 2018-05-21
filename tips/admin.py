@@ -68,6 +68,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         return '{}'.format(article.likes.count())
 
     def save_model(self, request, obj, form, change):
+        print(change)
         max_length = 48
         slug = slugify(strip_tags(obj.text), allow_unicode=True)
         slug = slug.replace('nbsp','-')
@@ -84,7 +85,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         if obj.push_update:
             users = UserProfile.objects.all()
             for user in users:
-                if userProfile.subscription != None and userProfile.subscription != "":                 
+                if user.subscription != None and user.subscription != "":                 
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
@@ -135,7 +136,7 @@ class ListicleAdmin(admin.ModelAdmin):
         if obj.push_update:
             users = UserProfile.objects.all()
             for user in users:
-                if userProfile.subscription != None and userProfile.subscription != "":                 
+                if user.subscription != None and user.subscription != "":                 
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),

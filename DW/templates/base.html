@@ -5,15 +5,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- set a web app capable website -->
+<meta name="theme-color" content="#4dc7a0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="{% static 'js/manifest.json' %}">
 <link rel="apple-touch-icon" href="{% static '/Images/gps.png' %}" />
 <link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
 <link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
-
-{% block headAddon %}
-{% endblock %}
 
 <title >{% block title %}Tripticle{% endblock %}</title>
 
@@ -33,7 +31,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" > 
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" /> 
+
+
+{% block headAddon %}
+{% endblock %}
 
 <style>
 body{
@@ -157,7 +159,7 @@ a, a:active, a:link {
     border-radius: 4px;
 }
 .toggle-handle {
-  margin-top: -24px; 
+  margin-top: -21px; 
   width:26px;
   height:32px;
  }

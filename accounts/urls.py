@@ -33,16 +33,16 @@ urlpatterns = [
 		'template_name': 'manual_registration/password_reset_form.html',
 		'email_template_name': 'manual_registration/password_reset_email.html',
      	'subject_template_name': 'manual_registration/password_reset_subject.txt',
-		'post_reset_redirect': 'accounts:password_reset_done',
+		'post_reset_redirect': 'accounts:password_reset_done','extra_context': args
 		}, 
 		name='reset_password'),
 	path('reset-password/done/', password_reset_done, { 
-		'template_name': 'manual_registration/password_reset_done.html',
+		'template_name': 'manual_registration/password_reset_done.html','extra_context': args
 		}, 
 		name='password_reset_done'),
 	path('reset-password/confirm/<uidb64>/<token>/', password_reset_confirm, {
 		'template_name': 'manual_registration/password_reset_form.html',
-		'post_reset_redirect': 'accounts:password_reset_complete',
+		'post_reset_redirect': 'accounts:password_reset_complete','extra_context': args
 		}, 
 		name='password_reset_confirm'),
 	# re_path(r'^reset-password/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', password_reset_confirm, {
@@ -51,7 +51,7 @@ urlpatterns = [
 	# 	}, 
 	# 	name='password_reset_confirm'),
 	path('reset-password/complete/', password_reset_complete, {
-		'template_name': 'manual_registration/password_reset_complete.html',
+		'template_name': 'manual_registration/password_reset_complete.html','extra_context': args
 		}, 
 		name='password_reset_complete'),
 	path('subscribe/', views.subscribe, name='subscribe')

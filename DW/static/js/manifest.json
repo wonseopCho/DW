@@ -3,7 +3,7 @@
   "name": "Tripticle",
   "start_url": "/",
   "scope": "/",
-  "theme_color": "#4A90E2",
+  "theme_color": "#4dc7a0",
   "background_color": "#F7F8F9",
   "display": "standalone",
   "icons": [
