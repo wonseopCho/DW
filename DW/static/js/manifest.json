@@ -1,7 +1,7 @@
 {
   "short_name": "Tripticle",
   "name": "Tripticle",
-  "start_url": "/",
+  "start_url": "/?utm_source=homescreen",
   "scope": "/",
   "theme_color": "#4dc7a0",
   "background_color": "#F7F8F9",
