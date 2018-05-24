@@ -10,7 +10,6 @@ class ArticleForm(forms.ModelForm):
 				'text' : SummernoteWidget(attrs={'width': '100%', 'height': '400px'}),
 		}
 
-
 class CommentForm(forms.ModelForm):	
 	class Meta:
 		model = Comment

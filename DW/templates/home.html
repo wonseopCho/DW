@@ -272,11 +272,11 @@ display:none;
 </style>
 {% endblock %}
 {% block title %} 
-  Tripticle
+  MicroTrips
 {% endblock %}
 
 {% block content %}
-<div /*class="container"*/ style="border: 0px solid blue; width:100%; height: 90%">
+<div style="border: 0px solid blue; width:100%; height: 90%">
 
   <!-- Modal -->
   <div style="border:0px solid red" class="modal fade form-bg-img" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -322,7 +322,7 @@ display:none;
       {% endif %}
     {% endfor %}
   </div>
-  <div /*class="container"*/ style="border: 0px solid red ;width:100% ;height:100%;">
+  <div style="border: 0px solid red ;width:100% ;height:100%;">
     <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
     
         {% for art_category, articles in category_articles.items %}
@@ -339,7 +339,7 @@ display:none;
                               {{listicle.title}}
                             </div>
                             <div>
-                              <img style="width:100%; height:100%" src="{{listicle.thumnails.url}}" />
+                              <img class="lazy" style="width:100%; height:100%" src="{{listicle.thumnails.url}}" />
                             </div>
                           </div>
                         </a>
@@ -348,26 +348,32 @@ display:none;
                     {% endif %}   
               {% endif %}
             {% endfor %}
-              <div class="col-md-6" > 
+              <div class="col-md-6" >
               {% for article in articles %}
                 <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
                   <a href="{% url 'tips:view_tips' pk=article.id %}">
                   <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
                     {% if article.image_set.first.thumnails.url %}
-                      <img style="width:100%; height:100%" src="{{article.image_set.first.thumnails.url}}"/>
+                      <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
                     {% else %}
-                      <img id= "{{article.title|slugify}}_main_image" style="width:100%; height:100%" />
-                      <script>
-                        var parser = new DOMParser(); 
-                        var a = parser.parseFromString(`{{article.text|safe|escape}}`, 'text/html');
-                        if (a.querySelector('img') != null) {
-                          var src = a.querySelector('img').src;                
-                          $("#{{article.title|slugify}}_main_image").attr('src',src);
-                        }
+                      <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+                      <script>                            
+                        var parser = new DOMParser();
+                        var textHtml = parser.parseFromString("{{article.text|replace_sq|safe|linebreaksbr}}", 'text/html');
+                        var image = textHtml.querySelector('img');
+                        // console.log(textHtml.querySelectorAll('img').length);
+                        if (image != null) {
+                          if (image.src.length > 0 ){
+                            $("#{{article.title|slugify}}_main_image").attr('data-src', image.src);
+                          }
+                          else {
+                            $("#{{article.title|slugify}}_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
+                          }; 
+                        };
                       </script>
                     {% endif %}
                   </div>
-                  <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px;display: table; ">
+                  <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
                     <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">{{article.title}}</div>
                     <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
                   </div>
@@ -384,7 +390,7 @@ display:none;
   <a href="https://www.google.com/maps/search/편의점/">test map search</a>
   {% if user.is_authenticated %}
   <div id="tip_write" style="border: 0px solid red; border-radius:40px; background-color: rgba( 255, 191, 0, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;  ">
-    <div data-toggle="modal" data-target="#tips" style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
+    <div data-toggle="modal" data-target="#tips" style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-3px;">+</div>
   </div>
  
   {% else %}
@@ -398,15 +404,27 @@ display:none;
 {% block additional_script %}
 <script src="{% static 'slick/1.8.0/slick/slick.js' %}"></script>
 <script src="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
 $(document).ready(function(){
+  
   var lastScrollTop = 0;
   var initial_slide, background_color;
   var p_page = getCookie('p_page');
   setCookie('p_page', '', -1);
+  
+  lazyImageCall();
 
   {% for cate in categories %}
-    if (p_page == '{{cate.category}}') {initial_slide = {{forloop.counter}}-1; background_color = '{{cate.color}}';};
+    if (p_page == '{{cate.category}}') {
+      initial_slide = {{forloop.counter}}-1; background_color = '{{cate.color}}';
+      var position = 0;
+      for (i=0; i < (parseInt(initial_slide)-1); i++) {
+        position += Math.ceil($("#main_navi a:eq("+(i)+")").outerWidth())+3;
+      }
+      $('#main_navi').animate({scrollLeft: position}, 300);
+      changeThemeColor(background_color);
+    };
   {% endfor %}
 
   if (initial_slide != undefined ){$('.main_navi > a').removeClass('slick_select');};
@@ -428,7 +446,6 @@ $(document).ready(function(){
   });
 
   $('.main_navi_item').on('click',function(event) {
-    var i;
     var position = 0;
     event.preventDefault();
     slideIndex = $(this).index();
@@ -439,12 +456,14 @@ $(document).ready(function(){
       position += Math.ceil($("#main_navi a:eq("+(i)+")").outerWidth())+3;
     }
     $('#main_navi').animate({scrollLeft: position}, 300);
+    lazyImageCall();
   });
  
   $('#body_div_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
     if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
-     }
+    };
+    lazyImageCall();
   });
   
   $('#body_div_slick').on('afterChange', function(event, slick, currentSlide){
@@ -463,10 +482,12 @@ $(document).ready(function(){
     if ($('.main_navi_item').hasClass('slick_select')) {
       $('a').removeClass('slick_select');
       $(".main_navi a:eq("+(parseInt(currentSlide))+")").addClass('slick_select'); 
-    }
+    };
     if (window.pageYOffset >= sticky) {
       $('html,body').animate({scrollTop: 190}, 400);
-     }
+    };
+    lazyImageCall();
+    changeThemeColor(background_color);
   });
 
   $(".owl-carousel").owlCarousel({
@@ -645,11 +666,48 @@ function getCookie(cName) {
     }
     return unescape(cValue);
 }
+var loadedElements = 0;
+function lazyImageCall(){
+  
+   $('.lazy').lazy({
+      beforeLoad: function(element){
+        // console.log('image "' + stripTime(element.data('src')) + '" is about to be loaded');
+      },
+      afterLoad: function(element) {
+        loadedElements++;
+        // console.log('image "' + stripTime(element.data('src')) + '" was loaded successfully');
+      },
+      onError: function(element) {
+        loadedElements++;
+        // console.log('image "' + stripTime(element.data('src')) + '" could not be loaded');
+      },
+      onFinishedAll: function() {
+        // console.log('finished loading ' + loadedElements + ' elements');
+        // console.log('lazy instance is about to be destroyed')
+      }
+    });
+}
+function stripTime(dateString){
+  var myDate = new Date(dateString);
+  return {tm_sec:myDate.getSeconds(), 
+          tm_min: myDate.getMinutes(), 
+          tm_hour: myDate.getHours(), 
+          tm_mday: myDate.getDate(),
+          tm_mon: myDate.getMonth(), 
+          tm_year: myDate.getFullYear().toString().substring(2), 
+          tm_wday: myDate.getDay()};
+}
+
+function changeThemeColor(color) {
+    var metaThemeColor = document.querySelector("meta[name=theme-color]");
+    metaThemeColor.setAttribute("content", color);
+}
+
 </script>
 {% endblock %}
 
 {% block footer	%}
 <div style="border: 0px solid red; height: 10%">
-	&copy Loen  2018
+	&copy; Loen  2018
 </div>
 {% endblock %}

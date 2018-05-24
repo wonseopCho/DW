@@ -13,11 +13,12 @@
 <link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
 <link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
 
-<title >{% block title %}Tripticle{% endblock %}</title>
+<title >{% block title %}MicroTrips{% endblock %}</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
 <script src="{% static 'popper.js/1.14.0/popper.min.js' %}"></script>
 <script src="{% static 'bootstrap/4.0.0-beta.3/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'Sortable/Sortable.js' %}"></script>
@@ -32,7 +33,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" /> 
-
 
 {% block headAddon %}
 {% endblock %}
@@ -185,22 +185,16 @@ pre code {
 </style>
 <script>
 var userAgent = navigator.userAgent.toLowerCase();
-console.log(userAgent);
 
 if(userAgent.match('iphone')) {
-    console.log(1);
     document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>"); 
 } else if(userAgent.match('ipad')) { // sizes="72*72"
-    console.log(2);
     document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>");
 } else if(userAgent.match('ipod')) {
-    console.log(3);
     document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>"); 
 } else if(userAgent.match('android')) {
-    console.log(4);
     document.write("<link href='{% static '/Images/gps.png' %}' rel='shortcut icon'>"); 
 } else {
-    console.log(5);
     document.write("<link href='{% static '/Images/gps.png' %}' rel='shortcut icon'>"); 
 };
 
@@ -423,12 +417,12 @@ function onLoad() {
 
       function updateBtn() {
         if (Notification.permission === 'denied') {
-            console.log('Push Messaging Blocked.');
-            $('#pushBtn').bootstrapToggle('disable');
-            updateSubscriptionOnServer(null);
-            return;
-          }
-        console.log(isSubscribed);
+          console.log('Push Messaging Blocked.');
+          $('#pushBtn').bootstrapToggle('disable');
+          updateSubscriptionOnServer(null);
+          return;
+        };
+
         if (isSubscribed) {
           $('#pushBtn').attr('checked', true);
           $('#pushBtn').bootstrapToggle({
