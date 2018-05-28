@@ -101,7 +101,7 @@ div.listicle {
   background-color:#4DC7A0; 
   z-index:1; 
   border: 0px solid red ;
-  width:100% ;
+  width:70%;
   height:46px; 
   text-align: center;
   margin-top: 0px
@@ -276,128 +276,130 @@ display:none;
 {% endblock %}
 
 {% block content %}
-<div style="border: 0px solid blue; width:100%; height: 90%">
+<div style="border: 0px solid red; width:100%; height: 90%">
+  <div class="rewidth" style="border: 0px solid blue; height: 100%; margin: 0 auto">
 
-  <!-- Modal -->
-  <div style="border:0px solid red" class="modal fade form-bg-img" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="border:0px solid red; max-width: 1000px; ">
-      <div class="modal-content" style="height:100%;">
-        <div class="modal-header" style="border:0px solid red;">
-          <div style="border: 0px solid red; float:left; width:100%; text-align: center"> 
-            <h4 class="modal-title" id="tips_ModalTitle" style="color:black;"></h4>
+    <!-- Modal -->
+    <div style="border:0px solid red" class="modal fade form-bg-img" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" style="border:0px solid red; max-width: 1000px; ">
+        <div class="modal-content" style="height:100%;">
+          <div class="modal-header" style="border:0px solid red;">
+            <div style="border: 0px solid red; float:left; width:100%; text-align: center"> 
+              <h4 class="modal-title" id="tips_ModalTitle" style="color:black;"></h4>
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
           </div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
-        </div>
-        <div id='tips_ModalText' class="modal-body" style="color:black">
-         <form method="post" enctype="multipart/form-data" action='/tips/write/'>
-          {% csrf_token %}
-          <label for="id_category" style="width:100%; margin-bottom:0"><b>Category</b></label>
-          {{form.category}}
-          <label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
-          <input type="text" name="title" maxlength="100" required="" autofocus="" id="id_title">
-          <label for="id_video" style="width:100%; margin-bottom:0"><b>Video</b></label>
-          {{form.video}}
-          <br><br>
-          {{form.text}}
-          <div class="modal-footer">
-            <button id="submitbtn" type="submit" class="btn btn-default" style="width:100%">Submit</button>
-            <button id="submitcancel" type="button" class="btn btn-default" data-dismiss="modal" style="width:100%">Close</button>
+          <div id='tips_ModalText' class="modal-body" style="color:black">
+           <form method="post" enctype="multipart/form-data" action='/tips/write/'>
+            {% csrf_token %}
+            <label for="id_category" style="width:100%; margin-bottom:0"><b>Category</b></label>
+            {{form.category}}
+            <label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
+            <input type="text" name="title" maxlength="100" required="" autofocus="" id="id_title">
+            <label for="id_video" style="width:100%; margin-bottom:0"><b>Video</b></label>
+            {{form.video}}
+            <br><br>
+            {{form.text}}
+            <div class="modal-footer">
+              <button id="submitbtn" type="submit" class="btn btn-default" style="width:100%">Submit</button>
+              <button id="submitcancel" type="button" class="btn btn-default" data-dismiss="modal" style="width:100%">Close</button>
+            </div>
+            </form>
           </div>
-          </form>
         </div>
       </div>
     </div>
-  </div>
 
-  <div style="border:0px solid red; background-color: grey; width:100%; height:100px">
-    <!-- {{ p_page }} -->
-    <br>
-  </div>
-  <div id="main_navi" class="scrollmenu main_navi" style="text-align:center; background-color: #4DC7A0;">
-   {% for category in categories %}
-      {% if forloop.first %}
-        <a class="main_navi_item slick_select" style="color:white;">{{category|capfirst}}</a>
-      {% else %}
-        <a class="main_navi_item" style="color:white;">{{category|capfirst}}</a>
-      {% endif %}
-    {% endfor %}
-  </div>
-  <div style="border: 0px solid red ;width:100% ;height:100%;">
-    <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
-    
-        {% for art_category, articles in category_articles.items %}
-          <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
-            <div class="row" style="border-top:6px solid #dddbdb;">
-            {% for lis_category, listicles in category_listicle.items %}
-              {% if lis_category == art_category %}                  
-                    {% if listicles %}
-                    <div class="col-md-6 owl-carousel owl-theme" style="border:0px solid blue; width:100%; height:100%;">
-                      {% for listicle in listicles %}
-                        <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
-                          <div style="width:100%; border: 0px solid blue; position:relative;"> 
-                            <div class="listicle_title">
-                              {{listicle.title}}
+    <!-- <div style="border:0px solid red; background-color: grey; width:100%; height:100px">
+      {{ p_page }}
+      <br>
+    </div> -->
+    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center; background-color: #4DC7A0;">
+     {% for category in categories %}
+        {% if forloop.first %}
+          <a class="main_navi_item slick_select" style="color:white;">{{category|capfirst}}</a>
+        {% else %}
+          <a class="main_navi_item" style="color:white;">{{category|capfirst}}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div style="border: 0px solid red ;width:100% ;height:100%;">
+      <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
+      
+          {% for art_category, articles in category_articles.items %}
+            <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
+              <div class="row" style="border-top:6px solid #dddbdb;">
+              {% for lis_category, listicles in category_listicle.items %}
+                {% if lis_category == art_category %}                  
+                      {% if listicles %}
+                      <div class="col-md-6 owl-carousel owl-theme" style="border:0px solid blue; width:100%; height:100%;">
+                        {% for listicle in listicles %}
+                          <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
+                            <div style="width:100%; border: 0px solid blue; position:relative;"> 
+                              <div class="listicle_title">
+                                {{listicle.title}}
+                              </div>
+                              <div>
+                                <img class="lazy" style="width:100%; height:100%" src="{{listicle.thumnails.url}}" />
+                              </div>
                             </div>
-                            <div>
-                              <img class="lazy" style="width:100%; height:100%" src="{{listicle.thumnails.url}}" />
-                            </div>
-                          </div>
-                        </a>
-                      {% endfor %}
-                    </div>
-                    {% endif %}   
-              {% endif %}
-            {% endfor %}
-              <div class="col-md-6" >
-              {% for article in articles %}
-                <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
-                  <a href="{% url 'tips:view_tips' pk=article.id %}">
-                  <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
-                    {% if article.image_set.first.thumnails.url %}
-                      <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
-                    {% else %}
-                      <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
-                      <script>                            
-                        var parser = new DOMParser();
-                        var textHtml = parser.parseFromString("{{article.text|replace_sq|safe|linebreaksbr}}", 'text/html');
-                        var image = textHtml.querySelector('img');
-                        // console.log(textHtml.querySelectorAll('img').length);
-                        if (image != null) {
-                          if (image.src.length > 0 ){
-                            $("#{{article.title|slugify}}_main_image").attr('data-src', image.src);
-                          }
-                          else {
-                            $("#{{article.title|slugify}}_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
-                          }; 
-                        };
-                      </script>
-                    {% endif %}
-                  </div>
-                  <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
-                    <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">{{article.title}}</div>
-                    <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
-                  </div>
-                  </a>
-                </div>
+                          </a>
+                        {% endfor %}
+                      </div>
+                      {% endif %}   
+                {% endif %}
               {% endfor %}
+                <div class="col-md-6" >
+                {% for article in articles %}
+                  <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+                    <a href="{% url 'tips:view_tips' pk=article.id %}">
+                    <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
+                      {% if article.image_set.first.thumnails.url %}
+                        <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
+                      {% else %}
+                        <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+                        <script>                            
+                          var parser = new DOMParser();
+                          var textHtml = parser.parseFromString("{{article.text|replace_sq|safe|linebreaksbr}}", 'text/html');
+                          var image = textHtml.querySelector('img');
+                          // console.log(textHtml.querySelectorAll('img').length);
+                          if (image != null) {
+                            if (image.src.length > 0 ){
+                              $("#{{article.title|slugify}}_main_image").attr('data-src', image.src);
+                            }
+                            else {
+                              $("#{{article.title|slugify}}_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
+                            }; 
+                          };
+                        </script>
+                      {% endif %}
+                    </div>
+                    <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
+                      <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">{{article.title}}</div>
+                      <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
+                    </div>
+                    </a>
+                  </div>
+                {% endfor %}
+                </div>
               </div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
 
+      </div>
     </div>
+    <a href="https://www.google.com/maps/search/편의점/">test map search</a>
+    {% if user.is_authenticated %}
+    <div id="tip_write" class="reright" style="border: 0px solid red; border-radius:40px; background-color: rgba( 255, 191, 0, 0.5 ); position:fixed; bottom: 50px; width: 55px; height:57px; text-align: center;  ">
+      <div data-toggle="modal" data-target="#tips" style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-3px;">+</div>
+    </div>
+   
+    {% else %}
+    <div id="tip_write" class="reright" style="border: 0px solid red; border-radius:40px; background-color: rgba( 192, 192, 192, 0.5 ); position:fixed; bottom: 50px; width: 55px; height:57px; text-align: center;" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})">
+      <div style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
+    </div>
+    {% endif %}
   </div>
-  <a href="https://www.google.com/maps/search/편의점/">test map search</a>
-  {% if user.is_authenticated %}
-  <div id="tip_write" style="border: 0px solid red; border-radius:40px; background-color: rgba( 255, 191, 0, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;  ">
-    <div data-toggle="modal" data-target="#tips" style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-3px;">+</div>
-  </div>
- 
-  {% else %}
-  <div id="tip_write" style="border: 0px solid red; border-radius:40px; background-color: rgba( 192, 192, 192, 0.5 ); position:fixed; bottom: 50px; right:10px; width: 55px; height:57px; text-align: center;" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})">
-    <div style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
-  </div>
-  {% endif %}
 </div>
 {% endblock %}
 
@@ -707,7 +709,7 @@ function changeThemeColor(color) {
 {% endblock %}
 
 {% block footer	%}
-<div style="border: 0px solid red; height: 10%">
+<div class="rewidth" style="border: 0px solid red;height: 10%; margin:0 auto">
 	&copy; Loen  2018
 </div>
 {% endblock %}

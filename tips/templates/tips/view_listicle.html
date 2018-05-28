@@ -209,8 +209,8 @@ table th {
         <h2>{{article.title}}</h2>
       </div>
       <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
-        <span id="views_{{article.id}}" class="badge badge-light">Views {{article.views}}</span>
-        <span id="likes_{{article.id}}" onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left: 3%">Likes {{article.likes.count}}</span>
+        <span id="views_{{article.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;right:125px;margin-top:5px">Views {{article.views}}</span>
+        <span id="likes_{{article.id}}" onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;right:55px;margin-top:5px">Likes {{article.likes.count}}</span>
         <span style="border:0px solid red;position:absolute;right:0;position:absolute; top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#{{article.id}}_snsShare"></span>
       </div>
       {% if article.video or article.image_set.all.count > 0 %}

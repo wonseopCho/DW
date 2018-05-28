@@ -168,6 +168,13 @@ pre code {
   word-break: break-word;
 }
 
+.rewidth{
+  width:70%;
+}
+.reright{
+  right:15%;
+}
+
 @media only screen and (max-width: 450px) {
   a {
     color: #333333;
@@ -180,6 +187,15 @@ pre code {
   }
   .overlay-content {
     width: 100%;
+  }
+  .rewidth {
+    width: 100%;
+  }
+  .sticky {
+    width: 100%;
+  }
+  .reright{
+  right:10px;
   }
 }
 </style>
@@ -223,7 +239,7 @@ function onLoad() {
 </script>
 </head>
 <body>
-  <header>
+  <header style="border:0px solid red;width:100%;">
     <div class="pageload">
       <div class="pageloadbar"></div>
     </div>
@@ -310,7 +326,7 @@ function onLoad() {
         <a class="nav-link" href="/bookmark">Bookmark</a>
       </div>
     </div>
-    <div style="border:0px solid red; width:100%; height:54px">
+    <div class="rewidth" style="border:0px solid red; height:54px; border:0px solid black; margin:0 auto">
       <div style="border:0px solid black; width:15%; text-align:center; float:left">
         <span style="font-size:35px;cursor:pointer" onclick="openNav()">&#9776;</span>
       </div>

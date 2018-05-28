@@ -7,7 +7,7 @@ from django_summernote.admin import SummernoteModelAdmin
 from pywebpush import webpush, WebPushException
 from accounts.models import UserProfile
 from .models import Listicle, Category, Article, Image, Comment
-from .forms import ListicleForm
+from .forms import ListicleForm, ArticleForm
 from DW import keys
 import json
 
@@ -49,6 +49,7 @@ class ImagesMultiuploadMixing(object):
             obj.save()
 
 class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdmin):
+    form = ArticleForm
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True

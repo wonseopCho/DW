@@ -6,6 +6,7 @@ from django.db.models import Avg, F, Max, Min, Window
 from django.http import JsonResponse
 from django.utils.text import slugify
 from django.utils.html import strip_tags
+from django_summernote.models import Attachment
 from accounts.models import UserProfile
 from allauth.socialaccount.models import SocialAccount
 from .models import Listicle, Category, Comment, Article, Image
@@ -412,3 +413,26 @@ def article_edit(request, author, article_pk):
 			return redirect(article)		
 	else:
 		return redirect("tips:view_tips", article_pk)
+
+def image_delete(request):
+	# print(Attachment.objects.all())
+	if request.user.is_authenticated:
+		if request.method == "POST":
+			image_src = request.POST['file']
+			try:
+				instance = Attachment.objects.get(file=image_src)
+			except:
+				instance = False
+			if instance is not False:
+				try:
+					instance.file.delete()
+					instance.delete()
+					return HttpResponse(1) # instance and file deleted from DB success
+				except:
+					return HttpResponse(2) # delete error
+			else:
+				return HttpResponse(3) # no instance exist
+		return HttpResponse(4) # POST error
+	else:
+		return HttpResponse(5) #login require
+	

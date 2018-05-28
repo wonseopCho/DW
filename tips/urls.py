@@ -15,6 +15,7 @@ urlpatterns = [
 	path('titleCheckAjax/<article_pk>/', views.title_check_ajax, name='title_check_ajax'),
 	path('articleRemove/<author>/<article_pk>/', views.article_remove, name='article_remove'),
 	path('articleEdit/<author>/<article_pk>/', views.article_edit, name='article_edit'),
+	path('imageDelete/', views.image_delete, name='image_delete'),
 	re_path(r'^(?P<pk>\d+)/$', views.view_tips, name='view_tips'),
 	re_path(r'^(?P<pk>\d+)/(?P<comment_pk>\d+)/$', views.view_tips, name='view_tips_withcomment'),
 	re_path(r'^listicle/(?P<listicle_pk>\d+)/$', views.view_listicle, name='view_listicle'),

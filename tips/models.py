@@ -90,9 +90,9 @@ class Listicle(models.Model):
     category = models.ForeignKey(Category, blank=False, null=True, on_delete=models.CASCADE)
     image = models.FileField(blank=False, null=False, upload_to='tips/listicle/images/%Y/%m/%d')
     thumnails = ImageSpecField(source='image', 
-                               processors=[ResizeToFill(200,100)],
+                               # processors=[ResizeToFill(200,100)],
                                format='JPEG',
-                               options={'quality': 100})
+                               options={'quality': 30})
     articles = models.ManyToManyField(Article, blank=False, related_name='listicle_articles')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, editable=False, on_delete=models.CASCADE)
     push_update = models.BooleanField(default=False)

@@ -214,9 +214,9 @@ table th {
       <h2>{{content.title}}</h2>
     </div>
     <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
-      <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;">Views {{content.views}}</span>
-      <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left: 3%">Likes {{content.likes.count}}</span>
-      <span style="border:0px solid red;position:absolute;right:0;position:absolute; top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
+      <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;right:125px;margin-top:5px">Views {{content.views}}</span>
+      <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;right:55px;margin-top:5px">Likes {{content.likes.count}}</span>
+      <span style="border:0px solid red;position:absolute;right:0; top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
     </div>
     {% if content.video or content.image_set.all.count > 0 %}
       <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
