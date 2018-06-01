@@ -362,9 +362,9 @@ def title_check_ajax(request, article_pk=None):
 				res = 0
 			return HttpResponse(res)
 		else:
-			return HttpResponse(4) #post error
+			return redirect('home') #post error
 	else:
-		return HttpResponse(5) #login require
+		return redirect('accounts:account_login') #login require
 
 def article_remove(request, author, article_pk):
 	article = Article.objects.get(id=article_pk)
@@ -432,7 +432,7 @@ def image_delete(request):
 					return HttpResponse(2) # delete error
 			else:
 				return HttpResponse(3) # no instance exist
-		return HttpResponse(4) # POST error
+		return redirect('home') # POST error
 	else:
-		return HttpResponse(5) #login require
+		return redirect('accounts:account_login') #login require
 	

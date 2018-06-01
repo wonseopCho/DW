@@ -16,7 +16,9 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display_links = ['id', 'category']
 
     def save_model(self, request, obj, form, change):
-        obj.category = obj.category.lower()
+        first = obj.category[0].upper()
+        rest = obj.category[1:].lower()
+        obj.category = first+rest
         if not obj.author:
             obj.author = request.user
         obj.save()

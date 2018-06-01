@@ -16,14 +16,14 @@
 <title >{% block title %}MicroTrips{% endblock %}</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 
 <script src="{% static 'popper.js/1.14.0/popper.min.js' %}"></script>
 <script src="{% static 'bootstrap/4.0.0-beta.3/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'Sortable/Sortable.js' %}"></script>
+<script src="{% static 'Sortable/Sortable.min.js' %}"></script>
 <script src="{% static 'sweetalert/sweetalert.js' %}"></script>
-<script src="{% static 'add-to-homescreen-master/src/addtohomescreen.js' %}"></script>
+<script src="{% static 'add-to-homescreen-master/src/addtohomescreen.min.js' %}"></script>
 <script src="{% static 'bootstrap/bootstrap-toggle-master/js/bootstrap-toggle.min.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap-toggle-master/css/bootstrap-toggle.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/4.0.0-beta.3/css/bootstrap.min.css' %}" />
@@ -33,6 +33,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" /> 
+
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
 
 {% block headAddon %}
 {% endblock %}
@@ -196,6 +199,9 @@ pre code {
   }
   .reright{
   right:10px;
+  }
+  .linkThumbs_item{
+    
   }
 }
 </style>

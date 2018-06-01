@@ -7,7 +7,7 @@ class ArticleForm(forms.ModelForm):
 		model = Article
 		fields = ['category', 'title', 'video', 'text', 'push_update']
 		widgets = {
-				'text' : SummernoteWidget(attrs={'width': '100%', 'height': '400px'}),
+				'text' : SummernoteWidget(attrs={'width': '100%', 'height': '400px'},)
 		}
 
 class CommentForm(forms.ModelForm):	

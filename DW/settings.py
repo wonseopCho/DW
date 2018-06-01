@@ -25,7 +25,7 @@ SECRET_KEY = 'j)p9lo0zybdy77%2-6xzdps=spd0894+1dt9g*lczgd*_kkpjc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.11.22','.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.11.24','.pythonanywhere.com']
 
 # Application definition
 
@@ -247,15 +247,14 @@ SUMMERNOTE_CONFIG = {
     'styleWithSpan': True,
     'direction': 'ltr',
     'empty': ('<p><br/></p>', '<p><br></p>'),
-
+    'width': '100%',
     'toolbar': [
         ['style', ['style']],
-        ['font', ['bold', 'italic', 'underline', 'superscript', 'subscript',
-                  'strikethrough', 'clear']],
-        # ['fontname', ['fontname']],
+        ['font', ['bold']],
+        ['fontname', ['fontname']],
         ['fontsize', ['fontsize']],
         ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
+        ['para', ['paragraph']],
         ['height', ['height']],
         ['table', ['table']],
         ['insert', ['link', 'picture', 'video', 'hr']],
@@ -263,7 +262,7 @@ SUMMERNOTE_CONFIG = {
         ['help', ['help']],
     ],
 
-    'attachment_filesize_limit': 1024 * 1024 * 10, #5MB
+    'attachment_filesize_limit': 1024 * 1024 * 10, #10MB limits
 
     'js': ('/static/js/tips/article.js',),
 }

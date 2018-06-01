@@ -349,29 +349,6 @@ table th {
 
 <script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
 <script>
-$(document).ready(function(){
-  $('.image_slick').slick({
-    arrows: false,
-    dots: false,
-    infinite: false,
-    speed: 300,
-    slidesToShow: 1,
-    centerMode: false,
-    adaptiveHeight: false,
-    cssEase: 'linear',
-    centerPadding: '40px',
-  });
-
-  $(".id_message").attr("placeholder", "Type your comment here").blur();
-  $(".id_message").attr("rows", "2");
-
-  $('.comment_form').click(function(){
-    $('.comment_form #id_parent').val(0);
-  });
-
-  $('img').css('height','');
-});
-
 function replyOnComment(current, listicle_pk, article_pk, comment_pk){
   var insert_td = $(current).parents('tr').children(":eq(1)");
   if ($(current).hasClass('remove')){
@@ -562,5 +539,29 @@ function articleSave(user_id, article_id){
     }
   });
 }
+
+$(document).ready(function(){
+  $('.image_slick').slick({
+    arrows: false,
+    dots: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    centerMode: false,
+    adaptiveHeight: false,
+    cssEase: 'linear',
+    centerPadding: '40px',
+  });
+
+  $(".id_message").attr("placeholder", "Type your comment here").blur();
+  $(".id_message").attr("rows", "2");
+
+  $('.comment_form').click(function(){
+    $('.comment_form #id_parent').val(0);
+  });
+
+  $('img').css('height','');
+  $('iframe').css({'width':'100%','height':''});
+});
 </script>
 {% endblock %}
