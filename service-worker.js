@@ -1,5 +1,6 @@
 var CACHE_NAME = 'tripticle-cache';
-var urlsToCache = [];
+var urlsToCache = [
+];
 
 self.addEventListener('install', function(event) {
   // Perform install steps

@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,27 +16,25 @@
 
 <title >{% block title %}MicroTrips{% endblock %}</title>
 
+{% cache 500 sidebar %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-
 <script src="{% static 'popper.js/1.14.0/popper.min.js' %}"></script>
 <script src="{% static 'bootstrap/4.0.0-beta.3/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'Sortable/Sortable.min.js' %}"></script>
 <script src="{% static 'sweetalert/sweetalert.js' %}"></script>
 <script src="{% static 'add-to-homescreen-master/src/addtohomescreen.min.js' %}"></script>
 <script src="{% static 'bootstrap/bootstrap-toggle-master/js/bootstrap-toggle.min.js' %}"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap-toggle-master/css/bootstrap-toggle.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap-toggle-master/css/bootstrap-toggle.min.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/4.0.0-beta.3/css/bootstrap.min.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/additionalCSS/carousel.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/additionalCSS/carousel.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/sweetalert.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" /> 
-
-<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}"/>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" />
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+{% endcache %}
 
 {% block headAddon %}
 {% endblock %}

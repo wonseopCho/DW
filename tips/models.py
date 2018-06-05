@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from smart_selects.db_fields import ChainedManyToManyField
@@ -26,6 +27,7 @@ class Article(models.Model):
     video = models.FileField(blank=True, upload_to='tips/video/%Y/%m/%d')
     slug = models.SlugField(max_length=100, unique=False, editable=False, allow_unicode=True)
     text = models.TextField(blank=False, null=False)
+    rating = models.PositiveSmallIntegerField(blank=True, default=0, choices=[(i, i) for i in range(0, 6)], validators=[MaxValueValidator(5), MinValueValidator(0)])
     views = models.PositiveIntegerField(default=0)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL ,blank=True, editable=False, related_name='category_likes')
     author = models.ForeignKey(User, blank=True, null=True, editable=False, on_delete=models.CASCADE)

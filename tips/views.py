@@ -332,6 +332,7 @@ def user_write_tip(request):
 			form = ArticleForm(request.POST, request.FILES)
 			if form.is_valid():
 				article = form.save(commit=False)
+				rating = strip_tags(request.POST['rating'])
 				text = strip_tags(request.POST['text'])
 				slug = slugify(text, allow_unicode=True)
 				slug = slug.replace('nbsp', '-')
@@ -342,6 +343,7 @@ def user_write_tip(request):
 				if len(trimmed_slug) <= max_length:
 				    article.slug = trimmed_slug
 				article.slug = slug[:max_length]+'...'
+				article.rating = rating
 				article.author = request.user				
 				article.save()
 				return redirect(article)
@@ -398,6 +400,7 @@ def article_edit(request, author, article_pk):
 		form = ArticleForm(request.POST, request.FILES, instance=article)
 		if form.is_valid():
 			article = form.save(commit=False)
+			rating = strip_tags(request.POST['rating'])
 			text = strip_tags(request.POST['text'])
 			slug = slugify(text, allow_unicode=True)
 			slug = slug.replace('nbsp', '-')
@@ -408,6 +411,7 @@ def article_edit(request, author, article_pk):
 			if len(trimmed_slug) <= max_length:
 			    article.slug = trimmed_slug
 			article.slug = slug[:max_length]+'...'
+			article.rating = rating
 			article.author = request.user				
 			article.save()
 			return redirect(article)		

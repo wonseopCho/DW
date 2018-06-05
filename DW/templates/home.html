@@ -5,17 +5,15 @@
 {% load jb_replace %}
 
 {% block headAddon %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.carousel.css' %}">
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.theme.default.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" media="print"/>
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.carousel.css' %}" >
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.theme.default.css' %}" media="print">
 <!-- <link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.3/docs/assets/css/docs.theme.min.css' %}"> -->
-<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 
 <style>
-/*body {
-  overflow: hidden;
-}*/
+
 * {box-sizing: border-box;}
 .wrapper {
   max-width: 940px;
@@ -269,6 +267,49 @@ div.scrollmenu a {
 display:none;
 }
 
+.rating {
+  padding-bottom:10px;
+  position: relative;
+  float: left;
+  transform: rotateY(180deg);
+  display: flex;
+}
+
+.rating input{
+  display: none;
+}
+.rating label{
+  height:30px;
+  display: block;
+  cursor: pointer;
+  width:30px;
+  background-color: white;
+}
+.rating label:before{
+  content:'\f005';
+  font-family: fontAwesome;
+  display: block;
+  font-size: 30px;
+  color: #DDDDDD;
+}
+.rating label:after{
+  content:'\f005';
+  font-family: fontAwesome;
+  position: relative;
+  top:-45px;
+  display: block;
+  font-size: 30px;
+  color: #1f9cff;
+  opacity: 0;
+  transition: .5s;
+  text-shadow: 0 2px 5px rbga(0,0,0,.5);
+}
+
+.rating label:hover:after,
+.rating label:hover ~ label:after,
+.rating input:checked ~ label:after{
+  opacity: 1;
+}
 </style>
 <script>
   function thumbImage(title, text){
@@ -288,6 +329,7 @@ display:none;
 
 </script>
 {% endblock %}
+
 {% block title %} 
   MicroTrips
 {% endblock %}
@@ -300,7 +342,7 @@ display:none;
       <div class="modal-dialog" style="border:0px solid red; max-width: 1000px; ">
         <div class="modal-content" style="height:100%;">
           <div class="modal-header" style="border:0px solid red;">
-            <div style="border: 0px solid red; float:left; width:100%; text-align: center"> 
+            <div style="border: 0px solid red; float:left; width:100%; height:45px; text-align: center"> 
               <h5 class="modal-title" id="tips_ModalTitle" style="color:black;"></h5>
             </div>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
@@ -309,9 +351,18 @@ display:none;
            <form id="user_write_form" method="post" enctype="multipart/form-data" action='/tips/write/'>
             {% csrf_token %}
             <label for="id_category" style="width:100%; margin-bottom:0"><b>Category</b></label>
-            {{form.category}}
+            <div id="category_tooltip" data-toggle="tooltip" data-placement="top" title="Please select a Category">{{form.category}}</div>
             <label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
-            <input type="text" name="title" maxlength="100" required="" autofocus="" id="id_title" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+            <input type="text" name="title" maxlength="100" required="" autofocus="" id="id_title" data-toggle="tooltip" data-placement="top" title="Please put a Title">
+            <label for="rating" style="width:100%; margin-bottom:0"><b>Rating</b></label>
+            <div class="rating">
+              <input type="radio" name="star" id="star1" value="5"><label for="star1"></label>
+              <input type="radio" name="star" id="star2" value="4"><label for="star2"></label>
+              <input type="radio" name="star" id="star3" value="3"><label for="star3"></label>
+              <input type="radio" name="star" id="star4" value="2"><label for="star4"></label>
+              <input type="radio" name="star" id="star5" value="1"><label for="star5"></label>
+            </div>
+            <div style="visibility:hidden; height:0">{{form.rating}}</div>
             <div class="form-group" style="border:0px solid red;margin-top:-25px;visibility:hidden; height:0">
               <div class="input-group input-file" name="video" id="id_video">
                 <span class="input-group-btn">
@@ -324,7 +375,7 @@ display:none;
               </div>
             </div>
             <br>
-            <div id="div_text" data-toggle="tooltip" data-placement="bottom" title="Tooltip on top">
+            <div id="text_tooltip" data-toggle="tooltip" data-placement="bottom" title="Please write Contents">
             {{form.text}}
             </div>
             <div class="modal-footer">
@@ -399,7 +450,7 @@ display:none;
                         <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
                       {% else %}
                         <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
-                        <script>                       
+                        <script async>                       
                           thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}");
                         </script>
                       {% endif %}
@@ -619,7 +670,7 @@ $(document).ready(function(){
         position += Math.ceil($("#main_navi a:eq("+(i)+")").outerWidth())+3;
       }
       $('#main_navi').animate({scrollLeft: position}, 300);
-      changeThemeColor(background_color);
+      // changeThemeColor(background_color);
     };
   {% endfor %}
 
@@ -682,7 +733,7 @@ $(document).ready(function(){
       $('html,body').animate({scrollTop: 190}, 400);
     };
     lazyImageCall();
-    changeThemeColor(background_color);
+    // changeThemeColor(background_color);
   });
 
   $("#listicle_slider").owlCarousel({
@@ -757,20 +808,36 @@ $(document).ready(function(){
     tipTitleCheckAjax(value);
   });
 
+  $('input:radio[name="star"]').on('change',function(){
+    $('#id_rating').val($('input:radio[name="star"]:checked').val());
+  });
+
   $('#submitbtn').on('click', function(){
-    console.log('submit btn test');
-    console.log($('#id_category').val());
-    // $('#user_write_form').submit();
-    $('#id_title').tooltip('show');
-    $('#div_text').tooltip('show');
-    setTimeout(function(){$('#id_title').tooltip('hide')},1000);
+    if($('#id_category').val() == ''){
+      $('#category_tooltip').tooltip('show');
+    }
+    else if($('#id_title').val() == ''){
+      $('#id_title').tooltip('show');
+    }
+    else if($('#id_text').val() == ''){
+      $('#text_tooltip').tooltip('show');
+    }
+    else {
+      $('#user_write_form').submit();
+    }
+    // console.log($('input:radio[name="star"]:checked').val());
+    console.log('id_rating',$('#id_rating').val());
+    setTimeout(function(){
+      $('#category_tooltip').tooltip('hide');
+      $('#id_title').tooltip('hide');
+      $('#text_tooltip').tooltip('hide');
+    },1000);
   });
 
   $('iframe').on('load', function(){
     setTimeout(function(){
     $('iframe').contents().find('.note-editable').css('height','355px');    
     }, 500);
-    console.log('{{form.text.value}}');
   });
 
 });

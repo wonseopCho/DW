@@ -56,7 +56,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
     multiupload_form = True
     multiupload_list = True
     search_fields = ['article','title']
-    list_display = ['id', 'category', 'title', 'video', 'slug', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
+    list_display = ['id', 'category', 'title', 'video', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'title']
     summernote_fields = ['text']
     

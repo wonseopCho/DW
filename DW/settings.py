@@ -25,7 +25,7 @@ SECRET_KEY = 'j)p9lo0zybdy77%2-6xzdps=spd0894+1dt9g*lczgd*_kkpjc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.11.24','.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.11.27','.pythonanywhere.com']
 
 # Application definition
 
@@ -76,13 +76,18 @@ SOCIALACCOUNT_PROVIDERS = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'DW.middleware.LoginRequiredMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'DW.urls'
@@ -119,14 +124,11 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'DW.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'DW',
         'USER': 'JB',
@@ -207,6 +209,11 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = "/home/wonseop/DW/static"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'DW', 'media')
 MEDIA_URL = '/media/'
@@ -266,3 +273,14 @@ SUMMERNOTE_CONFIG = {
 
     'js': ('/static/js/tips/article.js',),
 }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'TIMEOUT': 3600,
+#     }
+# }
+
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 60 * 10
+# CACHE_MIDDLEWARE_KEY_PREFIX = ''

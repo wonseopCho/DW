@@ -11,6 +11,7 @@ from allauth.socialaccount.models import SocialAccount
 from urllib import parse
 from tips.forms import ArticleForm
 import json
+import os
 
 #CVB
 # class HomeView(TemplateView):
@@ -50,7 +51,6 @@ def home_view(request):
 				 'form' : articleForm,
 				 'categories' : categories,
 		})
-	# print(args)
 	return render(request, 'home.html', args)
 
 @csrf_exempt

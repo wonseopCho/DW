@@ -122,6 +122,49 @@ table th {
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
+.rating {
+  padding-top:5px;
+  padding-bottom:10px;
+  position: relative;
+  transform: rotateY(180deg);
+  display: flex;
+  float:left;
+  width:100%;
+}
+
+.rating input{
+  display: none;
+}
+.rating label{
+  height: 25px;
+  display: block;
+  width: 25px;
+  background-color: #E9ECEF;
+}
+.rating label:before{
+  content:'\f005';
+  font-family: fontAwesome;
+  display: block;
+  font-size: 25px;
+  color: white;
+}
+.rating label:after{
+  content:'\f005';
+  font-family: fontAwesome;
+  position: relative;
+  top:-37px;
+  display: block;
+  font-size: 25px;
+  color: #1f9cff;
+  opacity: 0;
+  transition: .5s;
+  text-shadow: 0 2px 5px rbga(0,0,0,.5);
+}
+
+.rating input:checked ~ label:after{
+opacity: 1;
+}
+
 @-webkit-keyframes fadein {
     from {bottom: 0; opacity: 0;} 
     to {bottom: 30px; opacity: 1;}
@@ -217,7 +260,19 @@ table th {
       <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;right:125px;margin-top:5px">Views {{content.views}}</span>
       <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;right:55px;margin-top:5px">Likes {{content.likes.count}}</span>
       <span style="border:0px solid red;position:absolute;right:0; top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
+
     </div>
+    <div class="rating">
+      <input disabled type="radio" name="star" id="star1" value="5"><label for="star1"></label>
+      <input disabled type="radio" name="star" id="star2" value="4"><label for="star2"></label>
+      <input disabled type="radio" name="star" id="star3" value="3"><label for="star3"></label>
+      <input disabled type="radio" name="star" id="star4" value="2"><label for="star4"></label>
+      <input disabled type="radio" name="star" id="star5" value="1"><label for="star5"></label>
+      <script>
+        $('input:radio[value="{{content.rating}}"]').prop("checked", true);
+      </script>
+    </div>
+    <br><br>
     {% if content.video or content.image_set.all.count > 0 %}
       <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
       {% if content.image_set.all.count > 0 %} 
@@ -264,7 +319,7 @@ table th {
         </div>
       </div>
     </div>
-    <div id="article_text" style="margin-top: 10px">
+    <div id="article_text" style="margin-top: 10px;display:block">
       <p>{{content.text|safe}}</p>
     </div>
     <div style="border:0px solid blue; width:100%;height:40px">
@@ -631,6 +686,7 @@ $(document).ready(function(){
 
   $('img').css('height','');
   $('iframe').css({'width':'100%','height':''});
+
 });
 </script>
 {% endblock %}
