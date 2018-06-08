@@ -84,6 +84,7 @@ def view_tips(request, pk, comment_pk=None):
 			 'authenticated_user' : authenticated_user,
 			 'socialaccount': socialaccount,
 			 'categories' : Category.objects.all(),
+			 'excludeArticles' : Article.objects.filter(category=category).exclude(id=pk),
 	}
 	return render(request, 'tips/view_tip.html' , args)
 
@@ -155,6 +156,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 			'authenticated_user' : authenticated_user,
 			'socialaccount': socialaccount,
 			'categories' : Category.objects.all(),
+			'excludeListicles' : Listicle.objects.exclude(id=listicle_pk),
 			}
 	return render(request, 'tips/view_listicle.html', args)
 

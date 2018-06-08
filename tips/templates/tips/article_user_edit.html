@@ -23,7 +23,6 @@ input[type=text]:focus, select {
     background-color: #4CAF50;
     color: white;
     padding: 16px 20px;
-    margin: 8px 0;
     border: none;
     cursor: pointer;
     width: 100%;
@@ -162,7 +161,7 @@ $(document).ready(function(){
 </script>
 
 <div id="edit_body" style="border:0px solid blue;padding:3px 0px 3px 0px;">
-	<div style="border:0px solid red; border-radius:10px; width:95%; margin:0 auto; padding:5px; background-color: white">
+	<div style="border:0px solid red; border-radius:.3rem; width:95%; margin:0 auto; padding:5px; background-color: white">
 		<span style="text-align:center"><h4>{{form.title.value}} Edit</h4></span>
 		<form id="user_write_form" action="" enctype="multipart/form-data" method="POST">
 			{% csrf_token %}

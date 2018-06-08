@@ -14,8 +14,17 @@ img {
 }
 
 .article_text {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
+
+#article_text > p > a{
+  border-radius: 5px;
+  background-color : #28a745;
+  color:white;
+  padding:10px;
+  text-align: center;
+}
+
 .slick-slide{
   border: none;
   outline:none;
@@ -93,67 +102,6 @@ table th {
 .td_updated_at {
   border:none;
   width:180px;
-}
-
-@media only screen and (max-width: 600px) {
-  table {
-    border: 0;
-  }
-
-  table caption {
-    font-size: 1.3em;
-  }
-  
-  table thead {
-    border: none;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
-  
-  table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
-    margin-bottom: .625em;
-  }
-  
-  table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    font-size: .8em;
-    text-align: left;
-  }
-  
-  table td::before {
-    /*
-    * aria-label has no advantage, it won't be read inside a table
-    content: attr(aria-label);
-    */
-    /*content: attr(data-label);*/
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  table td:last-child {
-    border-bottom: 0;
-  }
-  .td_author {
-    width:100%;
-    text-align: left;
-  }
-  .td_message {
-    width:100%;
-    padding:0;
-  }
-  .td_updated_at {
-    text-align: right;
-    margin-left: 88px
-  }
 }
 
 #snackbar {
@@ -241,11 +189,81 @@ opacity: 1;
     to {bottom: 0; opacity: 0;}
 }
 
+@media only screen and (max-width: 600px) {
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1.3em;
+  }
+  
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+  
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: left;
+  }
+  
+  table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    /*content: attr(data-label);*/
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  table td:last-child {
+    border-bottom: 0;
+  }
+  .td_author {
+    width:100%;
+    text-align: left;
+  }
+  .td_message {
+    width:100%;
+    padding:0;
+  }
+  .td_updated_at {
+    text-align: right;
+    margin-left: 88px
+  }
+
+  #article_text > p > a{
+    border-radius: 5px;
+    background-color : #28a745;
+    color:white;
+    padding:10px;
+    display: block;
+    text-align: center;
+  }
+}
+
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container" style="width:100%;">
+<div class="container" style="border:0px solid red; overflow-x: hidden;">
 	{% for article in listicle.articles.all %}
     <div class="jumbotron" style="padding:25px 8px 8px 8px; margin-bottom: 0px">
       <div style="width:100%;text-align: center;">
@@ -256,6 +274,7 @@ opacity: 1;
         <span id="likes_{{article.id}}" onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;right:55px;margin-top:5px">Likes {{article.likes.count}}</span>
         <span style="border:0px solid red;position:absolute;right:0;position:absolute; top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#{{article.id}}_snsShare"></span>
       </div>
+      {% if article.rating != 0 %}
       <div class="rating">
         <input disabled type="radio" name="star{{article.title}}" id="star1" value="5"><label for="star1"></label>
         <input disabled type="radio" name="star{{article.title}}" id="star2" value="4"><label for="star2"></label>
@@ -266,6 +285,7 @@ opacity: 1;
           $('input:radio[name="star{{article.title}}"]').filter('[value={{article.rating}}]').prop("checked", true);
         </script>
       </div>
+      {% endif %}
       <br><br>
       {% if article.video or article.image_set.all.count > 0 %}
     		<div class="image_slick" style="border:0px solid red; width:100%;height:100%">
@@ -614,7 +634,7 @@ $(document).ready(function(){
     $('.comment_form #id_parent').val(0);
   });
 
-  $('img').css('height','');
+  $('#article_text > img').css('height','');
   $('iframe').css({'width':'100%','height':''});
 });
 </script>

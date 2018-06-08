@@ -16,11 +16,15 @@ img {
     white-space: pre-wrap;
 }
 
-#article_text > p > a{
+#article_text > p > a, #article_text > div > a{
     border-radius: 5px;
     background-color : #28a745;
     color:white;
     padding:10px;
+    text-align: center;
+    position: relative;
+    top:-10px;
+    float:right;
 }
 .slick-slide{
   border: none;
@@ -244,180 +248,250 @@ opacity: 1;
     text-align: right;
     margin-left: 88px
   }
+  #article_text > p > a, #article_text > div > a{
+    border-radius: 5px;
+    background-color : #28a745;
+    color:white;
+    padding:10px;
+    display: block;
+    text-align: center;
+    position: relative;
+    top:10px;
+    margin-bottom:40px;
+    width:100%;
+  }
 }
 
 </style>
+<script>
+function thumbImage(title, text){
+  var parser = new DOMParser();
+  var textHtml = parser.parseFromString(text, 'text/html');
+  var image = textHtml.querySelector('img');
+  // console.log(textHtml.querySelectorAll('img').length);
+  if (image != null) {
+    if (image.src.length > 0 ){
+      $("#"+title+"_main_image").attr('data-src', image.src);
+    }
+    else {
+      $("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
+    }; 
+  };
+}
+</script>
 {% endblock %}
 
 {% block content %}
-<div class="container" style="width:100%;">
-	{% for content in article %}
-	<div class="jumbotron" style="padding:25px 8px 8px 8px; margin-bottom: 0px;">
-    <div style="width:100%;text-align: center; border: 0px solid red">
-      <h2>{{content.title}}</h2>
-    </div>
-    <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
-      <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;right:125px;margin-top:5px">Views {{content.views}}</span>
-      <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;right:55px;margin-top:5px">Likes {{content.likes.count}}</span>
-      <span style="border:0px solid red;position:absolute;right:0; top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
+<div class="container rewidth" style="border:0px solid red; overflow-x:hidden;">
+  <div class="row">
+    <div class="col-md-8" style="padding:0;">
+  	{% for content in article %}
+    	<div class="jumbotron" style="padding:1px; margin-bottom: 0px;">
+        <div style="width:100%;text-align: center; border: 0px solid red">
+          <h2>{{content.title}}</h2>
+        </div>
+        <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
+          <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
+          <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{content.views}}</span>
+          <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px">Likes {{content.likes.count}}</span>
+          
+        </div>
+        {% if content.rating != 0 %}
+        <div class="rating">
+          <input disabled type="radio" name="star" id="star1" value="5"><label for="star1"></label>
+          <input disabled type="radio" name="star" id="star2" value="4"><label for="star2"></label>
+          <input disabled type="radio" name="star" id="star3" value="3"><label for="star3"></label>
+          <input disabled type="radio" name="star" id="star4" value="2"><label for="star4"></label>
+          <input disabled type="radio" name="star" id="star5" value="1"><label for="star5"></label>
+          <script>
+            $('input:radio[value="{{content.rating}}"]').prop("checked", true);
+          </script>
+        </div>
+        {% endif %}
 
-    </div>
-    <div class="rating">
-      <input disabled type="radio" name="star" id="star1" value="5"><label for="star1"></label>
-      <input disabled type="radio" name="star" id="star2" value="4"><label for="star2"></label>
-      <input disabled type="radio" name="star" id="star3" value="3"><label for="star3"></label>
-      <input disabled type="radio" name="star" id="star4" value="2"><label for="star4"></label>
-      <input disabled type="radio" name="star" id="star5" value="1"><label for="star5"></label>
-      <script>
-        $('input:radio[value="{{content.rating}}"]').prop("checked", true);
-      </script>
-    </div>
-    <br><br>
-    {% if content.video or content.image_set.all.count > 0 %}
-      <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
-      {% if content.image_set.all.count > 0 %} 
-        {%for pic in content.image_set.all %}
-          <div style="border: 0px solid red; width:100%; height:100%; margin-bottom:5px">
-            <img style="width:100%; height:100%"  src="{{pic.file.url}}">
+        {% if content.video or content.image_set.all.count > 0 %}
+          <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
+          {% if content.image_set.all.count > 0 %} 
+            {%for pic in content.image_set.all %}
+              <div style="border: 0px solid red; width:100%; height:100%; margin-bottom:5px">
+                <img style="width:100%; height:100%"  src="{{pic.file.url}}">
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% if content.video %}
+          <div class="show_slick_item" style="border:0px solid red">
+            <video style="width:100%" controls>
+              <source src="{{content.video.url}}" type="video/mp4">
+              <source src="{{content.video.url}}" type="video/ogg">
+              <source src="{{content.video.url}}" type="video/webm">
+               Your browser does not support the video tag.
+            </video>
           </div>
-        {% endfor %}
-      {% endif %}
-      {% if content.video %}
-      <div class="show_slick_item" style="border:0px solid red">
-        <video style="width:100%" controls>
-          <source src="{{content.video.url}}" type="video/mp4">
-          <source src="{{content.video.url}}" type="video/ogg">
-          <source src="{{content.video.url}}" type="video/webm">
-           Your browser does not support the video tag.
-        </video>
-      </div>
-      {% endif %}
-      </div>
-    {% endif %}
-    
-    <div style="margin-top: 10px">
-      <!-- Modal -->
-      <div id="snsShare" class="modal fade" role="dialog">
-        <div class="modal-dialog" style="border:0px solid red; top: 40%">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-body" style="text-align:center; padding:30px">
-              <a style="border:0px solid red; margin-right:7px" href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{content.id}}&t={{content.title}}">
-                <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
-              </a>
-              <a style="border:0px solid red; margin-right:7px" href="https://twitter.com/share?text={{content.title}}&url={{request.build_absolute_uri}}{{content.id}}">
-                <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
-              </a>
-              <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
-                <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
-              </a>
-              <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
-                <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
-              </a>
+          {% endif %}
+          </div>
+        {% endif %}
+        
+        <div style="margin-top: 10px">
+          <!-- Modal -->
+          <div id="snsShare" class="modal fade" role="dialog">
+            <div class="modal-dialog" style="border:0px solid red; top: 40%">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-body" style="text-align:center; padding:30px">
+                  <a style="border:0px solid red; margin-right:7px" href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{content.id}}&t={{content.title}}">
+                    <img src="{% static '/Images/sns/googleplus.svg' %}" width="40" height="40">
+                  </a>
+                  <a style="border:0px solid red; margin-right:7px" href="https://twitter.com/share?text={{content.title}}&url={{request.build_absolute_uri}}{{content.id}}">
+                    <img src="{% static '/Images/sns/twitter.svg' %}" width="35" height="35">
+                  </a>
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
+                    <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
+                  </a>
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
+                    <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div id="article_text" style="margin-top: 10px;display:block">
-      <p>{{content.text|safe}}</p>
-    </div>
-    <div style="border:0px solid blue; width:100%;height:40px">
-      <div style="border:1px solid #E9ECEF; width:50%;display:inline-block;float:left">
-        {% if user.is_authenticated and user != content.author %}
-        <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{content.id}})"/>
-        {% elif not user.is_authenticated %}
-        <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
-        {% endif %}
-      </div>
-        {% if user.is_authenticated and user == content.author %}
-      <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
-        <input id="content_edit" type="button" class="btn btn-warning" style="width:45%; max-width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
-        <input id="content_delete" type="button" class="btn btn-danger" style="width:50%; max-width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
-      </div>
-        {% endif %}
-    </div>
-    <div id="snackbar"></div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="card card-default">
-        <div class="card-header">{{content.comment_set.all.count}} Comments</div>
-          <div class="card-body">
-                {% if content.comment_set.all.count == 0 %}
-                  <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
-                {% else %}
-                  <table class="table">
-                    <tbody>
-                 {% for comment in content.comment_set.all %}
-                    {% if comment.depth == 2 %}
-                      <tr style="background-color: white; width:96.5%; margin-left:10px">
-                        <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
-                          <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static '/Images/comment/comment_arrow.svg' %}">
-                          {{comment.author}}<span> to </span> {{comment.parent_author}}
-                        </td>
-                    {% elif comment.depth > 2 %}
-                      <tr style="background-color: #d4fce4; width:96.5%; margin-left:10px">
-                        <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
-                          <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static '/Images/comment/comment_arrow.svg' %}">
-                          {{comment.author}}<span> to </span> {{comment.parent_author}}
-                        </td>
-                    {% else %}
-                      <tr>
-                        <td class="td_author" style="font-size: 12px;padding-left: 10px;border: none">
-                          {{comment.author}}
-                        </td>
-                    {% endif %}
-                        <td class="td_message" style="font-size: 11px; ">
-                          <p style="border:0px solid red">{{comment.message}}</p>
-                        </td>
-                        <td class="td_edit" style="font-size: 11px; border: none" >
-                          {% if user.is_authenticated and request.user == comment.author %}
-                            <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{content.id}}, {{comment.id}})">수정</a>
-                            <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{content.id}}, {{comment.id}})">삭제</a>
-                          {% endif %}
-                          {% if user.is_authenticated %}
-                            <a style="border:px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{content.id}}, {{ comment.id }})">댓글</a>
-                          {% endif %}
-                        </td>
-                        <td class="td_updated_at" style="font-size: 11px; border:0px solid black;">
-                          <span>{{comment.updated_at}}</span>
-                        </td>
-                      </tr>
-                 {% endfor %}
-                    </tbody>
-                  </table>
-                {% endif %}
-          </div>
-          <div id="card-footer" class="card-footer">
-            {% if user.is_authenticated %}
-            <div id="comment_form" class="comment_form">
-              <form method="POST">
-                {% csrf_token %}
-                <input class="noneDisplay" type="text" id="article" name="article" value="{{content.id}}"/>
-                {{ form.parent|add_class:"noneDisplay" }}
-                {{ form.message|add_class:"col-sm-12" }}
-                <input type="submit" value="Write"/>
-              </form>
-            </div>
-            <!-- <a href="{% url 'tips:comment_new' content.pk %}">Write Comments</a> -->
-            {% else %}
-            <div style="width:100%; margin:0 auto; text-align: center;" >
-              <a href="/login?next={{ request.path }}">
-                <p>To make a comment, Please Log-in</p>              
-              </a>
-            </div> 
+        <div id="article_text" style="margin-top: 10px;display:block">
+          <p>{{content.text|safe}}</p>
+        </div>
+        <div style="border:0px solid blue; width:100%;height:40px">
+          <div style="border:1px solid #E9ECEF; width:50%;display:inline-block;float:left">
+            {% if user.is_authenticated and user != content.author %}
+            <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{content.id}})"/>
+            {% elif not user.is_authenticated %}
+            <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
             {% endif %}
-          </div> 
+          </div>
+            {% if user.is_authenticated and user == content.author %}
+          <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
+            <input id="content_edit" type="button" class="btn btn-warning" style="width:45%; max-width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
+            <input id="content_delete" type="button" class="btn btn-danger" style="width:50%; max-width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
+          </div>
+            {% endif %}
+        </div>
+        <div id="snackbar"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-default">
+            <div class="card-header">{{content.comment_set.all.count}} Comments</div>
+              <div class="card-body">
+                    {% if content.comment_set.all.count == 0 %}
+                      <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
+                    {% else %}
+                      <table class="table">
+                        <tbody>
+                     {% for comment in content.comment_set.all %}
+                        {% if comment.depth == 2 %}
+                          <tr style="background-color: white; width:96.5%; margin-left:10px">
+                            <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
+                              <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static '/Images/comment/comment_arrow.svg' %}">
+                              {{comment.author}}<span> to </span> {{comment.parent_author}}
+                            </td>
+                        {% elif comment.depth > 2 %}
+                          <tr style="background-color: #d4fce4; width:96.5%; margin-left:10px">
+                            <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
+                              <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static '/Images/comment/comment_arrow.svg' %}">
+                              {{comment.author}}<span> to </span> {{comment.parent_author}}
+                            </td>
+                        {% else %}
+                          <tr>
+                            <td class="td_author" style="font-size: 12px;padding-left: 10px;border: none">
+                              {{comment.author}}
+                            </td>
+                        {% endif %}
+                            <td class="td_message" style="font-size: 11px; ">
+                              <p style="border:0px solid red">{{comment.message}}</p>
+                            </td>
+                            <td class="td_edit" style="font-size: 11px; border: none" >
+                              {% if user.is_authenticated and request.user == comment.author %}
+                                <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{content.id}}, {{comment.id}})">수정</a>
+                                <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{content.id}}, {{comment.id}})">삭제</a>
+                              {% endif %}
+                              {% if user.is_authenticated %}
+                                <a style="border:px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{content.id}}, {{ comment.id }})">댓글</a>
+                              {% endif %}
+                            </td>
+                            <td class="td_updated_at" style="font-size: 11px; border:0px solid black;">
+                              <span>{{comment.updated_at}}</span>
+                            </td>
+                          </tr>
+                     {% endfor %}
+                        </tbody>
+                      </table>
+                    {% endif %}
+              </div>
+              <div id="card-footer" class="card-footer">
+                {% if user.is_authenticated %}
+                <div id="comment_form" class="comment_form">
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input class="noneDisplay" type="text" id="article" name="article" value="{{content.id}}"/>
+                    {{ form.parent|add_class:"noneDisplay" }}
+                    {{ form.message|add_class:"col-sm-12" }}
+                    <input type="submit" value="Write"/>
+                  </form>
+                </div>
+                <!-- <a href="{% url 'tips:comment_new' content.pk %}">Write Comments</a> -->
+                {% else %}
+                <div style="width:100%; margin:0 auto; text-align: center;" >
+                  <a href="/login?next={{ request.path }}">
+                    <p>To make a comment, Please Log-in</p>              
+                  </a>
+                </div> 
+                {% endif %}
+              </div> 
+          </div>
+        </div>
+      </div>
+    	{% endfor %}
+      <br>
+    </div>
+
+
+    <div class="col-md-4" style="padding:3px;">
+      <div style="display:block; border-radius:5px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa">
+        Other Tips on {{category}}
+      </div>
+      {% for exArticle in excludeArticles %}
+        <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:52px; margin-top:10px">
+          <a href="{{exArticle.get_absolute_url}}">
+          <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:20%; height:47px; float:left">
+            {% if exArticle.image_set.first.thumnails.url %}
+              <img class="lazy" style="width:100%; height:100%;" data-src="{{exArticle.image_set.first.thumnails.url}}"/>
+            {% else %}
+              <img class="lazy" id="{{exArticle.title|slugify}}_main_image" style="width:100%; height:100%"/>
+              <script async>                       
+                thumbImage("{{exArticle.title|slugify}}", "{{exArticle.text|replace_sq|safe|linebreaksbr}}");
+              </script>
+            {% endif %}
+          </div>
+          <div style="border:0px solid orange;width: 75%;height:47px;margin-left:7px;float:left;font-size:15px;display:table;">
+            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;">{{exArticle.title}}</div>
+            <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
+          </div>
+          </a>
+        </div>
+      {% endfor %}
+      <div id='categories' style="border-top:6px solid #dddbdb;border-bottom:6px solid #dddbdb; width:100%; height:80px; padding:0 ">
+        {% for category in categories %}
+          <div style="border:0.5px solid #dddbdb; width:33.3%; float:left; cursor:pointer; text-align:center;" onclick="gotoCategory('{{category}}')">
+            <span style="display:block;border:0px solid red; font-size: 15px">{{category|capfirst}}</span>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </div>
-	{% endfor %}
 </div>  
 {% endblock %}
 
 {% block additional_script %}
-<script type="text/javascript" src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
 function contentDelete(author, article_pk){ 
   swal({
@@ -641,7 +715,31 @@ function articleSave(user_id, article_id){
   });
 }
 
+var loadedElements = 0;
+
+function lazyImageCall(){
+  
+   $('.lazy').lazy({
+      beforeLoad: function(element){
+        // console.log('image "' + stripTime(element.data('src')) + '" is about to be loaded');
+      },
+      afterLoad: function(element) {
+        loadedElements++;
+        // console.log('image "' + stripTime(element.data('src')) + '" was loaded successfully');
+      },
+      onError: function(element) {
+        loadedElements++;
+        // console.log('image "' + stripTime(element.data('src')) + '" could not be loaded');
+      },
+      onFinishedAll: function() {
+        // console.log('finished loading ' + loadedElements + ' elements');
+        // console.log('lazy instance is about to be destroyed')
+      }
+    });
+}
+
 $(document).ready(function(){
+  lazyImageCall();
   $('#show_slick').slick({
     arrows: false,
     dots: false,
@@ -684,7 +782,7 @@ $(document).ready(function(){
     $('#comment_form #id_parent').val(0);
   });
 
-  $('img').css('height','');
+  $('#article_text > img').css('height','');
   $('iframe').css({'width':'100%','height':''});
 
 });

@@ -34,6 +34,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}"/>
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 {% endcache %}
 
 {% block headAddon %}
@@ -349,7 +350,12 @@ function onLoad() {
     <script>
       const applicationServerPublicKey = 'BJajdmG_VQMSmpSMvjLWLowdqN-Rn1hkBwpz-Nkb2ZTI9y_rFfH1TBw3A4eMha4hm9P429Dl5AqONqVfZsmPHqI';
       
-      let isSubscribed = false;
+      if('{{authenticated_user.subscription}}' == ''){
+        let isSubscribed = false;
+      }
+      else{
+        let isSubscribed = false;
+      };
       let swRegistration = null;
 
       if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -378,7 +384,6 @@ function onLoad() {
               subscribeUser();
             }
           });
-
 
         // Set the initial subscription value
         swRegistration.pushManager.getSubscription()

@@ -96,7 +96,7 @@ div.listicle {
 .sticky {
   position:fixed;
   top: 0px;
-  background-color:#4DC7A0; 
+ /* background-color:#4DC7A0; */
   z-index:1; 
   border: 0px solid red ;
   width:70%;
@@ -111,7 +111,6 @@ div.listicle {
   top: 0;
 }
 .main_nav_slick { 
-  background-color:#4DC7A0; 
   text-align:center;
 }
 
@@ -221,7 +220,7 @@ input[type=text]:focus, select {
     background-color: #4CAF50;
     color: white;
     padding: 16px 20px;
-    margin: 8px 0;
+    margin: 0px;
     border: none;
     cursor: pointer;
     width: 100%;
@@ -310,9 +309,20 @@ display:none;
 .rating input:checked ~ label:after{
   opacity: 1;
 }
+
+.div_weather{
+  background-image: url("{% static 'Images/weather_div.png' %}");
+  background-position: center;
+  background-repeat: no-repeat;
+  display:block;
+  width:100%;
+  height:90px;
+  padding-top:20px; 
+  margin:0 auto;
+}
 </style>
 <script>
-  function thumbImage(title, text){
+function thumbImage(title, text){
   var parser = new DOMParser();
   var textHtml = parser.parseFromString(text, 'text/html');
   var image = textHtml.querySelector('img');
@@ -378,7 +388,7 @@ display:none;
             <div id="text_tooltip" data-toggle="tooltip" data-placement="bottom" title="Please write Contents">
             {{form.text}}
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="padding:0px">
               <button id="submitbtn" type="button" class="btn btn-default" style="width:100%">Submit</button>
               <button id="submitcancel" type="button" class="btn btn-default" data-dismiss="modal" style="width:100%">Close</button>
             </div>
@@ -388,11 +398,10 @@ display:none;
       </div>
     </div>
 
-    <!-- <div style="border:0px solid red; background-color: grey; width:100%; height:100px">
+    <!-- <div style="border:0px solid red; background-color: grey; width:100%; height:300px">
       {{ p_page }}
-      <br>
     </div> -->
-    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center; background-color: #4DC7A0;">
+    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center; background-color: #000000;">
      {% for category in categories %}
         {% if forloop.first %}
           <a class="main_navi_item slick_select" style="color:white;">{{category}}</a>
@@ -403,7 +412,6 @@ display:none;
     </div>
     <div style="border: 0px solid red ;width:100% ;height:100%;">
       <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
-      
           {% for art_category, articles in category_articles.items %}
             <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
               <div class="row" style="border-top:6px solid #dddbdb;">
@@ -428,41 +436,54 @@ display:none;
                     {% endif %}   
                   {% endif %}
                 {% endfor %}
+
+                  {% for article in articles %}
+                    <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+                      <a href="{{article.get_absolute_url}}">
+                      <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
+                        {% if article.image_set.first.thumnails.url %}
+                          <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
+                        {% else %}
+                          <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+                          <script async>                       
+                            thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}");
+                          </script>
+                        {% endif %}
+                      </div>
+                      <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
+                        <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">
+                          {{article.title}}
+                          <div style="display:block; border:0px solid red; font-size:17px">
+                            <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue"></i>{{article.views}}</span>
+                          </div>
+                        </div>
+                        <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
+                      </div>
+                      </a>
+                    </div>
+                  {% endfor %}
+                </div>
+                
+                <div class="col-md-6" >
                   <div style="border-top:6px solid #dddbdb;display:block;width:100%" >
                    <div class="linkThumbs innerSlider owl-carousel owl-theme">
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">IMG</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 1</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 2</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 3</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 4</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 5</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 6</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 7</div><span style="text-align:center; display:block;height:50px">text</span></div>
                    </div>
                   </div>
+                  {% if forloop.counter is 1 %} <!-- only on the first category-->                  
+                  <div class="div_weather">
+                    <div id="openweathermap-widget-18" style="width:300px; margin:0 auto" ></div>
+                    <script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 18,cityid: '1835848',appid: '94d95e13b724b2834e05f34e8c06b1cd',units: 'metric',containerid: 'openweathermap-widget-18',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
+                  </div>                  
+                  {% endif %}
                 </div>
 
-                <div class="col-md-6" >
-                {% for article in articles %}
-                  <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
-                    <a href="{% url 'tips:view_tips' pk=article.id %}">
-                    <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
-                      {% if article.image_set.first.thumnails.url %}
-                        <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
-                      {% else %}
-                        <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
-                        <script async>                       
-                          thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}");
-                        </script>
-                      {% endif %}
-                    </div>
-                    <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
-                      <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">{{article.title}}</div>
-                      <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
-                    </div>
-                    </a>
-                  </div>
-                {% endfor %}
-                </div>
               </div>
             </div>
           {% endfor %}
@@ -618,6 +639,7 @@ function getCookie(cName) {
     return unescape(cValue);
 }
 var loadedElements = 0;
+
 function lazyImageCall(){
   
    $('.lazy').lazy({
@@ -638,6 +660,7 @@ function lazyImageCall(){
       }
     });
 }
+
 function stripTime(dateString){
   var myDate = new Date(dateString);
   return {tm_sec:myDate.getSeconds(), 
@@ -825,8 +848,6 @@ $(document).ready(function(){
     else {
       $('#user_write_form').submit();
     }
-    // console.log($('input:radio[name="star"]:checked').val());
-    console.log('id_rating',$('#id_rating').val());
     setTimeout(function(){
       $('#category_tooltip').tooltip('hide');
       $('#id_title').tooltip('hide');
