@@ -102,7 +102,7 @@ class Listicle(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-    def get_listicle_url(self):
+    def get_absolute_url(self):
         return reverse('tips:view_listicle', args=[self.pk])
 
     def __str__(self):

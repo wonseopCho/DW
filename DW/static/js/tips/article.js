@@ -105,7 +105,7 @@ $(document).ready(function(){
     });
   };
   $('#summernote').on('summernote.image.upload', function(we, files) {
-    // console.log(files);
+     // console.log(we, files);
   });
   $('#summernote').on('summernote.media.delete', function(we, files) {
     // console.log((files));

@@ -92,7 +92,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
-                            data=obj.title+"has been Newly Added!",
+                            data=obj.title+" has been Newly Added!",
                             vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
                             vapid_claims={"sub": "mailto:YourNameHere@example.org",}
                         )
@@ -143,7 +143,7 @@ class ListicleAdmin(admin.ModelAdmin):
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
-                            data=obj.title+"has been Newly Added!",
+                            data=obj.title+" has been Newly Added!",
                             vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
                             vapid_claims={"sub": "mailto:YourNameHere@example.org",}
                         )

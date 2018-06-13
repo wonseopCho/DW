@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
 <link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
 
-<title >{% block title %}MicroTrips{% endblock %}</title>
+<title >{% block title %}KtripGuide{% endblock %}</title>
 
 {% cache 500 sidebar %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -34,7 +34,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}"/>
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'fontawesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css'%}">
 {% endcache %}
 
 {% block headAddon %}

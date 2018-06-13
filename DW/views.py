@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, TemplateView, View
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.conf import settings
 from tips.models import Listicle, Category, Article, Image
@@ -30,6 +31,7 @@ def home_view(request):
 	args= {'p_page' : p_page}
 	category_articles={}
 	category_listicle={}
+	category_user_articles={}
 	authenticated_user = ''
 	socialaccount = None
 	articleForm = ArticleForm()
@@ -42,10 +44,12 @@ def home_view(request):
 			socialaccount = None
 	for cate in categories:
 		category = Category.objects.get(category=cate.category).id
-		category_articles.update({ cate.category : Article.objects.filter(category=category).order_by('-id')})
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
-	args.update({'category_articles' : category_articles,
-				 'category_listicle' : category_listicle,
+		category_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=1),).filter(category=category).order_by('-id')})
+		category_user_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=0),).filter(category=category).order_by('-id')})
+	args.update({'category_listicle' : category_listicle,
+				 'category_articles' : category_articles,
+				 'category_user_articles' : category_user_articles,
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
 				 'form' : articleForm,

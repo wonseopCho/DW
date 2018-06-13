@@ -56,8 +56,8 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
-
-  const title = 'Tripticle';
+  console.log(event);
+  const title = 'KtripGuide';
   const options = {
     body: `"${event.data.text()}"`,
     icon: 'http://127.0.0.1:8000/static/Images/icon.png',

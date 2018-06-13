@@ -155,6 +155,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 			'form' : form,
 			'authenticated_user' : authenticated_user,
 			'socialaccount': socialaccount,
+			'category' : listicle.category,
 			'categories' : Category.objects.all(),
 			'excludeListicles' : Listicle.objects.exclude(id=listicle_pk),
 			}

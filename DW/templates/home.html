@@ -196,7 +196,7 @@ a * {
     text-align: center;
     color:#f1f1f1;
     padding: 6px;
-    font-size: 9vw;
+    font-size: 3vw;
 }
 
 #id_video {
@@ -320,28 +320,44 @@ display:none;
   padding-top:20px; 
   margin:0 auto;
 }
+
+@media only screen and (max-width: 600px) {
+  .listicle_title {
+    position: absolute; 
+    border:0px solid red;
+    bottom:0; 
+    width:100%; 
+    background-color: rgba( 0, 0, 0, 0.5 );
+    text-align: center;
+    color:#f1f1f1;
+    padding: 6px;
+    font-size: 9vw;
+  }
+}
 </style>
 <script>
-function thumbImage(title, text){
+function thumbImage(title, text, index){
   var parser = new DOMParser();
   var textHtml = parser.parseFromString(text, 'text/html');
   var image = textHtml.querySelector('img');
   // console.log(textHtml.querySelectorAll('img').length);
   if (image != null) {
     if (image.src.length > 0 ){
-      $("#"+title+"_main_image").attr('data-src', image.src);
+      if(index < 6){$("#"+title+"_main_image").attr('src', image.src);}
+      else{$("#"+title+"_main_image").attr('data-src', image.src);};
     }
     else {
-      $("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
+      if(index < 6){$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));}
+      else{$("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));};
     }; 
   };
-}
+};
 
 </script>
 {% endblock %}
 
 {% block title %} 
-  MicroTrips
+  KtripGuide
 {% endblock %}
 
 {% block content %}
@@ -353,7 +369,9 @@ function thumbImage(title, text){
         <div class="modal-content" style="height:100%;">
           <div class="modal-header" style="border:0px solid red;">
             <div style="border: 0px solid red; float:left; width:100%; height:45px; text-align: center"> 
-              <h5 class="modal-title" id="tips_ModalTitle" style="color:black;"></h5>
+              <h5 class="modal-title" id="tips_ModalTitle" style="color:black;">
+                Write & Share your own Tips about Korea
+              </h5>
             </div>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: rgba(255, 0, 0, 2);"><span aria-hidden="true">&times;</span></button>
           </div>
@@ -414,12 +432,12 @@ function thumbImage(title, text){
       <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
           {% for art_category, articles in category_articles.items %}
             <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
-              <div class="row" style="border-top:6px solid #dddbdb;">
-                <div class="col-md-6" >
+              <div class="row" style="border-top:6px solid #dddbdb; border:0px solid red">
+                <div class="col-md-6" style="border:0px solid red">
                 {% for lis_category, listicles in category_listicle.items %}
-                  {% if lis_category == art_category %}                  
+                  {% if lis_category == art_category %}   
                     {% if listicles %}
-                    <div id="listicle_slider" class="innerSlider owl-carousel owl-theme " style="border:0px solid blue; width:100%;">
+                    <div class="listicle_slider innerSlider owl-carousel owl-theme " style="border:0px solid blue; width:100%;">
                       {% for listicle in listicles %}
                         <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
                           <div style="width:100%; border: 0px solid blue; position:relative;"> 
@@ -437,70 +455,102 @@ function thumbImage(title, text){
                   {% endif %}
                 {% endfor %}
 
-                  {% for article in articles %}
-                    <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
-                      <a href="{{article.get_absolute_url}}">
-                      <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
-                        {% if article.image_set.first.thumnails.url %}
-                          <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
-                        {% else %}
-                          <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
-                          <script async>                       
-                            thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}");
-                          </script>
-                        {% endif %}
-                      </div>
-                      <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
-                        <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">
-                          {{article.title}}
-                          <div style="display:block; border:0px solid red; font-size:17px">
-                            <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue"></i>{{article.views}}</span>
-                          </div>
-                        </div>
-                        <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
-                      </div>
-                      </a>
-                    </div>
-                  {% endfor %}
-                </div>
-                
-                <div class="col-md-6" >
-                  <div style="border-top:6px solid #dddbdb;display:block;width:100%" >
-                   <div class="linkThumbs innerSlider owl-carousel owl-theme">
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 1</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 2</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 3</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 4</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 5</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 6</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                     <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 7</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   </div>
+                {% for article in articles %}
+                <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+                  <a href="{{article.get_absolute_url}}">
+                  <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
+                    {% if article.image_set.first.thumnails.url %}
+                      <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
+                    {% else %}
+                      <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+                      <script async>                       
+                        thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+                      </script>
+                    {% endif %}
                   </div>
-                  {% if forloop.counter is 1 %} <!-- only on the first category-->                  
-                  <div class="div_weather">
-                    <div id="openweathermap-widget-18" style="width:300px; margin:0 auto" ></div>
-                    <script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 18,cityid: '1835848',appid: '94d95e13b724b2834e05f34e8c06b1cd',units: 'metric',containerid: 'openweathermap-widget-18',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
-                  </div>                  
-                  {% endif %}
+                  <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
+                    <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">
+                      {{article.title}}
+                      <div style="display:block; border:0px solid red; font-size:17px">
+                        <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue"></i>{{article.views}}</span>
+                      </div>
+                    </div>
+                    <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
+                  </div>
+                  </a>
                 </div>
-
+                {% endfor %}
               </div>
-            </div>
-          {% endfor %}
+                
+              <div class="col-md-6" >
+                {% for user_category, user_articles in category_user_articles.items %}
+                  {% if user_category == art_category %}
+                    {% if user_articles %}
+                      {% for article in user_articles%}
+                        <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+                          <a href="{{article.get_absolute_url}}">
+                          <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
+                            {% if article.image_set.first.thumnails.url %}
+                              <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
+                            {% else %}
+                              <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+                              <script async>                       
+                                thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+                              </script>
+                            {% endif %}
+                          </div>
+                          <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
+                            <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">
+                              {{article.title}}
+                              <div style="display:block; border:0px solid red; font-size:17px">
+                                <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue"></i>{{article.views}}</span>
+                              </div>
+                            </div>
+                            <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
+                          </div>
+                          </a>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+          
+                <div style="border-top:6px solid #dddbdb;display:block;width:100%" >
+                 <div class="linkThumbs innerSlider owl-carousel owl-theme">
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 1</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 2</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 3</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 4</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 5</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 6</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 7</div><span style="text-align:center; display:block;height:50px">text</span></div>
+                 </div>
+                </div>
+                {% if forloop.counter is 1 %} <!-- only on the first category-->                  
+                <div class="div_weather">
+                  <div id="openweathermap-widget-18" style="width:300px; margin:0 auto" ></div>
+                  <script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 18,cityid: '1835848',appid: '94d95e13b724b2834e05f34e8c06b1cd',units: 'metric',containerid: 'openweathermap-widget-18',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
+                </div>                  
+                {% endif %}
+              </div>
 
+            </div>
+          </div>
+          {% endfor %}
       </div>
     </div>
     <a href="https://www.google.com/maps/search/편의점/">test map search</a>
+
     {% if user.is_authenticated %}
     <div id="tip_write" class="reright" style="border: 0px solid red; border-radius:40px; background-color: rgba( 255, 191, 0, 0.5 ); position:fixed; bottom: 50px; width: 55px; height:57px; text-align: center;  ">
       <div data-toggle="modal" data-target="#tips" style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-3px;">+</div>
     </div>
-   
     {% else %}
     <div id="tip_write" class="reright" style="border: 0px solid red; border-radius:40px; background-color: rgba( 192, 192, 192, 0.5 ); position:fixed; bottom: 50px; width: 55px; height:57px; text-align: center;" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})">
-      <div style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-7px;">+</div>
+      <div style="width:100%; height:20px; cursor:pointer; font-size:40px;margin-top:-3px;">+</div>
     </div>
     {% endif %}
+
   </div>
 </div>
 {% endblock %}
@@ -510,18 +560,26 @@ function thumbImage(title, text){
 <script src="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/owl.carousel.min.js' %}"></script>
 <script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
-window.onscroll = function() {myFunction()};
+window.onscroll = function() {myFunction();};
 var navbar = document.getElementById("main_navi");
 var sticky = navbar.offsetTop;
 var i = 0;
 var speed = 100;
 var txt = "Write & Share your own Tips about Korea";
 
-function typeWriter(){  
+function typeWriter(){
   if (i < txt.length) {
     document.getElementById("tips_ModalTitle").innerHTML += txt.charAt(i);
     i++;
     setTimeout(typeWriter, speed);
+  }
+}
+
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
   }
 }
 
@@ -557,14 +615,6 @@ function tipTitleCheckAjax(value) {
     }); 
   }
 };
-
-function myFunction() {
-  if (window.pageYOffset >= sticky) {
-    navbar.classList.add("sticky")
-  } else {
-    navbar.classList.remove("sticky");
-  }
-}
 
 $(function(){
     $.ajaxSetup({
@@ -638,10 +688,9 @@ function getCookie(cName) {
     }
     return unescape(cValue);
 }
-var loadedElements = 0;
 
+var loadedElements = 0;
 function lazyImageCall(){
-  
    $('.lazy').lazy({
       beforeLoad: function(element){
         // console.log('image "' + stripTime(element.data('src')) + '" is about to be loaded');
@@ -678,11 +727,11 @@ function changeThemeColor(color) {
 }
 
 $(document).ready(function(){
+  var scrollLock = false;
   var lastScrollTop = 0;
   var initial_slide, background_color;
   var p_page = getCookie('p_page');
   setCookie('p_page', '', -1);
-  
   lazyImageCall();
 
   {% for cate in categories %}
@@ -693,11 +742,18 @@ $(document).ready(function(){
         position += Math.ceil($("#main_navi a:eq("+(i)+")").outerWidth())+3;
       }
       $('#main_navi').animate({scrollLeft: position}, 300);
+      $('#id_category option:contains('+'{{cate.category}}'+')').prop('selected', true);
       // changeThemeColor(background_color);
     };
   {% endfor %}
+  
+  if (initial_slide != undefined ){
+    $('.main_navi > a').removeClass('slick_select');
+  }
+  else{
+    $("#id_category option[value='1']").prop('selected', true);
+  };
 
-  if (initial_slide != undefined ){$('.main_navi > a').removeClass('slick_select');};
   $(".main_navi").css('background-color', background_color);
   $(".main_navi a:eq("+(parseInt(initial_slide))+")").addClass('slick_select');
 
@@ -727,39 +783,33 @@ $(document).ready(function(){
     $('#main_navi').animate({scrollLeft: position}, 300);
     lazyImageCall();
   });
- 
-  $('#body_div_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-    if (window.pageYOffset >= sticky) {
-      $('html,body').animate({scrollTop: 190}, 400);
-    };
-    lazyImageCall();
-  });
   
-  $('#body_div_slick').on('afterChange', function(event, slick, currentSlide){
-    var background_color = '';
-    {% for cate in categories %}
-      if (currentSlide == {{forloop.counter}}-1){background_color = '{{cate.color}}'};
-    {% endfor %}
-    $('.main_navi').css('background-color', background_color);
-    $('.main_nav_slick').css('background-color', background_color);
-    $('.main_nav_slick').slick('slickGoTo', currentSlide-1, true );
-    if ($('.main_nav_item').hasClass('slick-current')) {
-      $('div').removeClass('slick_select');
-      $(".main_nav_slick div:eq("+(parseInt(currentSlide)+2)+")").addClass('slick_select'); //when infinite mode is false
-      // $('.slick-current').addClass('slick_select'); // when infinite mode is true 
-    }
-    if ($('.main_navi_item').hasClass('slick_select')) {
-      $('a').removeClass('slick_select');
-      $(".main_navi a:eq("+(parseInt(currentSlide))+")").addClass('slick_select'); 
+  $('#body_div_slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+    if (currentSlide != nextSlide){
+      var background_color = '';
+      {% for cate in categories %}
+        if (currentSlide == {{forloop.counter}}-1){background_color = '{{cate.color}}'};
+      {% endfor %}
+      $('.main_navi').css('background-color', background_color);
+      $('.main_nav_slick').css('background-color', background_color);
+      if ($('.main_navi_item').hasClass('slick_select')) {
+        $('a').removeClass('slick_select');
+        $(".main_navi a:eq("+(parseInt(nextSlide))+")").addClass('slick_select');
+      };
+      if(scrollLock == false){
+        if (window.pageYOffset >= sticky) {
+          $('html,body').animate({scrollTop: 0}, 400);
+        };
+      };
+      scrollLock = false;
+      lazyImageCall();
+      // changeThemeColor(background_color);
+      var category = $(".main_navi a:eq("+(parseInt(nextSlide))+")").text();
+      $('#id_category option:contains('+category+')').prop('selected', true);
     };
-    if (window.pageYOffset >= sticky) {
-      $('html,body').animate({scrollTop: 190}, 400);
-    };
-    lazyImageCall();
-    // changeThemeColor(background_color);
   });
 
-  $("#listicle_slider").owlCarousel({
+  $(".listicle_slider").owlCarousel({
     margin:0,
     nav:false,
     dots: false,
@@ -806,6 +856,7 @@ $(document).ready(function(){
 
   $('.innerSlider').on('touchend mouseover mouseout', function(e) {
     $('#body_div_slick').slick('slickSetOption', 'swipe', true, false);
+    scrollLock = true;
   });
 
   $(window).on('scroll', function() {
@@ -822,8 +873,7 @@ $(document).ready(function(){
   $("#tip_write").on('click', function(){
     var value = $('#id_title').val();
     tipTitleCheckAjax(value);
-    var id = "tips_ModalTitle"
-    typeWriter();
+    var id = "tips_ModalTitle";
   });
 
   $("#id_title").keyup(function(e){
