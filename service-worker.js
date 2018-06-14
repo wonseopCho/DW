@@ -1,6 +1,8 @@
 var CACHE_NAME = 'tripticle-cache';
+var redirectUrl;
 var urlsToCache = [
 ];
+
 
 self.addEventListener('install', function(event) {
   // Perform install steps
@@ -56,12 +58,16 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
-  console.log(event);
+
+  var contents = `${event.data.text()}`.split(' ');
+  redirectUrl = contents[0];
   const title = 'KtripGuide';
   const options = {
-    body: `"${event.data.text()}"`,
-    icon: 'http://127.0.0.1:8000/static/Images/icon.png',
-    badge: 'http://127.0.0.1:8000/static/Images/badge.png'
+    body: contents[1],
+    // icon: 'static/Images/icon.png',
+    icon: contents.pop(-1),
+    badge: 'static/Images/badge.png',
+    
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
@@ -69,10 +75,8 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
   console.log('[Service Worker] Notification click Received.');
-
   event.notification.close();
-
   event.waitUntil(
-    clients.openWindow('http://127.0.0.1:8000/')
+    clients.openWindow(redirectUrl)
   );
 });

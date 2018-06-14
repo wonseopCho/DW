@@ -2,14 +2,16 @@ from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.html import strip_tags
+from django.conf import settings
 from multiupload.admin import MultiUploadAdmin
 from django_summernote.admin import SummernoteModelAdmin
 from pywebpush import webpush, WebPushException
 from accounts.models import UserProfile
+from django.contrib.auth.models import User
 from .models import Listicle, Category, Article, Image, Comment
 from .forms import ListicleForm, ArticleForm
 from DW import keys
-import json
+import json, re
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'category', 'image', 'color', 'author', 'created_at', 'updated_at']
@@ -71,7 +73,9 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         return '{}'.format(article.likes.count())
 
     def save_model(self, request, obj, form, change):
-        print(change)
+        reg = re.compile('(?<=<img src=")(/\w*/\w*-*\w*/\d{4}-\d{2}-\d{2}/\w*-\w*-\w*-\w*-\w*.\w+)(?=")')
+        img = reg.search(obj.text)
+        imgUrl = img.group()
         max_length = 48
         slug = slugify(strip_tags(obj.text), allow_unicode=True)
         slug = slug.replace('nbsp','-')
@@ -92,7 +96,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
-                            data=obj.title+" has been Newly Added!",
+                            data="tips/"+str(obj.id)+" "+obj.title+" "+imgUrl,
                             vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
                             vapid_claims={"sub": "mailto:YourNameHere@example.org",}
                         )

@@ -350,13 +350,17 @@ function onLoad() {
     <script>
       const applicationServerPublicKey = 'BJajdmG_VQMSmpSMvjLWLowdqN-Rn1hkBwpz-Nkb2ZTI9y_rFfH1TBw3A4eMha4hm9P429Dl5AqONqVfZsmPHqI';
       
+      let isSubscribed;
+
       if('{{authenticated_user.subscription}}' == ''){
-        let isSubscribed = false;
+        isSubscribed = false;
       }
       else{
-        let isSubscribed = false;
+        isSubscribed = true;
       };
       let swRegistration = null;
+
+      console.log("here",isSubscribed);
 
       if ('serviceWorker' in navigator && 'PushManager' in window) {
           console.log('Service Worker and Push is supported');
