@@ -94,15 +94,10 @@ div.listicle {
 }
 
 .sticky {
-  position:fixed;
+  position:sticky;
   top: 0px;
  /* background-color:#4DC7A0; */
   z-index:1; 
-  border: 0px solid red ;
-  width:70%;
-  height:46px; 
-  text-align: center;
-  margin-top: 0px
 }
 
 .sticky2 {
@@ -190,10 +185,11 @@ a * {
 .listicle_title {
     position: absolute; 
     border:0px solid red;
-    bottom:0; 
+    top:35%; 
     width:100%; 
     background-color: rgba( 0, 0, 0, 0.5 );
     text-align: center;
+    font-family: 'Monoton', cursive;
     color:#f1f1f1;
     padding: 6px;
     font-size: 3vw;
@@ -203,6 +199,10 @@ a * {
   width: 100%;
 }
 
+#main_navi {
+   background-image: url("{% static 'Images/main_navi.jpg' %}");
+   background-size: 100% 100%;
+}
 input[type=text], select {
     width: 100%;
     padding: 8px;
@@ -325,9 +325,10 @@ display:none;
   .listicle_title {
     position: absolute; 
     border:0px solid red;
-    bottom:0; 
+    top:35%; 
     width:100%; 
     background-color: rgba( 0, 0, 0, 0.5 );
+    font-family: 'Monoton', cursive;
     text-align: center;
     color:#f1f1f1;
     padding: 6px;
@@ -350,6 +351,9 @@ function thumbImage(title, text, index){
       if(index < 6){$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));}
       else{$("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));};
     }; 
+  }
+  else {
+    $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
   };
 };
 
@@ -419,7 +423,7 @@ function thumbImage(title, text, index){
     <!-- <div style="border:0px solid red; background-color: grey; width:100%; height:300px">
       {{ p_page }}
     </div> -->
-    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center; background-color: #000000;">
+    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center;">
      {% for category in categories %}
         {% if forloop.first %}
           <a class="main_navi_item slick_select" style="color:white;">{{category}}</a>
@@ -469,7 +473,7 @@ function thumbImage(title, text, index){
                     {% endif %}
                   </div>
                   <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
-                    <div style="border:0px solid blue; width:100%; font-weight: bold;display: table-cell; vertical-align:middle;">
+                    <div style="border:0px solid blue; width:100%; display: table-cell; vertical-align:middle;">
                       {{article.title}}
                       <div style="display:block; border:0px solid red; font-size:17px">
                         <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue"></i>{{article.views}}</span>
@@ -514,7 +518,7 @@ function thumbImage(title, text, index){
                     {% endif %}
                   {% endif %}
                 {% endfor %}
-          
+                
                 <div style="border-top:6px solid #dddbdb;display:block;width:100%" >
                  <div class="linkThumbs innerSlider owl-carousel owl-theme">
                    <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 1</div><span style="text-align:center; display:block;height:50px">text</span></div>

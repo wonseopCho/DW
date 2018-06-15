@@ -69,6 +69,7 @@ function bs_input_file() {
 }
 
 $(document).ready(function(){
+  var pContents;
   var ref = document.referrer.split("/")[3];
   if (ref!='admin'){
     $('#summernote').on('summernote.init', function() {
@@ -101,16 +102,25 @@ $(document).ready(function(){
               </div>
             </div>`);
       $('#summernote').css('border','1px solid red');
+
       bs_input_file();   
     });
   };
   $('#summernote').on('summernote.image.upload', function(we, files) {
-     // console.log(we, files);
+     console.log(we, files);
   });
   $('#summernote').on('summernote.media.delete', function(we, files) {
-    // console.log((files));
+    console.log(we,"------------",files);
     var src = files[0].src.split("/");
     imageDelete(src.slice(4).join("/"));
   });
+
+  
+  // $('#summernote').on('summernote.change', function(we, contents, $editable) {
+  //   if(String(pContents).length > String(contents).length){
+  //     console.log("pre_",pContents, "new_",contents);
+  //   }
+  //   pContents = contents;
+  // });
 });
 

@@ -276,6 +276,9 @@ function thumbImage(title, text){
     else {
       $("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
     }; 
+  }
+  else {
+    $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
   };
 }
 </script>
@@ -286,8 +289,8 @@ function thumbImage(title, text){
   <div class="row">
     <div class="col-md-8" style="padding:0;">
   	{% for content in article %}
-    	<div class="jumbotron" style="padding:1px; margin-bottom: 0px;">
-        <div style="width:100%;text-align: center; border: 0px solid red">
+    	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
+        <div style="width:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive;">
           <h2>{{content.title}}</h2>
         </div>
         <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
@@ -346,7 +349,7 @@ function thumbImage(title, text){
                   <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
                     <img src="{% static '/Images/sns/pinterest.svg' %}" width="35" height="35">
                   </a>
-                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id={APP_ID}&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
                     <img src="{% static '/Images/sns/facebook.svg' %}" width="35" height="35">
                   </a>
                 </div>
@@ -358,7 +361,7 @@ function thumbImage(title, text){
           <p>{{content.text|safe}}</p>
         </div>
         <div style="border:0px solid blue; width:100%;height:40px">
-          <div style="border:1px solid #E9ECEF; width:50%;display:inline-block;float:left">
+          <div style="border:1px solid #F7F7F7; width:50%;display:inline-block;float:left">
             {% if user.is_authenticated and user != content.author %}
             <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{content.id}})"/>
             {% elif not user.is_authenticated %}
@@ -452,7 +455,7 @@ function thumbImage(title, text){
     </div>
 
 
-    <div class="col-md-4" style="padding:3px;">
+    <div class="col-md-4" style="padding:0px 3px 0px 3px;">
       <div style="display:block; border-radius:5px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa">
         Other Tips on {{category}}
       </div>
@@ -469,8 +472,8 @@ function thumbImage(title, text){
               </script>
             {% endif %}
           </div>
-          <div style="border:0px solid orange;width: 75%;height:47px;margin-left:7px;float:left;font-size:15px;display:table;">
-            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;">{{exArticle.title}}</div>
+          <div style="border:0px solid orange;width: 75%;height:47px;margin-left:7px;float:left;font-size:12.5px;display:table;">
+            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;font-size: 0.9em;">{{exArticle.title}}</div>
             <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
           </div>
           </a>

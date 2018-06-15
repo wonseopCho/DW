@@ -57,7 +57,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True
-    search_fields = ['article','title']
+    search_fields = ['id','title']
     list_display = ['id', 'category', 'title', 'video', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'title']
     summernote_fields = ['text']
@@ -75,7 +75,10 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
     def save_model(self, request, obj, form, change):
         reg = re.compile('(?<=<img src=")(/\w*/\w*-*\w*/\d{4}-\d{2}-\d{2}/\w*-\w*-\w*-\w*-\w*.\w+)(?=")')
         img = reg.search(obj.text)
-        imgUrl = img.group()
+        if img != None:
+            imgUrl = img.group()
+        else:
+            imgUrl = ''
         max_length = 48
         slug = slugify(strip_tags(obj.text), allow_unicode=True)
         slug = slug.replace('nbsp','-')
@@ -96,7 +99,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
-                            data="tips/"+str(obj.id)+" "+obj.title+" "+imgUrl,
+                            data="tips/"+str(obj.id)+"^"+obj.title+"^"+imgUrl,
                             vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
                             vapid_claims={"sub": "mailto:YourNameHere@example.org",}
                         )
@@ -138,6 +141,7 @@ class ListicleAdmin(admin.ModelAdmin):
         return 'Total#: {}'.format(listicle.articles.count())
 
     def save_model(self, request, obj, form, change):
+        imgUrl = obj.image.url
         if not obj.author:
             obj.author = request.user
         if obj.push_update:
@@ -147,7 +151,7 @@ class ListicleAdmin(admin.ModelAdmin):
                     try:
                         webpush(
                             subscription_info=json.loads(user.subscription),
-                            data=obj.title+" has been Newly Added!",
+                            data="tips/listicle/"+str(obj.id)+"^"+obj.title+"^"+imgUrl,
                             vapid_private_key=keys.SERVICE_WORKER_PUSH_PRIVATE_KEY,
                             vapid_claims={"sub": "mailto:YourNameHere@example.org",}
                         )

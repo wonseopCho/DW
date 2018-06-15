@@ -59,7 +59,7 @@ self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
 
-  var contents = `${event.data.text()}`.split(' ');
+  var contents = `${event.data.text()}`.split('^');
   redirectUrl = contents[0];
   const title = 'KtripGuide';
   const options = {

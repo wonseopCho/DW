@@ -50,24 +50,24 @@ table {
   table-layout: fixed;
 }
 
-..card-body > table caption {
+.card-body > table caption {
   font-size: 1.5em;
   margin: .5em 0 .75em;
 }
 
-..card-body > table tr {
+.card-body > table tr {
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   padding: .35em;
 }
 
-..card-body > table th,
-..card-body > table td {
+.card-body > table th,
+.card-body > table td {
   padding: 0;
   text-align: center;
 }
 
-..card-body > table th {
+.card-body > table th {
   font-size: .85em;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -267,8 +267,8 @@ opacity: 1;
   <div class="row">
     <div class="col-md-8" style="padding:0;">
   	   {% for article in listicle.articles.all %}
-         <div class="jumbotron" style="padding:1px; margin-bottom: 0px">
-           <div style="width:100%;text-align: center;">
+         <div class="jumbotron" style="padding:1px; margin-bottom: 0px;background-color: #F7F7F7">
+           <div style="width:100%;text-align: center; font-family: 'Bungee Inline', cursive;">
              <h2>{{article.title}}</h2>
            </div>
            <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
