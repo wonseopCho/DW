@@ -16,7 +16,7 @@ img {
     white-space: pre-wrap;
 }
 
-#article_text > p > a, #article_text > div > a{
+/*#article_text > p > a, #article_text > div > a{
     border-radius: 5px;
     background-color : #28a745;
     color:white;
@@ -25,7 +25,8 @@ img {
     position: relative;
     top:-10px;
     float:right;
-}
+}*/
+
 .slick-slide{
   border: none;
   outline:none;
@@ -169,15 +170,6 @@ textarea {
 opacity: 1;
 }
 
-.sticky {
-  background-color:white;
-  position:fixed;
-  width:70%;
-  top: 0px;
-  z-index:2;
-  padding-top:0px
-}
-
 @-webkit-keyframes fadein {
     from {bottom: 0; opacity: 0;} 
     to {bottom: 30px; opacity: 1;}
@@ -257,7 +249,7 @@ opacity: 1;
     text-align: right;
     margin-left: 88px
   }
-  #article_text > p > a, #article_text > div > a{
+ /* #article_text > p > a, #article_text > div > a{
     border-radius: 5px;
     background-color : #28a745;
     color:white;
@@ -268,16 +260,7 @@ opacity: 1;
     top:10px;
     margin-bottom:40px;
     width:100%;
-  }
-
-  .sticky {
-    background-color:white;
-    position:fixed;
-    width:100%;
-    top: 0px;
-    z-index:2;
-    padding-top:0px
-  }
+  }*/
 }
 
 </style>
@@ -308,29 +291,16 @@ function thumbImage(title, text){
     <div class="col-md-8" style="padding:0;">
   	{% for content in article %}
     	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
-        <div style="width:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap">
-          <h2>{{content.title}}</h2>
+        <div style="width:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap;">
+          <h2>{{content.name}}</h2>
         </div>
         <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
           <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static '/Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
           <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{content.views}}</span>
           <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px">Likes {{content.likes.count}}</span>
         </div>
-        {% if content.rating != 0 %}
-        <div class="rating">
-          <input disabled type="radio" name="star" id="star1" value="5"><label for="star1"></label>
-          <input disabled type="radio" name="star" id="star2" value="4"><label for="star2"></label>
-          <input disabled type="radio" name="star" id="star3" value="3"><label for="star3"></label>
-          <input disabled type="radio" name="star" id="star4" value="2"><label for="star4"></label>
-          <input disabled type="radio" name="star" id="star5" value="1"><label for="star5"></label>
-          <script>
-            $('input:radio[value="{{content.rating}}"]').prop("checked", true);
-          </script>
-        </div>
-        {% endif %}
 
         {% if content.video or content.images.all.count > 0 %}
-        <!-- !!!VIP!!! as we are going to use multiupload package for django, in order to call images in template page just simply call images.all not like image_set which is typcal way!!!! -->
           <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
           {% if content.images.all.count > 0 %} 
             {%for pic in content.images.all %}
@@ -376,7 +346,7 @@ function thumbImage(title, text){
             </div>
           </div>
         </div>
-        <div id="article_text" style="margin-top: 10px;display:block">
+        <div class="sticky" id="article_text" style="margin-top: 10px;display:block">
           <p>{{content.text|safe}}</p>
         </div>
         <div style="border:0px solid blue; width:100%;height:40px">
@@ -387,12 +357,6 @@ function thumbImage(title, text){
             <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
             {% endif %}
           </div>
-            {% if user.is_authenticated and user == content.author %}
-          <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
-            <input id="content_edit" type="button" class="btn btn-warning" style="width:45%; max-width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
-            <input id="content_delete" type="button" class="btn btn-danger" style="width:50%; max-width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
-          </div>
-            {% endif %}
         </div>
         <div id="snackbar"></div>
       </div>
@@ -451,7 +415,7 @@ function thumbImage(title, text){
                 <div id="comment_form" class="comment_form">
                   <form method="POST">
                     {% csrf_token %}
-                    <input class="noneDisplay" type="text" id="article" name="article" value="{{content.id}}"/>
+                    <input class="noneDisplay" type="text" id="recommendation" name="recommendation" value="{{content.id}}"/>
                     {{ form.parent|add_class:"noneDisplay" }}
                     {{ form.message|add_class:"col-sm-12" }}
                     <input type="submit" value="Write"/>
@@ -475,23 +439,23 @@ function thumbImage(title, text){
 
     <div class="col-md-4" style="padding:0px 3px 0px 3px;">
       <div style="display:block; border-radius:5px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa">
-        Other Tips on {{category}}
+        Other Recommendations on {{category}}
       </div>
       {% for exArticle in excludeArticles %}
         <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:52px; margin-top:10px">
           <a href="{{exArticle.get_absolute_url}}">
           <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:20%; height:47px; float:left">
-            {% if exArticle.image_set.first.thumnails.url %}
-              <img class="lazy" style="width:100%; height:100%;" data-src="{{exArticle.image_set.first.thumnails.url}}"/>
+            {% if exArticle.images.first.thumnails.url %}
+              <img class="lazy" style="width:100%; height:100%;" data-src="{{exArticle.images.first.thumnails.url}}"/>
             {% else %}
-              <img class="lazy" id="{{exArticle.title|slugify}}_main_image" style="width:100%; height:100%"/>
+              <img class="lazy" id="{{exArticle.name|slugify}}_main_image" style="width:100%; height:100%"/>
               <script async>                       
-                thumbImage("{{exArticle.title|slugify}}", "{{exArticle.text|replace_sq|safe|linebreaksbr}}");
+                thumbImage("{{exArticle.name|slugify}}", "{{exArticle.text|replace_sq|safe|linebreaksbr}}");
               </script>
             {% endif %}
           </div>
           <div style="border:0px solid orange;width: 75%;height:47px;margin-left:7px;float:left;font-size:12.5px;display:table;">
-            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;font-size: 0.9em;">{{exArticle.title}}</div>
+            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;font-size: 0.9em;">{{exArticle.name}}</div>
             <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
           </div>
           </a>
@@ -514,47 +478,6 @@ function thumbImage(title, text){
 <script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
 
-window.onscroll = function() {myFunction();};
-var navbar = document.getElementById("top_bar");
-var sticky = navbar.offsetTop;
-
-function myFunction() {
-  // #top_bar's margin-top is -2 
-  if (window.pageYOffset-2 >= sticky) {
-    navbar.classList.add("sticky")
-  } else {
-    navbar.classList.remove("sticky");
-  }
-}
-
-function contentDelete(author, article_pk){ 
-  swal({
-    title: 'Delete?',
-    text: "Do you want to delete?",
-    type: "info",
-    showCancelButton: true,
-    closeOnConfirm: true,
-    },function(){
-        console.log(author, article_pk);
-        location.replace("/tips/articleRemove/"+author+"/"+article_pk+"/"); 
-    }
-  );
-}
-
-function contentEdit(author, article_pk){ 
-  swal({
-    title: 'Edit?',
-    text: "Do you want to edit?",
-    type: "info",
-    showCancelButton: true,
-    closeOnConfirm: true,
-    },function(){
-        console.log(author, article_pk);
-        location.replace("/tips/articleEdit/"+author+"/"+article_pk+"/"); 
-    }
-  );
-}
-
 function replyOnComment(current, article_pk, comment_pk){
   var insert_td = $(current).parents('tr').children(":eq(1)");
   if ($(current).hasClass('remove')){
@@ -570,7 +493,7 @@ function replyOnComment(current, article_pk, comment_pk){
                     <br>
                     <form method="POST">
                       {% csrf_token %}
-                      <input class="noneDisplay" type="text" id="article" name="article" value="`+article_pk+`"/>
+                      <input class="noneDisplay" type="text" id="recommendation" name="recommendation" value="`+article_pk+`"/>
                       {{ form.parent |add_class:"noneDisplay"}}
                       {{ form.message |add_class:"col-sm-12" }}
                       <input type="submit" value="Write"/>
@@ -598,7 +521,7 @@ function edit_replyOnComment(current, p_pk, c_pk){
     edits.c_pk = parseInt(c_pk);
     edits.csrfmiddlewaretoken = '{{csrf_token}}';
     $.ajax({
-      url:"/tips/"+p_pk+"/comment/"+c_pk+"/edit_ajax/",
+      url:"/recommendation/"+p_pk+"/comment/"+c_pk+"/edit_ajax/",
       method:"post",
       data: edits,
       success: function(res){
@@ -613,9 +536,9 @@ function edit_replyOnComment(current, p_pk, c_pk){
           $('.replyForm').remove();
           var edit = `<div class='edit_replyOnCommentForm edit_replyForm'>
                         <br>
-                        <form method='POST' action='/tips/`+p_pk+`/`+c_pk+`/'>
+                        <form method='POST' action='/recommendation/`+p_pk+`/`+c_pk+`/'>
                         {% csrf_token %}
-                        <input class='noneDisplay' type='text' id='article' name='article' value='`+p_pk+`'/>
+                        <input class='noneDisplay' type='text' id='recommendation' name='recommendation' value='`+p_pk+`'/>
                         {{ form.parent|add_class:"noneDisplay" }}
                         {{ form.message|add_class:"col-sm-12" }}
                         <input type='submit' value='Write'/>
@@ -657,7 +580,7 @@ function delete_comment(current, p_pk, c_pk){
         _delete.c_pk = parseInt(c_pk);
         _delete.csrfmiddlewaretoken = '{{csrf_token}}';
         $.ajax({
-          url:"/tips/"+p_pk+"/comment/"+c_pk+"/delete_ajax/",
+          url:"/recommendation/"+p_pk+"/comment/"+c_pk+"/delete_ajax/",
           method:"post",
           data: _delete,
           success: function(res){
@@ -703,7 +626,7 @@ function likesUpdate(pk){
     updates.pk = parseInt(pk);
     updates.csrfmiddlewaretoken = '{{csrf_token}}';
     $.ajax({
-      url:"{% url 'tips:likesUpdate' %}",
+      url:"{% url 'recommendation:likesUpdate' %}",
       method:"post",
       data: updates,
       success: function(res){
@@ -730,7 +653,7 @@ function articleSave(user_id, article_id){
   _add.article_id = parseInt(article_id);
   _add.csrfmiddlewaretoken = '{{csrf_token}}';
   $.ajax({
-    url:"{% url 'tips:add_to_cart' %}",
+    url:"{% url 'recommendation:add_to_cart' %}",
     method:"post",
     data: _add,
     success: function(res){
@@ -777,16 +700,19 @@ $(document).ready(function(){
   $('#show_slick').slick({
     arrows: false,
     dots: false,
-    infinite: false,
+    infinite: true,
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    adaptiveHeight: false,
+    adaptiveHeight: true,
     centerMode: false,
     focusOnSelect: true,
     swipeToSlide: true,
     accessibility: true,
     edgeFriction: 0.0,
+    autoplay:true,
+    autoplaySpeed: 2000,
+    lazyLoad: 'ondemand',
   });
 
   $('#thumnail_slick').slick({
@@ -817,7 +743,7 @@ $(document).ready(function(){
   });
 
   $('#article_text > img').css('height','');
-  $('iframe').css({'width':'100%','height':''});
+  $('iframe > img').css({'width':'100%','height':''});
 
 });
 </script>

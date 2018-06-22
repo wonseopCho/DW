@@ -106,7 +106,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			form = CommentForm(request.POST, request.FILES)
-			if form.is_valid():
+			if form.is_valid():				
 				comment = form.save(commit=False)
 				comment.article = Article.objects.get(pk=articleNum)
 				comment.author = request.user

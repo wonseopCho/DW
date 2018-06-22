@@ -13,6 +13,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 
 <style>
+.home_main {
+  /*background-image: url("{% static '/Images/bg_patterns/back_pattern_@2X.png' %}");
+  background-repeat: repeat;*/
+
+}
 
 * {box-sizing: border-box;}
 .wrapper {
@@ -95,7 +100,7 @@ div.listicle {
 
 .sticky {
   position:sticky;
-  top: 0px;
+  top: -1px;
  /* background-color:#4DC7A0; */
   z-index:1; 
 }
@@ -200,8 +205,9 @@ a * {
 }
 
 #main_navi {
-   background-image: url("{% static 'Images/main_navi.jpg' %}");
-   background-size: 100% 100%;
+  /* background-image: url("{% static 'Images/main_navi.jpg' %}");
+   background-size: 100% 100%;*/
+   background-color: black;
 }
 input[type=text], select {
     width: 100%;
@@ -262,10 +268,6 @@ div.scrollmenu a {
     color:white;
 }
 
-::-webkit-scrollbar {
-display:none;
-}
-
 .rating {
   padding-bottom:10px;
   position: relative;
@@ -308,17 +310,6 @@ display:none;
 .rating label:hover ~ label:after,
 .rating input:checked ~ label:after{
   opacity: 1;
-}
-
-.div_weather{
-  background-image: url("{% static 'Images/weather_div.png' %}");
-  background-position: center;
-  background-repeat: no-repeat;
-  display:block;
-  width:100%;
-  height:90px;
-  padding-top:20px; 
-  margin:0 auto;
 }
 
 @media only screen and (max-width: 600px) {
@@ -365,7 +356,7 @@ function thumbImage(title, text, index){
 {% endblock %}
 
 {% block content %}
-<div style="border: 0px solid red; width:100%; height: 90%">
+<div class="home_main" style="border: 0px solid red; width:100%; height: 90%">
   <div class="rewidth" style="border: 0px solid blue; height: 100%; margin: 0 auto">
     <!-- Modal -->
     <div style="border:0px solid red; height:100%" class="modal fade form-bg-img" id="tips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -436,7 +427,7 @@ function thumbImage(title, text, index){
       <div id="body_div_slick" class="body_div_slick" style="border: 0px solid red ;width:100% ;height:100%;">
           {% for art_category, articles in category_articles.items %}
             <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
-              <div class="row" style="border-top:6px solid #dddbdb; border:0px solid red">
+              <div class="row" style="border-top:6px solid #dddbdb;">
                 <div class="col-md-6" style="border:0px solid red">
                 {% for lis_category, listicles in category_listicle.items %}
                   {% if lis_category == art_category %}   
@@ -462,7 +453,7 @@ function thumbImage(title, text, index){
                 {% for article in articles %}
                 <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
                   <a href="{{article.get_absolute_url}}">
-                  <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:37%; height:95px; float:left">
+                  <div style=" border:0px solid red; margin-top:0px; max-width:160px; width:37%; height:95px; float:left">
                     {% if article.image_set.first.thumnails.url %}
                       <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
                     {% else %}
@@ -519,25 +510,38 @@ function thumbImage(title, text, index){
                   {% endif %}
                 {% endfor %}
                 
-                <div style="border-top:6px solid #dddbdb;display:block;width:100%" >
-                 <div class="linkThumbs innerSlider owl-carousel owl-theme">
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 1</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 2</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 3</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 4</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 5</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 6</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                   <div style="border:1px solid #dddbdb;"><div style="background-color: #4dc7a0; width:100%; height:100px">Best 7</div><span style="text-align:center; display:block;height:50px">text</span></div>
-                 </div>
-                </div>
-                {% if forloop.counter is 1 %} <!-- only on the first category-->                  
-                <div class="div_weather">
-                  <div id="openweathermap-widget-18" style="width:300px; margin:0 auto" ></div>
-                  <script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 18,cityid: '1835848',appid: '94d95e13b724b2834e05f34e8c06b1cd',units: 'metric',containerid: 'openweathermap-widget-18',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
-                </div>                  
-                {% endif %}
-              </div>
 
+                {% for recomd_cate, recomd_articles in category_recommendation.items %}
+                  {% if recomd_cate == art_category %}
+                    {% if recomd_articles %}
+                      <div style="display:block;width:100%" >
+                        <div class="recomd_Thumbs innerSlider owl-carousel owl-theme">
+                          {% for article in recomd_articles %}
+                           <a href="{{article.get_absolute_url}}">
+                            <div style="border:1px solid #dddbdb; text-align:center;">
+                              <div style="width:100%; height:100px">
+                                {% if article.images.first.thumnails.url %}
+                                <img style="width:100%; height:100%" src="{{article.images.first.thumnails.url}}"/>
+                                {% else %}
+                                  <img class="lazy" id="{{article.name|slugify}}_main_image" style="width:100%; height:100%"/>
+                                  <script async>                       
+                                    thumbImage("{{article.name|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+                                  </script>
+                                {% endif %}
+                              </div>
+                              <div style="width:100%; height:60px; display:table;font-size: 13px">
+                                <span style="border: 0px solid red; width:100%;display: table-cell; vertical-align:middle;">{{article.name|truncatechars:30}}</span>
+                              </div>
+                            </div>
+                          </a>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endif %} 
+                {% endfor %}
+
+              </div>
             </div>
           </div>
           {% endfor %}
@@ -827,7 +831,7 @@ $(document).ready(function(){
     touchDrag: true,
   });
 
-  $(".linkThumbs").owlCarousel({
+  $(".recomd_Thumbs").owlCarousel({
     loop:true,
     responsiveClass:true,
     responsive:{

@@ -32,7 +32,8 @@ args = {'categories' : Category.objects.all()}
 urlpatterns = [
     # path('service-worker.js/', staticView),
     path('service-worker.js', views.service_worker_js),
-    path('', views.home_view, name='home'),
+    path('', views.index_view, name='index'),
+    path('home', views.home_view, name='home'),
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
     path('blog2/', include('blog2.urls')),
@@ -43,6 +44,7 @@ urlpatterns = [
     path('login/', login, {'template_name':'login.html', 'extra_context': args} ,name='login'),
     path('logout/', logout, {'template_name':'logout.html'}, name='logout'),
     path('tips/', include('tips.urls')),
+    path('recommendation/', include('recommendation.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]
 

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from smart_selects.db_fields import ChainedManyToManyField
 from colorful.fields import RGBColorField
 
 class Category(models.Model):
@@ -51,7 +50,7 @@ class Image(models.Model):
 							   processors=[ResizeToFill(200,112)],
 							   format='JPEG',
 							   options={'quality': 100})
-    article = models.ForeignKey(Article, blank=True, null=True, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, blank=True, null=True, related_name="images", on_delete=models.CASCADE)
     author = models.ForeignKey(User, blank=True, null=True, editable=False, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

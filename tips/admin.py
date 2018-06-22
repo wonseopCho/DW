@@ -57,7 +57,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True
-    search_fields = ['id','title']
+    search_fields = ['id', 'category__category','title']
     list_display = ['id', 'category', 'title', 'video', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'title']
     summernote_fields = ['text']
@@ -89,6 +89,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
             obj.slug = trimmed_slug
         # First word is > max_length chars, so we have to break it
         obj.slug = slug[:max_length]+'...'
+        
         if not obj.author:
             obj.author = request.user
 
@@ -118,7 +119,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         obj.save()
 
 class ImageAdmin(ImagesMultiuploadMixing, MultiUploadAdmin):
-    multiupload_form = False
+    multiupload_form = True
     multiupload_list = True
     list_display = ['id', 'article', 'article_id', 'file', 'thumnails', 'author', 'created_at', 'updated_at']
     list_display_links = ['article']

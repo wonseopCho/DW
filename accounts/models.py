@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from allauth.socialaccount.models import SocialAccount
 from tips.models import Article
+from recommendation.models import Recommendation
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,6 +17,7 @@ class UserProfile(models.Model):
 	gender = models.CharField(max_length=10, blank=True, null=True)
 	locale = models.CharField(max_length=50, blank=True, null=True)
 	article_cart = models.ManyToManyField(Article, blank=True, related_name='user_articles')
+	recommendation_cart = models.ManyToManyField(Recommendation, blank=True, related_name='user_recommendation')
 	subscription = models.CharField(max_length=500, blank=True, null=True)
 
 def create_profile(sender, **kwargs):

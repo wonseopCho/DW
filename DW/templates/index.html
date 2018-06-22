@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% load static %}
+{% load embed_video_tags %}
+{% load imagekit %}
+{% load jb_replace %}
+
+{% block headAddon %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" media="print"/>
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.carousel.css' %}" >
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.theme.default.css' %}" media="print">
+
+<style>
+.listicle{
+	width:100%;
+	height:400px;
+}
+
+.listicle_title {
+    position: absolute; 
+    border:0px solid red;
+    width:100%;
+    height:100%; 
+    background-color: rgba( 0, 0, 0, 0.3 );
+    font-family: 'Monoton', cursive;
+    color:#f1f1f1;
+    padding: 6px;
+    font-size: 3vw;
+}
+
+.sticky {
+  background-color:white;
+  position:fixed;
+  width:70%;
+  top: 0px;
+  z-index:-1;
+  padding-top:0px
+}
+
+.stickyx {
+  position: -webkit-sticky; /* Safari */
+  position:sticky;
+  top: 0;
+  padding-top:0px
+}
+
+.owl-dots {
+	height:0;
+}
+
+.div_weather{
+ /* background-image: url("{% static 'Images/weather_div.png' %}");
+  background-position: center;
+  background-repeat: no-repeat;*/
+  display:block;
+  width:100%;
+  height:90px;
+  padding-top:20px; 
+  margin:0 auto;
+  border:0px solid red;
+}
+
+#top_bar {
+  position:fixed;
+  top:0px;
+  z-index: 10;
+  width:70%;
+  color:white;
+}
+
+#top_bar_text {
+	color: white;
+
+}
+
+@media only screen and (max-width: 450px) {
+  .listicle{
+  	height:100%;
+  }
+
+  .listicle_title {
+    position: absolute; 
+    border:0px solid red;
+    width:100%;
+    height:100%;
+    background-color: rgba( 0, 0, 0, 0.5 );
+    font-family: 'Monoton', cursive;
+    color:#f1f1f1;
+    padding: 6px;
+    font-size: 6vw;
+  }
+
+  .sticky {
+  	background-color:white;
+  	position:fixed;
+  	width:100%;
+  	top: 0px;
+  	z-index:-1;
+  	padding-top:0px
+  }
+
+  #top_bar {
+	  position:fixed;
+	  top:0px;
+	  z-index: 10;
+	  width:100%;
+	}
+}
+</style>
+<script type="text/javascript">
+function thumbImage(title, text, index){
+  var parser = new DOMParser();
+  var textHtml = parser.parseFromString(text, 'text/html');
+  var image = textHtml.querySelector('img');
+  // console.log(textHtml.querySelectorAll('img').length);
+  if (image != null) {
+    if (image.src.length > 0 ){
+      if(index < 6){$("#"+title+"_main_image").attr('src', image.src);}
+      else{$("#"+title+"_main_image").attr('src', image.src);};
+    }
+    else {
+      if(index < 6){$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));}
+      else{$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));};
+    }; 
+  }
+  else {
+    $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
+  };
+};
+</script>
+{% endblock %}
+
+{% block title %} 
+  KOREAtripGuide
+{% endblock %}
+
+{% block content %}
+<div class="home_main" style=" border: 0px solid red; width:100%; height: 90%">
+	<div class="rewidth" style="border: 0px solid blue;margin: 0 auto">
+		<div id="listicle" class="listicle stickyx">
+		  <!-- {{ p_page }} -->
+		  <div class="listicle_slider innerSlider owl-carousel owl-theme " style=" width:100%;">
+		    {% for listicle in listicle_all %}
+		      <a href="{% url 'tips:view_listicle' listicle_pk=listicle.id %}">
+		        <div style="width:100%; border: 0px solid blue; position:relative;"> 
+		          <div class="listicle_title">
+		            <span style="position: absolute; bottom:30%">{{listicle.title}}<span>
+		          </div>
+		          <div style="border:0px solid red">
+		            <img class="lazy" style="width:100%; height:100%" src="{{listicle.image.url}}" />
+		          </div>
+		        </div>
+		      </a>
+		    {% endfor %}
+		  </div>
+		</div>
+		<div style="background-color: white; border-top:6px solid #dddbdb; width:100%; height:100%; padding-top:20px; position:relative; z-index: 3">
+			{% for category in categories %}
+			<div class="col-md-12" style="border: 0px solid red;padding: 1px">
+				<div style="width:100%; background-color: white; display:block; border: 0px solid orange">
+					{% for article_category, articles in category_articles.items %}
+						{% if category.category == article_category %}
+							{% if articles %}
+							<div style="width:100%; height:100%; background-color: white; padding:10px; border: 0px solid blue">
+								<img src="{{category.image.url}}" style=" border: 0px solid orange; position:absolute; margin-top:3px; width:19px; height:19px"/>
+								<span style="margin-left:30px; border: 0px solid red">{{category.category|upper}}</span>
+								<div style="float: right; cursor: pointer;" onclick="gotoCategory('{{category.category}}')">
+									+MORE
+								</div>
+							</div>
+							{% endif %}
+							<div style="border-top:0px solid #dddbdb;display:block;width:100%; background-color: white;" >
+							  <div class="article_Thumbs innerSlider owl-carousel owl-theme">
+							    {% for article in articles %}
+							     <a href="{{article.get_absolute_url}}">
+							      <div style="border:0px solid #dddbdb; text-align:center;">
+							        <div style="width:100%; height:100px">
+							          {% if article.images.first.thumnails.url %}
+							          <img style="width:100%; height:100%" src="{{article.images.first.thumnails.url}}"/>
+							          {% else %}
+							            <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+							            <script async>                       
+							              thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+							            </script>
+							          {% endif %}
+							        </div>
+							        <div style="width:100%; height:60px; display:table;font-size: 13px">
+							          <span style="border: 0px solid red; width:100%;display: table-cell; vertical-align:middle; background-color: white; ">
+							          {{article.title|truncatechars:30}}
+							      	  </span>
+							        </div>
+							      </div>
+							    </a>
+							    {% endfor %}
+							  </div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+			{% endfor %}
+
+			                
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block additional_script %}
+<script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script src="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/owl.carousel.min.js' %}"></script>
+<script>
+window.onscroll = function() {myFunction();};
+var topbar = document.getElementById("top_bar");
+var listicle = document.getElementById("listicle");
+var sticky = topbar.offsetTop;
+var li_offset = listicle.offsetTop;
+
+function myFunction() {
+	// #top_bar's margin-top is -2 
+  console.log(window.pageYOffset);
+  if (window.pageYOffset-2 >= sticky) {
+  	var opacity = (window.pageYOffset/100).toFixed(1);
+    topbar.style.backgroundColor = "rgba( 77, 199, 160,"+opacity+" )";
+  } else {
+    topbar.style.backgroundColor = "";
+  };
+
+  if (window.pageYOffset-2 >= li_offset) {
+    listicle.style.top = "-"+window.pageYOffset/2+"px";
+  } else {
+    listicle.style.top = "0px";
+  };
+}
+
+$(document).ready(function(){
+	$(".listicle_slider").owlCarousel({
+	  margin:0,
+	  nav:false,
+	  dots: false,
+	  items:1,
+	  margin:0,
+	  loop: true,
+	  autoplay: true,
+	  autoplayTimeout: 3000,
+	  autoHeight: false,
+	  autoHeightClass: true,
+	  touchDrag: true
+	});
+
+	$(".article_Thumbs").owlCarousel({
+	  loop:true,
+	  responsiveClass:true,
+	  responsive:{
+	      0:{
+	          items:2,
+	          margin:5,
+	          stagePadding: 10,
+	      },
+	      600:{
+	          items:3,
+	          margin:10,
+	          stagePadding: 10,
+	      },
+	      975:{
+	          items:3,
+	          margin:10,
+	          stagePadding: 10,
+	      },
+	      980:{
+	          items:4,
+	          margin:10,
+	          stagePadding: 20,
+	      }        
+	  }
+	});
+});
+
+</script>
+{% endblock %}
+
+{% block footer	%}
+<div class="rewidth" style="border: 0px solid red; height:10%; margin:0 auto">
+	
+	<div class="div_weather">
+	  <div id="openweathermap-widget-18" style="width:300px; margin:0 auto" ></div>
+	  <script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 18,cityid: '1835848',appid: '94d95e13b724b2834e05f34e8c06b1cd',units: 'metric',containerid: 'openweathermap-widget-18',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
+	</div>
+	&copy; Loen  2018
+</div>
+{% endblock %}

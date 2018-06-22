@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.conf import settings
 from tips.models import Listicle, Category, Article, Image
+from recommendation.models import Recommendation
 from accounts.models import UserProfile
 from allauth.socialaccount.models import SocialAccount
 from urllib import parse
@@ -25,6 +26,43 @@ import os
 def home_view(request):
 	return render(request, 'home.html')
 '''
+
+def index_view(request):
+	p_page = parse.urlparse(request.META.get('HTTP_REFERER')).path
+	args= {'p_page' : p_page}
+	category_articles={}
+	category_listicle={}
+	category_user_articles={}
+	category_recommendation={}
+	authenticated_user = ''
+	socialaccount = None
+	articleForm = ArticleForm()
+	categories = Category.objects.all()
+	if request.user.is_authenticated:
+		authenticated_user = UserProfile.objects.get(user=request.user)
+		try :
+			socialaccount = SocialAccount.objects.get(user=request.user)
+		except :
+			socialaccount = None
+	for cate in categories:
+		category = Category.objects.get(category=cate.category).id
+		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
+		category_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=1),).filter(category=category).order_by('-id')[:6]})
+		category_user_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=0),).filter(category=category).order_by('-id')})
+		category_recommendation.update({ cate.category : Recommendation.objects.filter(category=category)})
+	args.update({
+				 'listicle_all' : Listicle.objects.all,
+				 'category_listicle' : category_listicle,
+				 'category_articles' : category_articles,
+				 'category_user_articles' : category_user_articles,
+				 'category_recommendation' : category_recommendation,
+				 'authenticated_user' : authenticated_user,
+				 'socialaccount': socialaccount,
+				 'form' : articleForm,
+				 'categories' : categories,
+		})
+	return render(request, 'index.html', args)
+
 def home_view(request):
 	# p_page = request.META['HTTP_REFERER']
 	p_page = parse.urlparse(request.META.get('HTTP_REFERER')).path
@@ -32,6 +70,7 @@ def home_view(request):
 	category_articles={}
 	category_listicle={}
 	category_user_articles={}
+	category_recommendation={}
 	authenticated_user = ''
 	socialaccount = None
 	articleForm = ArticleForm()
@@ -47,9 +86,11 @@ def home_view(request):
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
 		category_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=1),).filter(category=category).order_by('-id')})
 		category_user_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=0),).filter(category=category).order_by('-id')})
+		category_recommendation.update({ cate.category : Recommendation.objects.filter(category=category)})
 	args.update({'category_listicle' : category_listicle,
 				 'category_articles' : category_articles,
 				 'category_user_articles' : category_user_articles,
+				 'category_recommendation' : category_recommendation,
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
 				 'form' : articleForm,
