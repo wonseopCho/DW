@@ -13,6 +13,7 @@ django-colorful==1.2
 django-embed-video==1.1.2
 django-imagekit==4.0.2
 django-smart-selects==1.5.4
+django-sortedm2m==1.5.0
 django-sslserver==0.20
 django-summernote==0.8.8.6
 django-widget-tweaks==1.4.2

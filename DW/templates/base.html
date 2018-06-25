@@ -370,8 +370,6 @@ function onLoad() {
       };
       let swRegistration = null;
 
-      console.log("here",isSubscribed);
-
       if ('serviceWorker' in navigator && 'PushManager' in window) {
           console.log('Service Worker and Push is supported');
           navigator.serviceWorker.register("/service-worker.js")
@@ -554,8 +552,8 @@ function onLoad() {
 
   </header>
   	{% block content %}{% endblock %}
+    {% block footer %}{% endblock %}
     {% block additional_script %}
     {% endblock %}
-  	{% block footer %}{% endblock %}
 </body>
 </html>

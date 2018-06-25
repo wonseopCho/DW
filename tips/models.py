@@ -1,4 +1,5 @@
 from django.db import models
+from sortedm2m.fields import SortedManyToManyField
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -94,7 +95,7 @@ class Listicle(models.Model):
                                # processors=[ResizeToFill(200,100)],
                                format='JPEG',
                                options={'quality': 30})
-    articles = models.ManyToManyField(Article, blank=False, related_name='listicle_articles')
+    articles = SortedManyToManyField(Article, blank=False, related_name='listicle_articles')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, editable=False, on_delete=models.CASCADE)
     push_update = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

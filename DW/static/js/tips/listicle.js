@@ -38,9 +38,12 @@
               data: updates,
               success: function(res){
                 $("#id_articles").html("");
+                $(".sortedm2m-items").html("");
+                var i=0;
                 $.each(res, function(key, value){
-                    console.log("-->",key, value);
+                    // console.log("-->",i++, key, value);
                     $("#id_articles").prepend("<option value='"+key+"'>"+value+"</option>");
+                     $(".sortedm2m-items").append(`<li class="sortedm2m-item"><label for="id_articles_`+i+`"><input type="checkbox" value="`+key+`" required="" id="id_articles_`+i+`" class="sortedm2m">`+value+`</label></li>`);
                 });
               }, error: function(error){
                 console.log(error);

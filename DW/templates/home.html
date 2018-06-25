@@ -13,6 +13,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 
 <style>
+body{
+  overflow: hidden;
+}
 .home_main {
   /*background-image: url("{% static '/Images/bg_patterns/back_pattern_@2X.png' %}");
   background-repeat: repeat;*/
@@ -312,6 +315,12 @@ div.scrollmenu a {
   opacity: 1;
 }
 
+#loader {
+  position: absolute;
+  left: 47%;
+  top: 45%;
+}
+
 @media only screen and (max-width: 600px) {
   .listicle_title {
     position: absolute; 
@@ -356,6 +365,9 @@ function thumbImage(title, text, index){
 {% endblock %}
 
 {% block content %}
+<div id="loading_overay" style="background-color: white; position: fixed; width:100%; height:100%; z-index: 99;">
+  <i id="loader" class="fa fa-spinner fa-spin" style="font-size:35px"></i>
+</div>
 <div class="home_main" style="border: 0px solid red; width:100%; height: 90%">
   <div class="rewidth" style="border: 0px solid blue; height: 100%; margin: 0 auto">
     <!-- Modal -->
@@ -417,9 +429,9 @@ function thumbImage(title, text, index){
     <div id="main_navi" class="scrollmenu main_navi" style="text-align:center;">
      {% for category in categories %}
         {% if forloop.first %}
-          <a class="main_navi_item slick_select" style="color:white;">{{category}}</a>
+          <a class="main_navi_item slick_select" style="color:white;">{{category|upper}}</a>
         {% else %}
-          <a class="main_navi_item" style="color:white;">{{category}}</a>
+          <a class="main_navi_item" style="color:white;">{{category|upper}}</a>
         {% endif %}
       {% endfor %}
     </div>
@@ -779,16 +791,11 @@ $(document).ready(function(){
   });
 
   $('.main_navi_item').on('click',function(event) {
-    var position = 0;
     event.preventDefault();
     slideIndex = $(this).index();
     $('a').removeClass('slick_select');
     $(this).addClass('slick_select');
     $('#body_div_slick').slick('slickGoTo', slideIndex, true); 
-    for (i=0; i < (parseInt(slideIndex)-1); i++) {
-      position += Math.ceil($("#main_navi a:eq("+(i)+")").outerWidth())+3;
-    }
-    $('#main_navi').animate({scrollLeft: position}, 300);
     lazyImageCall();
   });
   
@@ -814,6 +821,12 @@ $(document).ready(function(){
       // changeThemeColor(background_color);
       var category = $(".main_navi a:eq("+(parseInt(nextSlide))+")").text();
       $('#id_category option:contains('+category+')').prop('selected', true);
+      var slideIndex = nextSlide;
+      var position = 0;
+      for (i=0; i < (parseInt(slideIndex)-1); i++) {
+        position += Math.ceil($("#main_navi a:eq("+(i)+")").outerWidth())+3;
+      }
+      $('#main_navi').animate({scrollLeft: position}, 300);
     };
   });
 
@@ -919,7 +932,12 @@ $(document).ready(function(){
     }, 500);
   });
 
+  $("#loading_overay").fadeOut('500');
+  $('body').css("overflowY", "auto");
+
 });
+
+
 </script>
 {% endblock %}
 

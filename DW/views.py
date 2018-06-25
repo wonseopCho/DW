@@ -37,13 +37,13 @@ def index_view(request):
 	authenticated_user = ''
 	socialaccount = None
 	articleForm = ArticleForm()
-	categories = Category.objects.all()
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
 		try :
 			socialaccount = SocialAccount.objects.get(user=request.user)
 		except :
 			socialaccount = None
+	categories = Category.objects.all().order_by('-id')
 	for cate in categories:
 		category = Category.objects.get(category=cate.category).id
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
