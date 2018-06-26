@@ -94,7 +94,7 @@ class Listicle(models.Model):
     thumnails = ImageSpecField(source='image', 
                                # processors=[ResizeToFill(200,100)],
                                format='JPEG',
-                               options={'quality': 30})
+                               options={'quality': 70})
     articles = SortedManyToManyField(Article, blank=False, related_name='listicle_articles')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, editable=False, on_delete=models.CASCADE)
     push_update = models.BooleanField(default=False)

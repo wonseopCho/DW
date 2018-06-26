@@ -157,11 +157,11 @@ function thumbImage(title, text, index){
 <div id="loading_overay" style="background-color: white; position: fixed; width:100%; height:100%; z-index: 99;">
 	<i id="loader" class="fa fa-spinner fa-spin" style="font-size:35px"></i>
 </div>
-<div class="home_main" style=" border: 0px solid red; width:100%; height: 90%">
+<div class="home_main" style="border: 0px solid red; width:100%; height: 90%">
 	<div class="rewidth" style="border: 0px solid blue;margin: 0 auto">
 		<div id="listicle" class="listicle stickyx">
 		  <!-- {{ p_page }} -->
-		  <div id="l_t_d" style="position: absolute; z-index: 5; bottom:30px; border: 0px solid red; cursor:pointer">
+		  <div id="l_t_d" style="position: absolute; z-index: 2; bottom:10%; border: 0px solid red; cursor:pointer">
 		  	<span id="listicle_title_show" style="margin-left:5px"></span><br><br>
 		  	<span id="listicle_index" class="badge badge-light" style="border-radius: 8px;margin-left:10px"></span>
 		  </div>
@@ -285,7 +285,7 @@ $(document).ready(function(){
 	});
 
 	$(".article_Thumbs").owlCarousel({
-	  loop:true,
+	  loop:false,
 	  responsiveClass:true,
 	  responsive:{
 	      0:{
@@ -312,14 +312,14 @@ $(document).ready(function(){
 	});
 
 	$(window).on('load', function(){
-		console.log("loaded");
+		console.log("Page loaded");
 		$("#loading_overay").fadeOut('500');
 	});
 
 });
 
 function changeCallback(event){
-	console.log(event.item.index, event.item.count);
+	// console.log(event.item.index, event.item.count);
 	if (event.item.index == 0 || event.item.index == 2 ) {
 		index = 1;
 	}
