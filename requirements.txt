@@ -1,4 +1,4 @@
-admin-multiupload==1.10
+git+git://github.com/gkuhn1/django-admin-multiupload.git
 asn1crypto==0.24.0
 certifi==2018.1.18
 cffi==1.11.5
