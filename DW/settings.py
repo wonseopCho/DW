@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'recommendation',
 ]
 
-SITE_ID = 2
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -190,7 +189,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'DW', 'static')
 ]
 
-STATIC_ROOT = "/home/wonseop/DW/static"
+# STATIC_ROOT = "/home/wonseop/DW/static" # for pyrthonanywhre
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
@@ -256,6 +255,7 @@ SUMMERNOTE_CONFIG = {
 # CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 if DEBUG :
+    SITE_ID = 2
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     EMAIL_HOST = 'localhost'
     EMAIL_PORT = 1025
@@ -280,6 +280,7 @@ if DEBUG :
     }
 
 else :
+    SITE_ID = 1
     EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
     EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
     EMAIL_PORT = 465
@@ -307,5 +308,3 @@ else :
             }
         }
     }
-
-
