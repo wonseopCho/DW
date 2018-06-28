@@ -31,9 +31,9 @@ def staticView(request):
 args = {'categories' : Category.objects.all()}
 urlpatterns = [
     # path('service-worker.js/', staticView),
-    path('service-worker.js', views.service_worker_js),
+    path('service-worker.js/', views.service_worker_js),
     path('', views.index_view, name='index'),
-    path('home', views.home_view, name='home'),
+    path('home/', views.home_view, name='home'),
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
     path('blog2/', include('blog2.urls')),
