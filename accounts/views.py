@@ -1,5 +1,6 @@
 import logging
 from django.http import HttpResponse
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
@@ -12,7 +13,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.contrib.auth.forms import (
 										PasswordChangeForm,
 										UserChangeForm, 
@@ -62,9 +63,18 @@ def register(request):
                 'token': account_activation_token.make_token(user),
 				})
 			to_email = form.cleaned_data.get('email')
-			email = EmailMessage(
-            	mail_subject, message, to=[to_email])
-			email.send()
+			if settins.DEBUG:
+				email = EmailMessage(
+					mail_subject, message, to=[to_email])
+				email.send()
+			else :
+				send_mail(
+					mail_subject,
+					message,
+					settings.DEFAULT_FROM_EMAIL,
+					[to_email],
+					fail_silentyl=False,
+					)
 			return HttpResponse('please confirm your email. address to complete the registration')
 		else:
 			return HttpResponse('username exists')

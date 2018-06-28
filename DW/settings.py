@@ -129,25 +129,6 @@ WSGI_APPLICATION = 'DW.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'DW',
-        'USER': 'JB',
-        'PASSWORD': 'JB',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8',
-            'init_command': 'SET character_set_connection=utf8;'
-                            'SET collation_connection=utf8_unicode_ci;'
-                            "SET NAMES 'utf8';"
-                            "SET CHARACTER SET utf8;"
-                            "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
-    }
-}
-
 '''
 DATABASES = {
     'default': {
@@ -235,19 +216,6 @@ LOGIN_EXEMPT_URLS = [
     r'^accounts/reset-password/complete/$',
 ]
 
-#python -m smtpd -n -c DebuggingServer localhost:1025  #for smtp 
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-
-'''
-#ex
-EMAIL_HOST_USER = 'testsite_app'
-EMAIL_HOST_PASSWORD = 'mys3cr3tp4ssw0rd'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'TestSite Team <noreply@example.com>'
-'''
 
 SUMMERNOTE_CONFIG = {
 
@@ -286,3 +254,58 @@ SUMMERNOTE_CONFIG = {
 # CACHE_MIDDLEWARE_ALIAS = 'default'
 # CACHE_MIDDLEWARE_SECONDS = 60 * 10
 # CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
+if DEBUG :
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 1025
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'DW',
+            'USER': 'JB',
+            'PASSWORD': 'JB',
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'charset': 'utf8',
+                'init_command': 'SET character_set_connection=utf8;'
+                                'SET collation_connection=utf8_unicode_ci;'
+                                "SET NAMES 'utf8';"
+                                "SET CHARACTER SET utf8;"
+                                "SET sql_mode='STRICT_TRANS_TABLES'"
+            }
+        }
+    }
+
+else :
+    EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
+    EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
+    EMAIL_PORT = 465
+    EMAIL_USE_SSL = True
+    AWS_ACCESS_KEY_ID = 'AKIAJRVHXVSJYZ5GY2KA'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_SES_REGION = 'us-west-2'
+    DEFAULT_FROM_EMAIL = 'helly011@msn.com'
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'KtripDB',
+            'USER': 'JB',
+            'PASSWORD': 'Cho277412',
+            'HOST': 'ktripdbinstance.c0p3n05acild.ap-northeast-2.rds.amazonaws.com',
+            'PORT': '3306',
+            'OPTIONS': {
+                'charset': 'utf8',
+                'init_command': 'SET character_set_connection=utf8;'
+                                'SET collation_connection=utf8_unicode_ci;'
+                                "SET NAMES 'utf8';"
+                                "SET CHARACTER SET utf8;"
+                                "SET sql_mode='STRICT_TRANS_TABLES'"
+            }
+        }
+    }
+
+
