@@ -284,8 +284,8 @@ else :
     EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
     EMAIL_PORT = 465
     EMAIL_USE_SSL = True
-    AWS_ACCESS_KEY_ID = 'AKIAJRVHXVSJYZ5GY2KA'
-    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_ACCESS_KEY_ID = ''
+    AWS_SECRET_ACCESS_KEY = ''
     AWS_SES_REGION = 'us-west-2'
     DEFAULT_FROM_EMAIL = 'helly011@msn.com'
 
