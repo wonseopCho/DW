@@ -190,11 +190,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'DW', 'static')
 ]
 
-<<<<<<< HEAD
-# STATIC_ROOT = "/home/wonseop/DW/static"
-=======
+
 # STATIC_ROOT = "/home/wonseop/DW/static" # for pyrthonanywhre
->>>>>>> e1833bc3f9b5dd0ffbd6719d9df1a7e8c73b977d
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
