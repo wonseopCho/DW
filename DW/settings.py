@@ -25,7 +25,7 @@ SECRET_KEY = 'j)p9lo0zybdy77%2-6xzdps=spd0894+1dt9g*lczgd*_kkpjc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*', '.pythonanywhere.com', '.ap-northeast-2.compute.amazonaws.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*', '.ktripguide.com', 'ktripguide.com', '.ap-northeast-2.compute.amazonaws.com']
 
 # Application definition
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
     'sortedm2m',
+    'storages',
     'colorful',
     'embed_video',
     'imagekit',
@@ -60,9 +61,39 @@ INSTALLED_APPS = [
     'tips',
     'tips.templatetags',
     'recommendation',
+    'pwa',
 ]
 
-SITE_ID = 2
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'service-worker.js') # in template the name 'serviceworker.js must be kept'
+PWA_APP_NAME = 'KOREAtripGuide'
+PWA_APP_SHORT_NAME = 'KOREAtripGuide'
+PWA_APP_DESCRIPTION = 'KOREAtripGuide'
+PWA_APP_THEME_COLOR = '#4dc7a0'
+PWA_APP_BACKGROUND_COLOR = '#F7F8F9'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_START_URL = '/'
+PWA_APP_ICONS = [
+    {
+      "src": "/static/Images/gps.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/static/Images/gps.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/static/Images/gps.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/static/Images/gps.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+]
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -182,9 +213,6 @@ USE_TZ = True
 USE_DJANGO_JQUERY = True
 #------------------------------
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'DW', 'static')
@@ -193,7 +221,6 @@ STATICFILES_DIRS = [
 
 # STATIC_ROOT = "/home/wonseop/DW/static" # for pyrthonanywhre
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -217,34 +244,6 @@ LOGIN_EXEMPT_URLS = [
     r'^accounts/reset-password/complete/$',
 ]
 
-
-SUMMERNOTE_CONFIG = {
-
-    'iframe': True,
-    'airMode': False,
-    'styleWithSpan': True,
-    'direction': 'ltr',
-    'empty': ('<p><br/></p>', '<p><br></p>'),
-    'width': '100%',
-    'toolbar': [
-        ['style', ['style']],
-        ['font', ['bold']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['paragraph']],
-        ['height', ['height']],
-        ['table', ['table']],
-        ['insert', ['link', 'picture', 'video', 'hr']],
-        ['view', ['fullscreen', 'codeview']],
-        ['help', ['help']],
-    ],
-
-    'attachment_filesize_limit': 1024 * 1024 * 10, #10MB limits
-
-    'js': ('/static/js/tips/article.js',),
-}
-
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -261,6 +260,7 @@ if DEBUG :
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     EMAIL_HOST = 'localhost'
     EMAIL_PORT = 1025
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
     DATABASES = {
         'default': {
@@ -281,16 +281,48 @@ if DEBUG :
         }
     }
 
+    SUMMERNOTE_CONFIG = {
+        'iframe': True,
+        'airMode': False,
+        'styleWithSpan': True,
+        'direction': 'ltr',
+        'empty': ('<p><br/></p>', '<p><br></p>'),
+        'width': '100%',
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            ['help', ['help']],
+        ],
+        'attachment_filesize_limit': 1024 * 1024 * 10, #10MB limits
+        'js': ('/static/js/tips/article.js',),
+    }
+
 else :
     SITE_ID = 1
     EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
     EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
     EMAIL_PORT = 465
     EMAIL_USE_SSL = True
+    MEDIAFILES_LOCATION = 'media'
+    STATICFILES_LOCATION = 'static'
     AWS_ACCESS_KEY_ID = ''
     AWS_SECRET_ACCESS_KEY = ''
+    AWS_STORAGE_BUCKET_NAME = 'ktrip'
+    AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
     AWS_SES_REGION = 'us-west-2'
     DEFAULT_FROM_EMAIL = 'helly011@msn.com'
+    STATIC_URL = "https://%s/static/" % AWS_S3_CUSTOM_DOMAIN
+    STATICFILES_STORAGE = 'DW.s3storages.StaticStorage'
+    MEDIA_URL = "https://%s/media/" % AWS_S3_CUSTOM_DOMAIN
+    DEFAULT_FILE_STORAGE = 'DW.s3storages.MediaStorage'
 
     DATABASES = {
         'default': {
@@ -310,5 +342,58 @@ else :
             }
         }
     }
+
+    SUMMERNOTE_CONFIG = {
+        'iframe': True,
+        'airMode': False,
+        'styleWithSpan': True,
+        'direction': 'ltr',
+        'empty': ('<p><br/></p>', '<p><br></p>'),
+        'width': '100%',
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            ['help', ['help']],
+        ],
+        'attachment_filesize_limit': 1024 * 1024 * 10, #10MB limits
+        'js': ("https://%s/static/js/tips/article.js" % AWS_S3_CUSTOM_DOMAIN ,),
+    }
+
+    PWA_APP_ICONS = [
+        {
+          "src": "https://%s/static/Images/gps.png" % AWS_S3_CUSTOM_DOMAIN ,
+          "type": "image/png",
+          "sizes": "48x48"
+        },
+        {
+          "src": "https://%s/static/Images/gps.png" % AWS_S3_CUSTOM_DOMAIN ,
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "src": "https://%s/static/Images/gps.png" % AWS_S3_CUSTOM_DOMAIN ,
+          "type": "image/png",
+          "sizes": "144x144"
+        },
+        {
+          "src": "https://%s/static/Images/gps.png" % AWS_S3_CUSTOM_DOMAIN,
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+    ]
+
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT =True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    LOGGING_CONFIG = None
 
 

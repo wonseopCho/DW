@@ -26,6 +26,7 @@ class Article(models.Model):
     title = models.CharField(unique=True, max_length=100)
     video = models.FileField(blank=True, upload_to='tips/video/%Y/%m/%d')
     slug = models.SlugField(max_length=100, unique=False, editable=False, allow_unicode=True)
+    find_keyword = models.CharField(blank=True, null=True, max_length=100)
     text = models.TextField(blank=False, null=False)
     rating = models.PositiveSmallIntegerField(blank=True, default=0, choices=[(i, i) for i in range(0, 6)], validators=[MaxValueValidator(5), MinValueValidator(0)])
     views = models.PositiveIntegerField(default=0)

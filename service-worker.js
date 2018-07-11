@@ -6,13 +6,28 @@ var urlsToCache = [
 
 self.addEventListener('install', function(event) {
   // Perform install steps
-  // event.waitUntil(
-  //   caches.open(CACHE_NAME)
-  //     .then(function(cache) {
-  //       console.log('Opened cache');
-  //       return cache.addAll(urlsToCache);
-  //     })
-  // );
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(function(cache) {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+self.addEventListener('activate', function(event) {
+  console.log('[ServiceWorker] Activate');
+  event.waitUntil(
+    caches.keys().then(function(keyList) {
+      return Promise.all(keyList.map(function(key) {
+        if (key !== CACHE_NAME) {
+          console.log('[ServiceWorker] Removing old cache', key);
+          return caches.delete(key);
+        }
+      }));
+    })
+  );
+  return self.clients.claim();
 });
 
 self.addEventListener('fetch', function(event) {

@@ -5,7 +5,7 @@ from .models import Comment, Category, Article, Listicle
 class ArticleForm(forms.ModelForm):
 	class Meta:
 		model = Article
-		fields = ['category', 'title', 'video', 'rating', 'text', 'push_update']
+		fields = ['category', 'title', 'find_keyword', 'video', 'rating', 'text', 'push_update']
 		widgets = {
 				'text' : SummernoteWidget(attrs={'width': '100%', 'height': '400px'},)
 		}

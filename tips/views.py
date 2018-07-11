@@ -150,6 +150,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 			form = CommentForm()
 	else:
 		form = CommentForm()
+	category = listicle.category
 	args = {
 			'listicle': listicle,
 			'form' : form,
@@ -157,7 +158,7 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 			'socialaccount': socialaccount,
 			'category' : listicle.category,
 			'categories' : Category.objects.all(),
-			'excludeListicles' : Listicle.objects.exclude(id=listicle_pk),
+			'excludeListicles' : Listicle.objects.filter(category=category).exclude(id=listicle_pk),
 			}
 	return render(request, 'tips/view_listicle.html', args)
 

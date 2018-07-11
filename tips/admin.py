@@ -57,8 +57,8 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True
-    search_fields = ['id', 'category__category','title']
-    list_display = ['id', 'category', 'title', 'video', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
+    search_fields = ['id', 'category__category','title', 'find_keyword']
+    list_display = ['id', 'category', 'title', 'video', 'find_keyword', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'title']
     summernote_fields = ['text']
     
@@ -73,7 +73,7 @@ class ArticleAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdm
         return '{}'.format(article.likes.count())
 
     def save_model(self, request, obj, form, change):
-        reg = re.compile('(?<=<img src=")(/\w*/\w*-*\w*/\d{4}-\d{2}-\d{2}/\w*-\w*-\w*-\w*-\w*.\w+)(?=")')
+        reg = re.compile('(?<=<img src=")('+settings.MEDIA_URL+'\w*-*\w*/\d{4}-\d{2}-\d{2}/\w*-\w*-\w*-\w*-\w*.\w+)(?=")')
         img = reg.search(obj.text)
         if img != None:
             imgUrl = img.group()

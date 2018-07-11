@@ -4,20 +4,18 @@
 {% load socialaccount %}
 
 {% block headAddon %}
-{% endblock %}
 
-{% block content %}
 <style>
 * {
   box-sizing: border-box;
 }
 a.cancelbtn {
-	color:white;
-	text-decoration: none;
+  color:white;
+  text-decoration: none;
 }
-a:active {
-	color:white;
-	text-decoration: none;
+.contatiner > a, a:active {
+  color:white;
+  text-decoration: none;
 }
 
 form {border: 3px solid #f1f1f1;}
@@ -83,7 +81,7 @@ input,.btn {
   display: inline-block;
   font-size: 17px;
   line-height: 20px;
-  text-decoration: none; /* remove underline from anchors */
+  text-decoration: none;
 }
 .col {
   float: left;
@@ -150,28 +148,30 @@ input,.btn {
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 650px) {
     span.psw {
-       	display: block;
-      	 float: none;
+        display: block;
+         float: none;
     }
     .cancelbtn {
-       	width: auto;
+        width: auto;
     }
     .col {
-		width: 100%;
-		margin-top: 0;
-	}
-	/* hide the vertical line */
-	.vl {
-		display: none;
-	}
-	/* show the hidden text on small screens */
-	.hide-md-lg {
-		display: block;
-		text-align: center;
-	}
+    width: 100%;
+    margin-top: 0;
+  }
+  /* hide the vertical line */
+  .vl {
+    display: none;
+  }
+  /* show the hidden text on small screens */
+  .hide-md-lg {
+    display: block;
+    text-align: center;
+  }
 }
 </style>
+{% endblock %}
 
+{% block content %}
 <div class="container" style="height:100%">
 	<div class="row">
 		<div class="vl">

@@ -79,8 +79,8 @@ hr {
 {% endblock %}
 
 {% block content %}
-<div class="container">
-	<div class="outtercontainer">
+<div class="container rewidth outtercontainer">
+	<div>
 	    <h1 style="text-align: center">Register</h1>
 	    <p>Please fill in this form to create an account.</p>
 	    <hr>		  
@@ -129,7 +129,7 @@ hr {
 		    	</ul>
 		    </span>
 		    <hr>
-		    <p>By creating an account you agree to our <a href="#" style="color: dodgerblue">Terms & Privacy</a>.</p>
+		    <p>By creating an account you agree to our <span style="color: dodgerblue; cursor:pointer;" data-toggle="modal" data-target="#policy&privacy">Terms & Privacy</span>.</p>
 
 			<label for="id_terms">Terms of sevice:</label>
 			<input type="checkbox" name="terms" required="" id="id_terms">
@@ -141,6 +141,285 @@ hr {
 		</form>
 	    <div class="container signin" style="padding: 16px">
 	      <p>Already have an account? <a href="{% url 'accounts:account_login' %}" style="color: dodgerblue">Sign in</a>.</p>
+	    </div>
+
+	    <div class="modal fade" id="policy&privacy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	      <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	          <div class="modal-header" style="height:40px;padding-top: 5px">
+	            <h5 class="modal-title" id="Terms" style="font-weight: bold">Terms and conditions of use</h5>
+	            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	              <span aria-hidden="true">&times;</span>
+	            </button>
+	          </div>
+	          <div class="modal-body" style=" white-space: pre-wrap; border: 0px solid red; height: 220px; overflow: auto">
+The terms and conditions of use shown herewith(hereinafter referred to as the"Terms and Conditions") set forth the terms between Lo.En.Inc(hereinafter referred to as the"Service Provider”)and users(hereinafter referred to as the"User")of any services or features of ktripguide.com(hereinafter referred to as the"Service"), which is provided by the Service Provider.
+
+1. Definitions
+
+The following words and terms shall have the meanings set forth below when they are used in the Terms and Conditions.
+1.1."Content(s)" means information such as texts, audio files, musics, images, videos, software programs, and the relevant things with mentioned above. 
+1.2."Content(s)" means content(s) that may be accessed through the Service. 
+1.3."Submitted Content(s)" means content(s) that Users have submitted, transmitted, or uploaded. 
+
+2. Agreement to Terms and Conditions
+
+Users shall use the Service in accordance with the terms stated in the Terms and Conditions and shall comply with them. Users may not use some part of the contents of the Service unless they agree to the Terms and Conditions. Such agreement is valid and irrevocable. 
+
+3. Modification of the Terms and Conditions
+
+The Service Provider may modify the Terms and Conditions when the Service Provider deems necessary, without providing prior notice to Users. The modification will become effective once the modified Terms and Conditions are posted on an appropriate location within the website operated by the Service Provider. Users shall be deemed to have granted valid and irrevocable consent to the modified Terms and Conditions by continuing to use the Service. Users shall refer to the Terms and Conditions on a regular basis when using the Service, since a separate notification regarding the modification to Terms and Conditions may not be provided.
+
+4. Account
+
+4.1. Anyone who has personal account of social media services which are permitted to share the contents of the Service, or anyone who has email account can register the account for the Service.
+4.2. If Users register a password while using the Service, Users shall exercise due care and responsibility in order for the password not to be used in an unlawful manner. The Service Provider may treat all activities conducted with the password as activities that have been conducted by the holder of the password him/herself.
+4.3. Any registered User to the Service may delete his/her account and withdraw from using the Service, at any time.
+4.4. The Service Provider may suspend or delete a User's account without giving prior notice to the User if the Service Provider believes that the User is violating or has violated the Terms and Conditions.
+4.5. The Service Provider reserves the right to delete any account that has been inactive for a period of a year or more since its last activation, without any prior notice to the User.
+4.6. Users'rights to use the service shall expire when their account has been deleted for any reason. The account cannot be retrieved even if Users have accidentally deleted their account, and the Service Provider asks Users to be aware of this.
+4.7. Each account in the Service is for the exclusive use and belongs solely to the owner of the account. Users may not transfer or lend their accounts to any third party nor may their accounts be inherited by any third party.
+
+5. Privacy
+
+5.1. The Service Provider places its highest priority on the privacy of its Users.
+5.2. The Service Provider promises to protect the privacy and personal information of its users in accordance with the Privacy Policy.
+5.3. The Service Provider promises to exercise the utmost care and attention regarding its security measures for the continued security of any and all User information.
+
+6. Provision of the Service
+
+6.1. Users shall supply the necessary PC, mobile phone device, communication device, operating system, and data connection necessary for using the Service under Users'own responsibility and at Users'own expense.
+6.2. The Service Provider reserves the right to modify or cease, at the Service Provider's own discretion, the whole or part of the Service at anytime without any prior notice to the Users.
+
+7. Incapability of Emergency Calls
+
+The Service cannot be depended upon for emergency calls, such as ones made to law enforcement agencies, maritime safety authorities, fire brigade, or other emergency services.
+
+8. Advertisements
+
+The Service Provider reserves the right to provide Users with advertisements for the Service Provider or a third party, through the Service.
+
+9. Contents
+
+9.1. The Service Provider grants Users non-transferable, non-re-licensable, non-exclusive license to use the Contents provided by the Service Provider, only for the purpose of using the Service.
+9.2. Users shall not use the Contents beyond the scope of the intended use of the Contents in the Service(including but not limited to copying, transmission, reproduction, modification).
+9.3. If Users wish to back-up the whole or part of the Submitted Contents, they will need to do so themselves. The Service Provider will not undertake the obligation of backing up any of the Submitted Contents.
+9.4. The Service may include functions where multiple users may post, correct, edit, and delete items. In such cases, the User who posted his/her Submitted Contents has to allow other Users to perform any editing in relation to the Submitted Contents.
+9.5. Users shall maintain the rights regarding their Submitted Contents just as before, and the Service Provider shall not acquire any rights to such contents. However, if the Submitted Contents are visible to all the other Users, the User who posts the Submitted Content shall grant the Service Provider a worldwide, non-exclusive, royalty-free license(with the right to sublicense such content to other third parties working together with the Service Provider), for an indefinite period, to use(after modifying such content, if the Service Provider believes it necessary and proper)such content for services and/or promotional purposes.
+9.6. The Service Provider may check the details of the Submitted Contents, when the Service Provider believes that the Submitted Contents may violate related laws or provisions set out in the Terms and Conditions. However, the Service Provider is not obligated to conduct such investigations.
+9.7. If the Service Provider believes that the User has violated or may violate applicable laws or provisions in the Terms and Conditions related to Submitted Contents, then the Service Provider reserves the right to preclude the User's use of the Submitted Contents in certain manners, such as deleting the Submitted Content without providing the User with prior notice.
+
+10. Restrictions
+
+Users shall not engage in the following when using the Service.
+10.1. Activities that violate the law, court verdicts, resolutions or orders, or administrative measures that are legally binding.
+10.2. Activities that may hinder public order or customs.
+10.3. Activities that infringe intellectual property rights, such as copyrights, trademarks and patents, fame, privacy, and all other rights of the Service Provider and/or a third party granted by the law or contract.
+10.4. Activities that post or transmit violent or sexual expressions;expressions that lead to discrimination by race, national origin, creed, sex, social status, family origin, etc.;expressions that induce or encourage suicide, self-injury behavior, or drug abuse;or anti-social expressions that include anti-social content and lead to the discomfort of others.
+10.5. Activities that lead to the misrepresentation of the Service Provider and/or a third party, or intentionally spread false information.
+10.6. Activities such as sending messages indiscriminately to numerous Users(except for those approved by the Service Provider).
+10.7. Activities that exchange the right to use the Contents into cash, property or other economic benefits without Service Provider's authorization.
+10.8. Activities that use the Service for sales, marketing, advertisement, soliciting or other commercial purposes(except for those approved by the Service Provider);use the Service for the purpose of sexual conducts or obscene acts.use the Service for the purpose of meeting a person for sexual encounters.use the Service for the purpose of harassments or libelous attacks against other Users;or use the Service for purposes other than the Service's true intent.
+10.9. Activities that benefit or collaborate with anti-social groups.
+10.10. Activities that are related to religious activities or invitations to certain religious groups.
+10.11. Activities that illegally or improperly lead to the collection, disclosure, or provision of other's personal information, registered information, user history, or the like.
+10.12. Activities that interfere with the servers and/or network systems of the Service;that abuse the Service by means of BOTs, cheat tools, or other technical measures;that deliberately use defects of the Service;that make unreasonable inquires and/or undue claims such as repeatedly asking the same question beyond the necessity, and that interfere with the Service Provider's operation of the Service or Users'use of the Service.
+10.13. Activities that aid or encourage any activity stated in Clauses 1 to 9 above.
+10.14. Other activities that are deemed by the Service Provider to be inappropriate.
+
+11. User Responsibility
+
+11.1. Users shall use this Service at his/her own risk, and shall bear all responsibility for actions carried out and their results upon this Service.
+11.2. The Service Provider may take measures that the Service Provider considers necessary and appropriate, if the Service Provider acknowledges that a User is using the service in a way which violates the Terms and Conditions. However, the Service Provider shall not be responsible for correcting or preventing such violation towards Users or others.
+11.3. In the case where the Service Provider has suffered loss/damage or has been charged an expense(including but not limited to lawyer's fees)directly or indirectly(including but not limited to cases where the Service Provider has been sued for damages by a third party)due to the User violating applicable laws or the Terms and Conditions while using the Service, the User shall immediately compensate the Service Provider upon its request.
+
+12. The Service Provider's Exemption of Liability
+
+12.1. The Service Provider does not expressly or impliedly guarantee that the Service(including the Contents)are free from de facto or legal flaws(including but not limited to stability, reliability, accuracy, integrity, effectiveness, fitness for certain purposes, security-related faults, errors, bugs, or infringements of rights). The Service Provider shall not be responsible for providing the Service without such defects.
+12.2. The Service Provider shall not be responsible for any damages inflicted upon Users in relation to the use of the Service. However, if the agreement(including but not limited to the Terms and Conditions)between the Service Provider and Users regarding the Service shall be deemed as a consumer contract under the Consumer Contract Law in Japan, then this exemption clause shall not be applied.
+12.3. Notwithstanding the condition stated in clause 14.2 above, the Service Provider shall not be responsible for any indirect, special, incidental, consequential or punitive damages(including but not limited to such damages that the Service Provider or Users predicted or could have predicted)with respect to the Service Provider's contractual default or act of tort due to the Service Provider's negligence(except for gross negligence). The compensation for ordinary damages in respect to the Service Provider's contractual default or act of tort due to the Service Provider's negligence(except for gross negligence)shall be limited to the total amount of received fees from the User in the particular calendar month in which such damages occurred.
+
+13. Notification and Contact
+
+13.1.When the Service Provider notifies or contacts Users regarding the Service, the Service Provider may use a method that the Service Provider considers appropriate, such as posting on the website operated by the Service Provider.
+13.2.When Users notifies or contacts the Service Provider in regard to the Service, Users shall use the Service Provider’s email account (koreatripguide2018@gmail.com).
+
+14.Governing Law and Jurisdiction
+
+Where the Service Provider has provided Users with a translation of the English version of the Terms and Conditions(hereinafter referred to as"English Version"), the English Version will govern the relationship between Users and the Service Provider.In the event of a contradiction between the English Version and a translation, the provisions in the English Version shall take precedence over any other translation. These Terms and Conditions will be governed by the laws of Republic of Korea. Conflicts that arise from the Service or conflicts between Users and the Service Provider related to the Service will be governed primarily under the exclusive jurisdiction of Seoul Central District Court.
+
+End
+
+Version1.0 dated 16th, July 2018
+</div>
+<div class="modal-header" style="border-top:1px solid #E9ECEF; height:45px;padding-top: 5px">
+    <h5 class="modal-title" id="Privacy" style="font-weight: bold">Privacy Policy</h5>
+    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+</div>
+<div class="modal-body" style=" white-space: pre-wrap; height: 220px; overflow: auto">
+1. Summary
+We, Lo.En.Inc. (hereinafter refered to as “Lo.En.”, “we”, “us” or “our”), believe your privacy is important. 
+To fulfill our commitment to respecting and protecting your privacy, we will adhere to the following principles:
+
+1.We will inform you of the personal information that will be collected, and, where appropriate seek your consent to collect, process, use, or disclose your personal information.
+2.We will identify the purposes for which we will collect and further process your personal information.
+3.We will only collect information that is necessary to carry out the identified purposes of use.
+4.We will use or disclose your personal information only for the purposes for which it has been collected, except with your consent, or as required or permitted by applicable law, and we will retain your information only as long as necessary to fulfill those purposes.
+5.We will endeavor to ensure that your personal information is accurate, complete, and up-to-date.
+6.We will implement appropriate technical and organizational measures to protect your personal information.
+7.We will make our policies and practices for the handling of your personal information as transparent as is reasonably possible.
+8.You will have access to your personal information and will be able to correct your personal information as appropriate in accordance with your rights under applicable law.
+9.We will be accountable to you.  We are interested in hearing your opinion regarding our compliance with these principles, this Privacy Policy, and applicable laws.
+
+
+2.Scope of This Privacy Policy 
+This Privacy Policy explains how LO.EN. will process and safeguard your personal information, and the rights and choices you have with respect to your personal information.  This Privacy Policy applies to: personal information you provide us when you use the Service, optional services made available within the Service and other apps that integrate with or work in conjunction with the Servie; personal information we collect when you visit websites maintained by us relating to our Service; and personal information about you provided by other users of the Service.
+
+
+3.Types of Personal Information We Collect
+a.What Personal Information Does the Service Provider?
+When you create an account and use Services, the Service Provider collects, uses, and transfers the following types of information:
+
+i.Information Concerning Your Account
+When you create an account of the Service in order to access the Services (an “Account”), the Service Provider collects the User’s social media account or email address.  We do not collects the User’s password of social media when the User log in by social media.
+
+ii.Device Information and Access Logs When You Use Our Service
+When you use Services, we may obtain and maintain certain electronic identification or log data that is automatically provided by your device such as: device type, OS type, IP address, browser information including type and language settings, device identifier, cookie data, advertising identifier or mobile application identifier.
+This information is necessary as part of our ongoing efforts to detect and deter unauthorized or fraudulent use of, or abuse of, Services, as well as to provide you with customized options, and optimize the Service for your device.  Also, please note that a third party advertising identifier may be associated with your Account through our internal identifier.
+
+iii.Email Address(optional)
+If you wish to access your Account from multiple devices (“Multiple Device Login”) or to transfer your Account from one device to another (“Account Transfer”), you will need to provide your email address and a password and/or PIN code to the Service Provider, so that we may associate these devices with your Account.  We may use your registered e-mail address to provide you with important information about the operation of Services.
+
+Please note that if you withdraw the Service, you can at any time withdraw in the “Settings” > “personal profile” menu in the Service.
+
+iv.Contact Information for Customer Support (optional)
+There may be circumstances in which you might wish to contact us to seek our customer support.  If you contact us via our email or specific form or by other means, we may obtain and maintain any information you choose to provide, including your name, contact info such as your email address, phone number, as well as information about your mobile device or personal computer such as its device type, and OS type.  We will use this information to address and investigate the issues you have raised, to provide you support, and to improve our customer support service.  We may process this information in connection with the assistance you have requested, the administration of your Account, and retain this information in accordance with the provisions of this Privacy Policy.
+c.What About Information I Create About Myself and Share With Others?
+i.User-Generated Content (optional)
+The information of the User(e.g., ID, display name, profile picture, the user generated contents) opens to whom using the Service 
+Please note that the profile information and user generated content you share with others can be copied, stored, or disseminated by the recipients and potentially accessed by unintended third party recipients due to the nature of digital data.  We encourage you to be very attentive and cautious when you generate and share your personal information or content with others.
+
+
+4.How We Use and Handle Your Information
+a.How Does the Service Provider Use My Information?
+To provide Services and any Additional Services, the Service Provider, as a data controller or joint data controller, uses your personal information for the following purposes in accordance with this Privacy Policy:
+
+■for developing, providing, and improving our Services:
+•to provide Services and any Additional Services to you and to allow you to transmit your user-generated content to other Service users;
+•to allow you to use your Account on multiple devices and transfer your Account to another device;
+•to help you find people you know that are already Service users so that you can connect using Service and, subject to your prior agreement, to allow other Service users to connect with you;
+•to enable you to sync other applications offered by the Service Provider, its affiliates and business partners together with your Account and to share information between the applications you use;
+•to respond to requests you may make to use Additional Services;
+•to enable us to provide customer support, and to respond effectively to your inquiries and claims;
+•to conduct user surveys;
+•to notify you of any other important information regarding Services and any Additional Services, if necessary;
+•to identify winners of promotional contests, to send gifts to those winners, and to deliver purchased products and services;
+•to aggregate anonymized statistical data regarding Services and any Additional Services; 
+•to comply with applicable laws or legal obligations;
+
+■for maintaining the security of Services or preventing unauthorized use:
+•to verify your identity;
+•to monitor, detect and deter unauthorized or fraudulent use of, or abuse of, Services;
+•to verify yourself or to notify you in case any unauthorized use occurred;
+
+■for personalization or advertisement delivery:
+•to improve and/or optimize Services and any Additional Services; and
+•to measure the effectiveness of advertisements that we place on the Internet or in other media.
+
+If, however, we provide you with more specific purpose(s) of use either at the time we ask you to provide your personal information or through other means, then such notice will take precedence over the general purposes of use stated in Section 4.a of this Privacy Policy.
+
+In principle, we obtain your consent when we process your personal information.  If, however, permitted under applicable laws, we may handle your personal information when any of the following applies:
+
+1)processing is necessary for the performance of a contract to which you are party or in order to take steps at your request prior to entering into a contract;
+2)processing is necessary for compliance with a legal obligation to which we are subject (e.g., when following the information disclosure orders based upon laws and regulations announced by government agencies);
+3)processing is necessary in order to protect vital interests of yours or of another individual;
+4)processing is necessary to investigate, prevent and take measures against illegal or suspected illegal acts; or
+5)processing is necessary for the legitimate interests pursued by us or by a third party, except where such interests are overridden by your privacy related rights, interests, and freedom (including improvement of operations or systems, prevention of fraud, maintenance of security, marketing, and research performed by us).
+
+b.How Does the Service Provider Protect My Personal Information?
+
+Because no method of electronic transmission or method of data storage is perfect or impenetrable, we cannot guarantee that your personal information will be absolutely safe from intrusion during transmission or while stored in our systems.
+To help protect your privacy and confidentiality of your personal information, we also need your help.  Please do not share your password with others, or use the same passwords you use for other services.  Also, please notify us in the event you suspect any unauthorized use of your Account or any other breach of security via our email(koreatripguide2018@gmail.com)
+
+c.Where Is My Personal Information Transmitted and Stored?
+
+To provide Services in a reliable and responsible manner, the Service Provider use Amazon Web Service. We are sure that AWS keeps the User’s information safely.
+
+d.How Long Does the Service Provider Keep My Information?
+
+The Service Provider retains the personal information you provide while: your Account is active; for the length of time needed to fulfill any of the applicable purposes of use described in this Privacy Policy; or to comply with applicable laws and regulations.
+
+We may retain your personal information following the closure or termination of your Account if retention is reasonably necessary:
+•to comply with applicable laws, regulations or legal obligations;
+•to provide and complete customer support service;
+•to resolve disputes between or with service users, for the duration of the applicable limitation period; or
+•to detect and deter unauthorized or fraudulent use of, or abuse of, Services.
+
+e.Does the Service Provider Use Outside Service Providers or Agents?
+
+Still not, but we may use outside agent in future.
+To provide Services, it sometimes is necessary for the Service Provider to enlist third party service providers to process user data, which may include your personal information.  These service providers include payment agencies, delivery agencies, providers of customer support services, and so on.  These service providers may store your data in countries or regions where do not have the data protection laws at the level that is required in your country or region.   In such a case, we will take measures to protect your personal information such as entering into a contract regarding data protection. We strictly evaluate all such third party service providers.  We take reasonable steps to ensure that they have established appropriate and secure information administration and organizational control systems.  We will impose binding contractual obligations on such service providers to comply with applicable laws and regulations regarding the processing of personal information.  We will also require that they access your personal information only to the extent necessary to perform tasks in accordance with our instructions, and for no other purposes.
+
+f.Does the Service Provider Give My Information to Third Parties?
+
+Other than as described in this Privacy Policy and other applicable privacy policies, the Service Provider will not provide your information to any third parties without your consent, unless we believe in good faith that we are required or permitted to do so under applicable laws.
+
+g.Does the Service Provider Use Cookies or Other Similar Technologies?
+
+We use cookies and similar local storage technologies.
+A cookie is a small text file that is stored on your computer when visiting a website. This text file stores information that can be read by the website when visiting it again at a later date. Some of these cookies are necessary because otherwise the site is unable to function properly. Other cookies are convenient for the visitor: they remember your username in a secure way as well as your language preferences, for example. Cookies mean that you do not need to fill out the same information each time you visit a website.
+We use cookies:
+•to help us maintain your session when you use Services and/or any Additional Service;
+•to enhance security of our systems;
+•to store your preferences and provide customized services to you; and
+•to help us understand how people use Services and to improve them.
+We also use the following third party cookies on the Website:
+•Google Analytics
+By continuing to use Services, you consent to our use of cookies and similar technologies in accordance with this Privacy Policy.
+Most Internet browsers allow you to control whether or not to accept cookies. If, however, you deactivate cookies or limit the ability to set cookies, you may not be able to obtain the full benefit of the Website or access all of its functions, which may limit your overall user experience.
+
+h.Does the Service Provider Use Third-Party Modules?
+
+The Service Provider may use third party advertising agencies to place advertisements on the Internet or in other media. To measure the effectiveness of advertisements and determine how much to pay to advertising agencies, we may install third-party modules within the Service.  We may also install third-party modules within the Service in order to help us understand how Services and/or Additional Services are being used.  
+
+5.Your Choices, Your Rights
+There is a possibility that the Service Provider may obtain personal information relating to individuals who are currently not users of Services.  Please note that, regardless of whether or not you are a user of Services, you have the choices and rights set out in this section if we hold your personal information.
+
+a.How Do I Control My Information?
+Subject to applicable law (including any exemptions or derogations under such law), you may have a right to access your personal information, to have errors in your personal information rectified, to object to the processing of your personal information on legitimate grounds, data portability, etc.  You can exercise some of these rights directly within the Service at any time.  For example:
+•under your “Profile” in “Settings” in the Service, you can confirm and/or revise your email address, display name and profile picture; and
+•You can also delete your registered email address and withdraw the Service.
+
+To exercise any of your other rights under applicable law, you may contact us using the Contact Form.   Upon verification of your identity, we will respond to your request within a reasonable period of time, and in accordance with relevant law.  If you would like to send us a written request, please refer to Section 6.b for our mailing address.  If, however, permitted under applicable laws, we may not be able to respond to your request when any of the following applies:
+•disclosure is likely to harm the life, body, property, or other rights or interests of yours or another individual;
+•disclosure is likely to seriously impede the proper execution our business;
+•disclosure violates other laws; or
+•when you failed to verify your identity upon your disclosure request.
+
+If you no longer wish to use the Service or if you no longer wish to consent to the Service Provider’s collection and use of your personal information, you may choose to delete your entire Account directly through the Service.  We will delete your information in accordance with Section 4.d.
+
+If you exercise any of your rights permitted under the applicable law through the Contact Form, we may charge a fee taking into account the administrative costs of responding to the request, in accordance with the procedures defined separately.
+
+b.Questions/Comments/Concerns
+If you have any questions, comments, or concerns about this Privacy Policy or our other privacy policies or practices, please contact us via the email:
+
+Email: koreatripguide2018@gmail.com
+LO.EN. Inc.
+Attn: Privacy Policy
+
+c.Changes to This Privacy Policy
+We may modify our Privacy Policy from time to time for various reasons including to improve our privacy practices, to reflect changes to our Service, and to comply with relevant laws.  This Privacy Policy has been initially released on 16th., July 2018.
+When we make any material changes to our Privacy Policy, we will notify you on our Services, or by other reasonable means.  We encourage you to review changes carefully.  If you agree to the changes, then please continue to use our Service.  If, however, you do not agree to any of the changes and you no longer wish to use our Services, you may choose to close your Account.  Continuing to use our Services after a notice of changes has been communicated to you or published on our Services constitutes your acceptance of the changes and consent to the modified Privacy Policy. We seek your consent when applicable law requires.
+
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="TAP(0)">Close</button>
+	            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="TAP(1)">Agree</button>
+	          </div>
+	        </div>
+	      </div>
 	    </div>
 	  </div>
 </div>
@@ -325,6 +604,17 @@ $(document).ready(function(){
 		}
 	});
 });
+
+function TAP(agree){
+	if(agree == 1){
+		$('input:checkbox[id="id_terms"]').prop("checked",true);
+		$('input:checkbox[id="id_privacy"]').prop("checked",true);
+	}
+	else {
+		$('input:checkbox[id="id_terms"]').prop("checked",false);
+		$('input:checkbox[id="id_privacy"]').prop("checked",false);
+	}
+}
 
 </script>
 {% endblock %}

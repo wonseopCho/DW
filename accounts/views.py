@@ -63,7 +63,7 @@ def register(request):
                 'token': account_activation_token.make_token(user),
 				})
 			to_email = form.cleaned_data.get('email')
-			if settins.DEBUG:
+			if settings.DEBUG:
 				email = EmailMessage(
 					mail_subject, message, to=[to_email])
 				email.send()
@@ -73,7 +73,7 @@ def register(request):
 					message,
 					settings.DEFAULT_FROM_EMAIL,
 					[to_email],
-					fail_silentyl=False,
+					fail_silently=False,
 					)
 			return HttpResponse('please confirm your email. address to complete the registration')
 		else:
@@ -81,7 +81,8 @@ def register(request):
 	else:
 		form = RegistrationForm()
 		return render(request, 'accounts/reg_form.html', {
-			'form': form
+			'form': form,
+			'categories' : Category.objects.all(),
 			})
 
 def usernameCheckAjax(request):

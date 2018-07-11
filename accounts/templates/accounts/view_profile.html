@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}{% endblock %}
 
 {% block headAddon %}
-{% endblock %}
 
-{% block content %}
 <style>
 
 .sticky {
@@ -31,6 +29,9 @@ table tr:last-child {
 }
 </style>
 
+{% endblock %}
+
+{% block content %}
 <div class="container" style="width:100%">
 	<div class="row">
 		<div class="col-md-6" >
@@ -139,6 +140,8 @@ table tr:last-child {
 
 {% block additional_script %}
 <script>
+updateBtn();
+
 function remove_ajax(user_id, id, current){
 	console.log(id);
 	swal({
@@ -170,6 +173,6 @@ function remove_ajax(user_id, id, current){
 	  });
 }
 </script>
-
 {% endblock %}
+
 {% block footer %}{% endblock %}

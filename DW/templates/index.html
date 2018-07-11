@@ -10,8 +10,9 @@
 <link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.theme.default.css' %}" media="print">
 
 <style>
+
 .listicle{
-	width:100%;
+	width:70%;
 	height:100%;
 }
 
@@ -27,6 +28,10 @@
     font-size: 3vw;
 }
 
+#l_t_d {
+	top:230px;
+}
+
 #listicle_title_show {
 	font-family: 'Monoton', cursive;
     color:#f1f1f1;
@@ -38,16 +43,17 @@
   background-color:white;
   position:fixed;
   width:70%;
-  top: 0px;
-  z-index:-1;
+  top:0px;
+  z-index:4;
   padding-top:0px
 }
 
-.stickyx {
-  position: -webkit-sticky; /* Safari */
-  position:sticky;
-  top: 0;
-  padding-top:0px
+.lis_sticky {
+  position:fixed;
+  top: -1px;
+ /* background-color:#4DC7A0; */
+  z-index:2; 
+  width:70%;
 }
 
 .owl-dots {
@@ -70,7 +76,7 @@
   position:fixed;
   top:0px;
   z-index: 10;
-  width:70%;
+  width:70vw;
   color:white;
 }
 
@@ -81,50 +87,90 @@
 
 #loader {
   position: absolute;
-  left: 47%;
-  top: 45%;
+  left:46%;
+  top:45%;
+}
+
+.owl-nav {
+	position: absolute;
+	top: 0;
+
+}
+
+.owl-dots{
+	position:absolute;
+	margin-top:-30px;
+}
+
+
+.owl-carousel .owl-nav button.owl-prev, .owl-carousel .owl-nav button.owl-next{
+	height:100px;
+	width: 20px;
+	font-size: 20px;
+	font-weight: bold;
+	background-color: rgba( 0, 0, 0, 0.5 );
+	color: white;
+}
+
+.owl-carousel .owl-nav button.owl-next {
+	border:0px solid blue;
+	position: absolute;
+	
+}
+
+.vw_rewidth {
+  	width :70vw;
 }
 
 @media only screen and (max-width: 450px) {
   .listicle{
-  	height:100%;
-  }
+	width:100%;
+	height:100%;
+	}
+  .listicle_title {
+	font-size:6vw;
+	}
+  #l_t_d {
+	top:15%;
+	}
+  #listicle_title_show {
+	font-size:6vw;
+	}
+  #top_bar {
+	width:100vw;
+	}
+  .vw_rewidth {
+	width:100vw;
+  } 
+}
+
+
+@media screen and (min-width: 450px) and (max-width: 500px) {
 
   .listicle_title {
-    position: absolute; 
-    border:0px solid red;
-    width:100%;
-    height:100%;
-    background-color: rgba( 0, 0, 0, 0.5 );
-    font-family: 'Monoton', cursive;
-    color:#f1f1f1;
-    padding: 6px;
-    font-size: 6vw;
+    font-size:3vw;
   }
-
+  #l_t_d {
+  	top:14%;
+  }
   #listicle_title_show {
-	font-family: 'Monoton', cursive;
-    color:#f1f1f1;
-    padding: 5px;
-    font-size: 6vw;
+    font-size:4vw;
   }
-
-  .sticky {
-  	background-color:white;
-  	position:fixed;
-  	width:100%;
-  	top: 0px;
-  	z-index:-1;
-  	padding-top:0px
-  }
-
-  #top_bar {
-	  position:fixed;
-	  top:0px;
-	  z-index: 10;
-	  width:100%;
-	}
 }
+
+@media screen and (min-width: 500px) and (max-width: 800px) {
+
+  .listicle_title {
+    font-size:3vw;
+  }
+  #l_t_d {
+  	top:16%;
+  }
+  #listicle_title_show {
+    font-size:4vw;
+  } 
+}
+
 </style>
 <script type="text/javascript">
 function thumbImage(title, text, index){
@@ -132,6 +178,7 @@ function thumbImage(title, text, index){
   var textHtml = parser.parseFromString(text, 'text/html');
   var image = textHtml.querySelector('img');
   // console.log(textHtml.querySelectorAll('img').length);
+  // console.log(image.outerHTML.split(" ")[1].slice(5,-1));
   if (image != null) {
     if (image.src.length > 0 ){
       if(index < 6){$("#"+title+"_main_image").attr('src', image.src);}
@@ -159,13 +206,13 @@ function thumbImage(title, text, index){
 </div>
 <div class="home_main" style="border: 0px solid red; width:100%; height: 90%">
 	<div class="rewidth" style="border: 0px solid blue;margin: 0 auto">
-		<div id="listicle" class="listicle stickyx">
+		<div id="listicle" class="listicle" style="z-index:2;top:0%;position:fixed;border:0px solid red">
 		  <!-- {{ p_page }} -->
-		  <div id="l_t_d" style="position: absolute; z-index: 2; bottom:10%; border: 0px solid red; cursor:pointer">
-		  	<span id="listicle_title_show" style="margin-left:5px"></span><br><br>
+		  <div id="l_t_d" style="position:absolute; z-index:3; border:0px solid red; cursor:pointer">
+		  	<span id="listicle_title_show" style="margin-left:5px;"></span><br><br>
 		  	<span id="listicle_index" class="badge badge-light" style="border-radius: 8px;margin-left:10px"></span>
 		  </div>
-		  <div class="listicle_slider innerSlider owl-carousel owl-theme " style=" width:100%;">
+		  <div class="listicle_slider innerSlider owl-carousel owl-theme vw_rewidth" style="height:100%">
 		    {% for listicle in listicle_all %}
 		      <a id="listicle_url_{{forloop.counter}}" href="{{listicle.get_absolute_url}}">
 		        <div style="width:100%; border: 0px solid blue; position:relative;"> 
@@ -180,7 +227,7 @@ function thumbImage(title, text, index){
 		    {% endfor %}
 		  </div>
 		</div>
-		<div style="background-color: white; border-top:6px solid #dddbdb; width:100%; height:100%; padding-top:20px; position:relative; z-index: 3">
+		<div style="margin-top:56%;background-color: white; border-top:6px solid #dddbdb; width:100%; height:100%; padding-top:0px; position:relative; z-index: 3">
 			{% for category in categories %}
 			<div class="col-md-12" style="border: 0px solid red;padding: 1px">
 				<div style="width:100%; background-color: white; display:block; border: 0px solid orange">
@@ -190,8 +237,8 @@ function thumbImage(title, text, index){
 							<div style="width:100%; height:100%; padding:10px; cursor: pointer; border: 0px solid blue" onclick="gotoCategory('{{category.category}}')">
 								<img src="{{category.image.url}}" style="border: 0px solid orange; position:absolute; margin-top:3px; width:19px; height:19px"/>
 								<span style="margin-left:30px; border: 0px solid red">{{category.category|upper}}</span>
-								<div style="float: right; " >
-									+MORE
+								<div style="float: right; font-size: 20px" >
+									<i class="fas fa-plus-square"></i>
 								</div>
 							</div>
 							{% endif %}
@@ -231,13 +278,8 @@ function thumbImage(title, text, index){
 {% endblock %}
 
 {% block footer	%}
-<div class="rewidth" style="border: 0px solid red; height:10%; margin:0 auto">
-	
-	<div class="div_weather">
-	  <div id="openweathermap-widget-18" style="width:300px; margin:0 auto" ></div>
-	  <script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 18,cityid: '1835848',appid: '94d95e13b724b2834e05f34e8c06b1cd',units: 'metric',containerid: 'openweathermap-widget-18',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
-	</div>
-	&copy; Loen  2018
+<div class="rewidth" style="border: 0px solid red; height:100%; margin:0 auto; text-align:center; font-size:12px">
+	&copy; Loen ALL RIGHTS RESERVED
 </div>
 {% endblock %}
 
@@ -263,11 +305,18 @@ function myFunction() {
   if (window.pageYOffset-2 >= li_offset) {
     listicle.style.top = "-"+window.pageYOffset/2+"px";
   } else {
-    listicle.style.top = "0px";
+    listicle.style.top = "0";
   };
+
+  if (window.pageYOffset-2 >= li_offset) {
+    listicle.classList.add("lis_sticky");
+  } else {
+    listicle.classList.remove("lis_sticky");
+  }
 }
 
 $(document).ready(function(){
+
 	$(".listicle_slider").owlCarousel({
 	  margin:0,
 	  nav:false,
@@ -281,11 +330,19 @@ $(document).ready(function(){
 	  autoHeight: false,
 	  autoHeightClass: true,
 	  touchDrag: true,
+	  responsiveClass:true,
+	  responsive:{
+	      600:{
+	          dots:true,
+	      } 
+	  },
 	  onChanged: changeCallback
 	});
 
 	$(".article_Thumbs").owlCarousel({
 	  loop:false,
+	  nav:false,
+	  dots:false,
 	  responsiveClass:true,
 	  responsive:{
 	      0:{
@@ -299,23 +356,29 @@ $(document).ready(function(){
 	          stagePadding: 10,
 	      },
 	      975:{
+	      	  nav:true,
 	          items:3,
 	          margin:10,
 	          stagePadding: 10,
 	      },
 	      980:{
+	      	  nav:true,
 	          items:4,
 	          margin:10,
 	          stagePadding: 20,
 	      }        
 	  }
 	});
+	var next_nav = Math.floor($('.article_Thumbs').width());
+	$('.owl-next').css('left',(next_nav-19)+'px');
+	
+});
 
-	$(window).on('load', function(){
-		console.log("Page loaded");
-		$("#loading_overay").fadeOut('500');
+$(window).on('load', function(){
+	console.log("Page loaded");
+	$.when($("#loading_overay").fadeOut('500')).done(function(e){
+		$('body').css("overflowY", "auto");
 	});
-
 });
 
 function changeCallback(event){
@@ -323,16 +386,18 @@ function changeCallback(event){
 	if (event.item.index == 0 || event.item.index == 2 ) {
 		index = 1;
 	}
-	else if (event.item.count%2 == 0){
-		index = event.item.index-2; 
-	}
 	else {
-		index = event.item.index-3;
-	}
+        index = event.item.index-(event.item.count-5);
+        if (index > event.item.count){
+                index = 1;
+        }
+    };
 	var link_url = $("#listicle_url_"+index).attr('href');
 	$("#listicle_index").text(index+'/'+event.item.count);
 	$("#listicle_title_show").text($("#listicle_title_hidden_"+index).text());
 	$("#l_t_d").attr("onClick", "location.href = '"+link_url+"'");
+	var next_nav = Math.floor($('.article_Thumbs').width());
+	$('.owl-next').css('left',(next_nav-19+'px'));
 }
 
 </script>

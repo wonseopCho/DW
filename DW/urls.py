@@ -28,11 +28,16 @@ def staticView(request):
     with open(settings.BASE_DIR+"/service-worker.js") as fp:
         return HttpResponse(fp.read())
 
+def heart_beat(request):
+    return HttpResponse("It's Works!", content_type='text/plain')
+
 args = {'categories' : Category.objects.all()}
 urlpatterns = [
     # path('service-worker.js/', staticView),
-    path('service-worker.js/', views.service_worker_js),
+    # path('service-worker.js/', views.service_worker_js),
+    path('', include('pwa.urls')),
     path('', views.index_view, name='index'),
+    path('heart_beat/', heart_beat),
     path('home/', views.home_view, name='home'),
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),

@@ -1,8 +1,7 @@
 {
   "short_name": "KtripGuide",
   "name": "KtripGuide",
-  "start_url": "/?utm_source=homescreen",
-  "scope": "/",
+  "start_url": "/",
   "theme_color": "#4dc7a0",
   "background_color": "#F7F8F9",
   "display": "standalone",

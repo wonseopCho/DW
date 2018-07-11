@@ -43,7 +43,7 @@ def index_view(request):
 			socialaccount = SocialAccount.objects.get(user=request.user)
 		except :
 			socialaccount = None
-	categories = Category.objects.all().order_by('-id')
+	categories = Category.objects.all().order_by('id')
 	for cate in categories:
 		category = Category.objects.get(category=cate.category).id
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})

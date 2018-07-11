@@ -13,11 +13,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 
 <style>
-body{
-  overflow: hidden;
-}
 .home_main {
-  /*background-image: url("{% static '/Images/bg_patterns/back_pattern_@2X.png' %}");
+  /*background-image: url("{% static 'Images/bg_patterns/back_pattern_@2X.png' %}");
   background-repeat: repeat;*/
 
 }
@@ -212,6 +209,11 @@ a * {
    background-size: 100% 100%;*/
    background-color: black;
 }
+
+#main_navi::-webkit-scrollbar {
+display:none;
+}
+
 input[type=text], select {
     width: 100%;
     padding: 8px;
@@ -316,9 +318,21 @@ div.scrollmenu a {
 }
 
 #loader {
-  position: absolute;
-  left: 47%;
+  position: fixed;
+  left: 46%;
   top: 45%;
+}
+
+.owl-carousel .owl-nav button.owl-prev, .owl-carousel .owl-nav button.owl-next{
+  color: red;
+}
+
+.left_col {
+  padding-right: 5px;
+}
+
+.right_col {
+  padding-left: 5px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -332,7 +346,13 @@ div.scrollmenu a {
     text-align: center;
     color:#f1f1f1;
     padding: 6px;
-    font-size: 9vw;
+    font-size: 7.5vw;
+  }
+  .left_col {
+    padding-right: 15px;
+  }
+  .right_col {
+    padding-left: 15px;
   }
 }
 </style>
@@ -440,7 +460,7 @@ function thumbImage(title, text, index){
           {% for art_category, articles in category_articles.items %}
             <div class="{{art_category}}" style="border: 0px solid red; width:100%; height:100%;">
               <div class="row" style="border-top:6px solid #dddbdb;">
-                <div class="col-md-6" style="border:0px solid red">
+                <div class="col-md-6 left_col" style="border:0px solid red;">
                 {% for lis_category, listicles in category_listicle.items %}
                   {% if lis_category == art_category %}   
                     {% if listicles %}
@@ -461,9 +481,15 @@ function thumbImage(title, text, index){
                     {% endif %}   
                   {% endif %}
                 {% endfor %}
-
+                <div style="margin-top:5px; display:block; border-radius:2px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa; font-weight: bold;">
+                  {{art_category}} Guide
+                </div>
                 {% for article in articles %}
-                <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+                  {% if forloop.first %}
+                  <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:0px">
+                  {% else %}
+                  <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+                  {% endif %}
                   <a href="{{article.get_absolute_url}}">
                   <div style=" border:0px solid red; margin-top:0px; max-width:160px; width:37%; height:95px; float:left">
                     {% if article.image_set.first.thumnails.url %}
@@ -489,7 +515,40 @@ function thumbImage(title, text, index){
                 {% endfor %}
               </div>
                 
-              <div class="col-md-6" >
+              <div class="col-md-6 right_col" >               
+                {% for recomd_cate, recomd_articles in category_recommendation.items %}
+                  {% if recomd_cate == art_category %}
+                    {% if recomd_articles %}
+                      <div style="margin-top:1px; display:block; border-radius:2px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa; font-weight: bold;">
+                        Must Visits
+                      </div>
+                      <div style="display:block;width:100%" >
+                        <div class="recomd_Thumbs innerSlider owl-carousel owl-theme">
+                          {% for article in recomd_articles %}
+                           <a href="{{article.get_absolute_url}}">
+                            <div style="border:1px solid #dddbdb; text-align:center;">
+                              <div style="width:100%; height:100px">
+                                {% if article.images.first.thumnails.url %}
+                                <img style="width:100%; height:100%" src="{{article.images.first.thumnails.url}}"/>
+                                {% else %}
+                                  <img class="lazy" id="{{article.name|slugify}}_main_image" style="width:100%; height:100%"/>
+                                  <script async>                       
+                                    thumbImage("{{article.name|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+                                  </script>
+                                {% endif %}
+                              </div>
+                              <div style="width:100%; height:60px; display:table;font-size: 13px">
+                                <span style="border: 0px solid red; width:100%;display: table-cell; vertical-align:middle;">{{article.name|truncatechars:30}}</span>
+                              </div>
+                            </div>
+                          </a>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endif %} 
+                {% endfor %}
+
                 {% for user_category, user_articles in category_user_articles.items %}
                   {% if user_category == art_category %}
                     {% if user_articles %}
@@ -521,37 +580,6 @@ function thumbImage(title, text, index){
                     {% endif %}
                   {% endif %}
                 {% endfor %}
-                
-
-                {% for recomd_cate, recomd_articles in category_recommendation.items %}
-                  {% if recomd_cate == art_category %}
-                    {% if recomd_articles %}
-                      <div style="display:block;width:100%" >
-                        <div class="recomd_Thumbs innerSlider owl-carousel owl-theme">
-                          {% for article in recomd_articles %}
-                           <a href="{{article.get_absolute_url}}">
-                            <div style="border:1px solid #dddbdb; text-align:center;">
-                              <div style="width:100%; height:100px">
-                                {% if article.images.first.thumnails.url %}
-                                <img style="width:100%; height:100%" src="{{article.images.first.thumnails.url}}"/>
-                                {% else %}
-                                  <img class="lazy" id="{{article.name|slugify}}_main_image" style="width:100%; height:100%"/>
-                                  <script async>                       
-                                    thumbImage("{{article.name|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
-                                  </script>
-                                {% endif %}
-                              </div>
-                              <div style="width:100%; height:60px; display:table;font-size: 13px">
-                                <span style="border: 0px solid red; width:100%;display: table-cell; vertical-align:middle;">{{article.name|truncatechars:30}}</span>
-                              </div>
-                            </div>
-                          </a>
-                          {% endfor %}
-                        </div>
-                      </div>
-                    {% endif %}
-                  {% endif %} 
-                {% endfor %}
 
               </div>
             </div>
@@ -559,7 +587,6 @@ function thumbImage(title, text, index){
           {% endfor %}
       </div>
     </div>
-    <a href="https://www.google.com/maps/search/편의점/">test map search</a>
 
     {% if user.is_authenticated %}
     <div id="tip_write" class="reright" style="border: 0px solid red; border-radius:40px; background-color: rgba( 255, 191, 0, 0.5 ); position:fixed; bottom: 50px; width: 55px; height:57px; text-align: center;  ">
@@ -572,6 +599,12 @@ function thumbImage(title, text, index){
     {% endif %}
 
   </div>
+</div>
+{% endblock %}
+
+{% block footer	%}
+<div class="rewidth" style="border: 0px solid red; height:100%; margin:0 auto; text-align:center; font-size:12px">
+	&copy; Loen ALL RIGHTS RESERVED
 </div>
 {% endblock %}
 
@@ -597,7 +630,7 @@ function typeWriter(){
 
 function myFunction() {
   if (window.pageYOffset >= sticky) {
-    navbar.classList.add("sticky")
+    navbar.classList.add("sticky");
   } else {
     navbar.classList.remove("sticky");
   }
@@ -842,33 +875,33 @@ $(document).ready(function(){
     autoHeight: false,
     autoHeightClass: true,
     touchDrag: true,
+    responsiveClass:true,
+    responsive:{
+        600:{
+            dots:true,
+        } 
+    }
   });
 
   $(".recomd_Thumbs").owlCarousel({
-    loop:true,
+    loop:false,
+    nav:false,
+    dots:false,
     responsiveClass:true,
     responsive:{
         0:{
             items:3,
             margin:5,
-            stagePadding: 20,
+            stagePadding:0,
         },
         600:{
-            items:3,
-            margin:10,
-            stagePadding: 50,
-        },
-        975:{
-            items:3,
-            margin:10,
-            stagePadding: 20,
-        },
-        980:{
+            dots:true,
             items:3,
             margin:5,
-            stagePadding: 20,
-        }        
-    }
+            stagePadding:0,
+        } 
+    }//,
+     // onChanged: changeCallback
   });
 
   $('.innerSlider').on('touchstart touchmove mousemove mouseenter', function(e) {
@@ -932,17 +965,37 @@ $(document).ready(function(){
     }, 500);
   });
 
-  $("#loading_overay").fadeOut('500');
-  $('body').css("overflowY", "auto");
+  $.when($("#loading_overay").fadeOut('500')).done(function(e){
+    $('body').css("overflowY", "auto");
+  });
 
+  // show_owl_dots();
+  // nav_next_adjust(26);
 });
 
+function changeCallback(event){
+  nav_next_adjust(20);
+}
 
+function nav_next_adjust(adjust_width){
+  var next_nav = Math.floor($('.recomd_Thumbs').width());
+  $('.recomd_Thumbs .owl-next').css('left',(next_nav-adjust_width+'px'));
+  if ($('body').width() > 768) {
+    $('.recomd_Thumbs .owl-nav').css('display', 'block');
+  }
+  else {
+    $('.recomd_Thumbs .owl-nav').css('display', 'none');
+  }
+}
+
+function show_owl_dots(){
+  if ($('body').width() > 768) {
+    $('.owl-dots').css('display', 'block');
+  }
+  else {
+    $('owl-dots').css('display', 'none');
+  }
+}
 </script>
-{% endblock %}
 
-{% block footer	%}
-<div class="rewidth" style="border: 0px solid red; height:10%; margin:0 auto">
-	&copy; Loen  2018
-</div>
 {% endblock %}

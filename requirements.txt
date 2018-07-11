@@ -1,4 +1,4 @@
-git+git://github.com/gkuhn1/django-admin-multiupload.git
+admin-multiupload==1.10
 asn1crypto==0.24.0
 boto3==1.7.47
 botocore==1.10.47
@@ -15,9 +15,11 @@ django-appconf==1.0.2
 django-colorful==1.2
 django-embed-video==1.1.2
 django-imagekit==4.0.2
+django-progressive-web-app==0.1.1
 django-smart-selects==1.5.4
 django-sortedm2m==1.5.0
 django-sslserver==0.20
+django-storages==1.6.6
 django-summernote==0.8.8.6
 django-widget-tweaks==1.4.2
 docutils==0.14

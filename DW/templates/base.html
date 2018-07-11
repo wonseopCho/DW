@@ -1,21 +1,21 @@
-{% load static %}
-{% load cache %}
 <!DOCTYPE html>
 <html>
+{% load static %}
+{% load cache %}
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <!-- set a web app capable website -->
 <meta name="theme-color" content="#4dc7a0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="{% static 'js/manifest.json' %}">
-<link rel="apple-touch-icon" href="{% static '/Images/gps.png' %}" />
-<link rel="apple-touch-icon-precomposed" href="{% static '/Images/gps.png' %}" />
-<link rel="shortcut icon" href="{% static '/Images/gps.png' %}" />
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="{% static 'Images/gps.png' %}" />
+<link rel="apple-touch-icon-precomposed" href="{% static 'Images/gps.png' %}" />
+<link rel="shortcut icon" href="{% static 'Images/gps.png' %}" />
 
 <title >{% block title %}KtripGuide{% endblock %}</title>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -34,12 +34,15 @@
 <link rel="stylesheet" type="text/css" href="{% static 'add-to-homescreen-master/style/addtohomescreen.css' %}"/>
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Monoton|Cinzel+Decorative|Bungee+Inline|Metrophobic|Righteous" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" href="{% static 'fontawesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css'%}">
-
+<!-- <link rel="stylesheet" href="{% static 'fontawesome/5.0.13/web-fonts-with-css/css/fontawesome-all.min.css'%}"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 <style>
 
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
 display:none;
+}*/
+html { 
+  width: 100vw; 
 }
 
 a, a:active, a:hover, a:link {
@@ -48,10 +51,14 @@ a, a:active, a:hover, a:link {
 }
 
 body{
-  padding-top: 0px;
+  padding-top: 0;
+  padding-bottom: 0;
   font-family: 'Metrophobic', sans-serif;
 }
-
+#top_bar {
+  top:0px;
+  width:70vw;
+}
 .overlay {
     height: 100%;
     width:100%;
@@ -95,7 +102,7 @@ body{
 }
 
 .noneScroll {
-  /*overflow: hidden;*/
+  overflow: hidden;
 }
 
 .avatar {
@@ -176,6 +183,7 @@ pre code {
 
 .rewidth{
   width:70%;
+  margin:0 auto;
 }
 
 .reright{
@@ -189,6 +197,43 @@ pre code {
   font-family: 'Righteous', cursive;
 }
 
+.owl-nav {
+  position: absolute;
+  top: 0;
+
+}
+.owl-dots {
+  width:100%;
+  text-align: center;
+}
+.owl-carousel .owl-nav button.owl-prev, .owl-carousel .owl-nav button.owl-next{
+  height:162px;
+  width: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: rgba( 0, 0, 0, 0.1 );
+  color: white;
+}
+
+.owl-carousel .owl-nav button.owl-next {
+  border:0px solid blue;
+  position: absolute;
+}
+
+.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span {
+    background: #869791;
+}
+
+.owl-theme .owl-dots .owl-dot span {
+    width: 10px;
+    height: 10px;
+    margin: 5px 7px;
+    background: #D6D6D6;
+    display: block;
+    -webkit-backface-visibility: visible;
+    transition: opacity .2s ease;
+    border-radius: 30px;
+}
 @media only screen and (max-width: 450px) {
   a {
     color: #333333;
@@ -203,29 +248,32 @@ pre code {
     width: 100%;
   }
   .rewidth {
+    margin:0 auto;
     width: 100%;
   }
   .reright{
   right:10px;
   }
-  .linkThumbs_item{
-    
+  #top_bar {
+    top:0px;
+    width:100vw;
   }
 }
+
 </style>
 <script>
 var userAgent = navigator.userAgent.toLowerCase();
 
 if(userAgent.match('iphone')) {
-    document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>"); 
+    document.write("<link href='{% static 'Images/gps.png' %}' rel='apple-touch-icon'>"); 
 } else if(userAgent.match('ipad')) { // sizes="72*72"
-    document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>");
+    document.write("<link href='{% static 'Images/gps.png' %}' rel='apple-touch-icon'>");
 } else if(userAgent.match('ipod')) {
-    document.write("<link href='{% static '/Images/gps.png' %}' rel='apple-touch-icon'>"); 
+    document.write("<link href='{% static 'Images/gps.png' %}' rel='apple-touch-icon'>"); 
 } else if(userAgent.match('android')) {
-    document.write("<link href='{% static '/Images/gps.png' %}' rel='shortcut icon'>"); 
+    document.write("<link href='{% static 'Images/gps.png' %}' rel='shortcut icon'>"); 
 } else {
-    document.write("<link href='{% static '/Images/gps.png' %}' rel='shortcut icon'>"); 
+    document.write("<link href='{% static 'Images/gps.png' %}' rel='shortcut icon'>"); 
 };
 
 addToHomescreen();// Especially for IOS
@@ -313,7 +361,7 @@ function onLoad() {
               </a>
             </div>
           {% endif %}
-        <div id='categories' style="border:1px solid #dddbdb; height: 250px; padding:0 ">
+        <div id='categories' style="border:1px solid #dddbdb; height: 160px; padding:0 ">
           {% for category in categories %}
             <div style="border: 0px solid black; width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('{{category}}')">
               <img style="width:40px; height:40px" src="{{category.image.url}}"/>
@@ -322,26 +370,21 @@ function onLoad() {
           {% endfor %}
         </div>
         <div id="push_and_map" style="border:1px solid #dddbdb; height: 70px; ">
-          
-          <div style="border:0px solid black; width:51%; float:left; font-size: 17px;">
+          <div style="border:0px solid black; width:100%; float:left; font-size: 17px;">
+            <div style="border:0px solid black; width:49%; height:34px; float:left; font-size:25px; padding-top:0px">
+             <i class="fas fa-bell"></i>
+            </div>
             {% if user.is_authenticated %}
-              <input id="pushBtn"  type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="danger" data-width="130" data-height="32">
+              <input id="pushBtn" style="" type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="danger" data-width="130" data-height="32">
             {% else %}
-              <input id="pushBtn_dummy"  type="checkbox" disabled data-toggle="toggle" data-width="130" data-height="32">
+              <input id="pushBtn_dummy" type="checkbox" disabled data-toggle="toggle" data-width="130" data-height="32">
             {% endif %}
           </div>
-          
-          <div style="border: 0px solid black; width:49%; float:left; font-size: 17px;">
-            <a id="mapAPI" href="/mapAPI">MAP</a>
-          </div>
         </div>
-        <a class="nav-link" href="/blog">Blog</a>
-        <a class="nav-link" href="/blog2">Blog2</a>
-        <a class="nav-link" href="/bookmark">Bookmark</a>
       </div>
     </div>
     <div class="rewidth" style="border:0px solid blue; margin: 0 auto; margin-top:-2px">  
-      <div id="top_bar" style="border:0px solid red; height:54px; margin:0 auto">
+      <div id="top_bar" class="top_rewidth" style="border:0px solid red; height:54px; margin:0 auto">
         <!-- <div style="border:1px solid white; width:15%; text-align:center; float:left">
           <span style="font-size:35px;cursor:pointer"></span>
         </div> -->
@@ -372,8 +415,8 @@ function onLoad() {
 
       if ('serviceWorker' in navigator && 'PushManager' in window) {
           console.log('Service Worker and Push is supported');
-          navigator.serviceWorker.register("/service-worker.js")
-            .then(function(swReg){
+          navigator.serviceWorker.register("/serviceworker.js")
+          .then(function(swReg){
               console.log('Service Worker is registered', swReg);
               swRegistration = swReg;
               initialiseUI();
@@ -387,7 +430,6 @@ function onLoad() {
 
       function initialiseUI() {
         $('#pushBtn').change(function() {
-            console.log("coliock");
             $('#pushBtn').attr('disabled', true);
             if (isSubscribed) {
               // TODO: Unsubscribe user
@@ -400,14 +442,12 @@ function onLoad() {
         // Set the initial subscription value
         swRegistration.pushManager.getSubscription()
         .then(function(subscription) {
-          isSubscribed = !(subscription === null);
-
+          isSubscribed = !('{{authenticated_user.subscription}}' === '');
           if (isSubscribed) {
             console.log('User IS subscribed.');
           } else {
             console.log('User is NOT subscribed.');
           }
-
           updateBtn();
         });
       }
@@ -460,7 +500,6 @@ function onLoad() {
           updateSubscriptionOnServer(null);
           return;
         };
-
         if (isSubscribed) {
           $('#pushBtn').attr('checked', true);
           $('#pushBtn').bootstrapToggle({
@@ -474,7 +513,6 @@ function onLoad() {
               off: 'Alarm Disabled'
             });
         };
-
         $('#pushBtn').bootstrapToggle('enable');
       }
 
@@ -532,13 +570,13 @@ function onLoad() {
 
     function openNav() {
         $("#myNav").animate({left: '0px'}, 30);
-        $('body').addClass('noneScroll');
+       $('body').css('overflow-y', 'hidden');
 
     }
 
     function closeNav() {
         $("#myNav").animate({left: '-100%'}, 30);
-        $('body').removeClass('noneScroll');
+        $('body').css('overflow-y', 'auto');
     }
 
     $("#mapAPI").click(function(){
