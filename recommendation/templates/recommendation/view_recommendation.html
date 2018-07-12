@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 <style>
+
 img {
   max-width: 100%;
 }
@@ -170,6 +171,35 @@ textarea {
 opacity: 1;
 }
 
+/* Style tab links */
+.tablink {
+    background-color: #999999;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    width: 33.3%;
+}
+
+.tablink:hover {
+    background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+    color: white;
+    display: none;
+    padding: 100px 20px;
+    height: 100%;
+}
+
+#About {background-color: #4dc7a0;}
+#Infomation {background-color: #17A2B8;}
+#Contact {background-color: #FF7058;}
+
 @-webkit-keyframes fadein {
     from {bottom: 0; opacity: 0;} 
     to {bottom: 30px; opacity: 1;}
@@ -298,8 +328,19 @@ function thumbImage(title, text){
           <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
           <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{content.views}}</span>
           <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px">Likes {{content.likes.count}}</span>
+          {% if content.find_keyword %}
+          <a href= "https://www.google.com/maps/search/{{content.find_keyword}}">
+            <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
+          </a>
+          {% endif %}
+          <div style="position:absolute; right:0">
+            {% if user.is_authenticated and user != content.author %}
+            <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="articleSave({{authenticated_user.id}},{{content.id}})"><i class="fas fa-paperclip"></i></div>
+            {% elif not user.is_authenticated %}
+            <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"><i class="fas fa-paperclip"></i></div>
+            {% endif %}
+          </div>
         </div>
-
         {% if content.video or content.images.all.count > 0 %}
           <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
           {% if content.images.all.count > 0 %} 
@@ -346,17 +387,44 @@ function thumbImage(title, text){
             </div>
           </div>
         </div>
-        <div class="sticky" id="article_text" style="margin-top: 10px;display:block">
-          <p>{{content.text|safe}}</p>
-        </div>
-        <div style="border:0px solid blue; width:100%;height:40px">
-          <div style="border:1px solid #F7F7F7; width:50%;display:inline-block;float:left">
-            {% if user.is_authenticated and user != content.author %}
-            <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{content.id}})"/>
-            {% elif not user.is_authenticated %}
-            <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
-            {% endif %}
+        <div class="sticky" id="article_text" style="margin-top: 10px;display:block;">
+          <button class="tablink" onclick="openPage('About', this, '#4dc7a0')" id="defaultOpen">About</button>
+          <button class="tablink" onclick="openPage('Infomation', this, '#17A2B8')">Information</button>
+          <button class="tablink" onclick="openPage('Contact', this, '#FF7058')">Contact</button>
+
+          <div id="About" class="tabcontent">
+            <h3>Introduction</h3>
+            <p>{{content.about|safe}}</p>
           </div>
+
+          <div id="Infomation" class="tabcontent">
+            <h3>Infomation</h3>
+            <p>{{content.information|safe}}</p> 
+          </div>
+
+          <div id="Contact" class="tabcontent">
+            <h3>Contact</h3>
+            <p>{{content.contact|safe}}</p>
+          </div>
+
+          <script>
+          function openPage(pageName,elmnt,color) {
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                  tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tablink");
+              for (i = 0; i < tablinks.length; i++) {
+                  tablinks[i].style.backgroundColor = "";
+              }
+              document.getElementById(pageName).style.display = "block";
+              elmnt.style.backgroundColor = color;
+
+          }
+          // Get the element with id="defaultOpen" and click on it
+          document.getElementById("defaultOpen").click();
+          </script>
         </div>
         <div id="snackbar"></div>
       </div>
@@ -477,6 +545,7 @@ function thumbImage(title, text){
 <script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
 <script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
+var save_vol = getCookie('save_vol');
 
 function replyOnComment(current, article_pk, comment_pk){
   var insert_td = $(current).parents('tr').children(":eq(1)");
@@ -667,6 +736,11 @@ function articleSave(user_id, article_id){
         $('#snackbar').html('Added!');
         $('#snackbar').addClass('show');
         setTimeout(function(){ $('#snackbar').removeClass('show'); }, 1500);
+        save_vol = getCookie('save_vol');
+        setCookie('save_vol', ++save_vol, 1);
+        save_vol = getCookie('save_vol');
+        $('.cart_vol').text('+'+save_vol);
+        $('.cart_vol').css('display','initial');
       }
       else{
         swal("You added it aleady.")

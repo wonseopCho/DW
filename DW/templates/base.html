@@ -43,7 +43,10 @@ display:none;
 }*/
 html { 
   width: 100vw; 
+  outline: none;
 }
+
+button:focus {outline:0;}
 
 a, a:active, a:hover, a:link {
   color: black;
@@ -291,6 +294,11 @@ $(document).ready(function(){
     $(".pageload").css("background-color" , "white");
     $(".pageloadbar").css("display" , "none");
   });
+  var save_cart = getCookie('save_vol')
+  if(save_cart != ''){
+    $('.cart_vol').text('+'+save_cart);
+    $('.cart_vol').css('display','initial');
+  }
 });
 
 function onLoad() { 
@@ -328,7 +336,9 @@ function onLoad() {
                     <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="avatar" alt="Avatar" />
                   {% endif %}
                 {% endif %}
-                {{authenticated_user.user}}'s Profile 
+                <span class="cart_vol" style="position:relative;display:none;background-color:red; color:white; padding:7px 10px;border-radius:50%;font-size:13px;font-weight: bold"></span>
+                <span style="border:0px solid red">{{authenticated_user.user}}'s Profile</span>
+
               </div>
             </a>
             <div style="text-align: left">
@@ -393,8 +403,9 @@ function onLoad() {
           <!-- &#9819; -->KOREAtripGuide
           </span>
         </div>
-        <div style="border:0px solid red; width:9%; text-align:center; float:left" onclick="openNav()">
-          <span style="font-size:35px;cursor:pointer">
+        <div style="border:0px solid red;cursor:pointer; width:9%; text-align:center;float:left;" onclick="openNav()">
+          <span class="cart_vol" style="display:none;position:absolute; width:28px;height:28px; margin-left:-35px; margin-top:14px;padding-top:4px;border:0px solid red; background-color: red; color: white;border-radius:50%;font-size:13px;font-weight: bold"></span>
+          <span style="font-size:35px;">
             <!-- <i class="fas fa-sliders-h"></i> --><!-- &#9776; --> &#8942; 
           </span>
         </div>
@@ -583,6 +594,27 @@ function onLoad() {
       $("#myNav").animate({left: '-100%'}, 30);
     });
 
+    function setCookie(cName, cValue, cDay){
+        var expire = new Date();
+        expire.setDate(expire.getDate() + cDay);
+        cookies = cName + '=' + escape(cValue) + '; path=/ ';
+        if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+        document.cookie = cookies;
+    }
+
+    function getCookie(cName) {
+        cName = cName + '=';
+        var cookieData = document.cookie;
+        var start = cookieData.indexOf(cName);
+        var cValue = '';
+        if(start != -1){
+            start += cName.length;
+            var end = cookieData.indexOf(';', start);
+            if(end == -1)end = cookieData.length;
+            cValue = cookieData.substring(start, end);
+        }
+        return unescape(cValue);
+    }
     </script>
 
 {% block headAddon %}

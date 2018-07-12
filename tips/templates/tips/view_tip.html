@@ -317,7 +317,19 @@ function thumbImage(title, text){
         <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
           <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
           <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{content.views}}</span>
-          <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px">Likes {{content.likes.count}}</span>
+          <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px;cursor:pointer;">Likes {{content.likes.count}}</span>
+          {% if content.find_keyword %}
+          <a href= "https://www.google.com/maps/search/{{content.find_keyword}}">
+            <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
+          </a>
+          {% endif %}
+          <div style="position:absolute; right:0">
+            {% if user.is_authenticated and user != content.author %}
+            <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="articleSave({{authenticated_user.id}},{{content.id}})"><i class="fas fa-paperclip"></i></div>
+            {% elif not user.is_authenticated %}
+            <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"><i class="fas fa-paperclip"></i></div>
+            {% endif %}
+          </div>
         </div>
         {% if content.rating != 0 %}
         <div class="rating">
@@ -384,11 +396,7 @@ function thumbImage(title, text){
         </div>
         <div style="border:0px solid blue; width:100%;height:40px">
           <div style="border:1px solid #F7F7F7; width:50%;display:inline-block;float:left">
-            {% if user.is_authenticated and user != content.author %}
-            <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{content.id}})"/>
-            {% elif not user.is_authenticated %}
-            <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
-            {% endif %}
+            
           </div>
             {% if user.is_authenticated and user == content.author %}
           <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
@@ -516,10 +524,10 @@ function thumbImage(title, text){
 <script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
 <script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
-
 window.onscroll = function() {myFunction();};
 var navbar = document.getElementById("top_bar");
 var sticky = navbar.offsetTop;
+var save_vol = getCookie('save_vol');
 
 function myFunction() {
   // #top_bar's margin-top is -2 
@@ -692,14 +700,7 @@ function delete_comment(current, p_pk, c_pk){
 }
 // var category = document.location.href.split('/')[4];
 // console.log( document.location.href.split('/'));
-setCookie('p_page', '{{category}}', 1); 
-function setCookie(cName, cValue, cDay){
-    var expire = new Date();
-    expire.setDate(expire.getDate() + cDay);
-    cookies = cName + '=' + escape(cValue) + '; path=/ ';
-    if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
-    document.cookie = cookies;
-}
+setCookie('p_page', '{{category}}', 1);
 
 function likesUpdate(pk){
     var updates={};
@@ -733,7 +734,7 @@ function likesUpdate(pk){
   }
 
 function articleSave(user_id, article_id){
-  console.log(user_id, article_id);
+  // console.log(user_id, article_id);
   var _add={};
   _add.user_id = parseInt(user_id);
   _add.article_id = parseInt(article_id);
@@ -747,6 +748,11 @@ function articleSave(user_id, article_id){
         $('#snackbar').html('Added!');
         $('#snackbar').addClass('show');
         setTimeout(function(){ $('#snackbar').removeClass('show'); }, 1500);
+        save_vol = getCookie('save_vol');
+        setCookie('save_vol', ++save_vol, 1);
+        save_vol = getCookie('save_vol');
+        $('.cart_vol').text('+'+save_vol);
+        $('.cart_vol').css('display','initial'); 
       }
       else{
         swal("You added it aleady.")

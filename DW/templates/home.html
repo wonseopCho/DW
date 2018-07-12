@@ -122,7 +122,6 @@ div.listicle {
 }
 
 a * {
-  color: #333333;
   text-decoration: none;
 }
 
@@ -506,12 +505,22 @@ function thumbImage(title, text, index){
                       {{article.title}}
                       <div style="display:block; border:0px solid red; font-size:17px">
                         <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue"></i>{{article.views}}</span>
+                        {% if article.find_keyword %}
+                        <a href= "https://www.google.com/maps/search/{{article.find_keyword}}">
+                        <div style="color:#17A2B8; border: 0px solid blue; position: absolute;margin-top:-45px; margin-left: 45%; padding:10px;cursor:pointer; font-size:25px">
+                          <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        </a>
+                        {% endif %}
                       </div>
+                      
                     </div>
+                    
                     <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
                   </div>
                   </a>
                 </div>
+
                 {% endfor %}
               </div>
                 
@@ -520,7 +529,7 @@ function thumbImage(title, text, index){
                   {% if recomd_cate == art_category %}
                     {% if recomd_articles %}
                       <div style="margin-top:1px; display:block; border-radius:2px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa; font-weight: bold;">
-                        Must Visits
+                        Must Have a Visit
                       </div>
                       <div style="display:block;width:100%" >
                         <div class="recomd_Thumbs innerSlider owl-carousel owl-theme">

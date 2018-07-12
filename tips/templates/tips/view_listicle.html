@@ -293,7 +293,18 @@ opacity: 1;
              <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#{{article.id}}_snsShare"></span>
              <span id="views_{{article.id}}" class="badge badge-light"  style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{article.views}}</span>
              <span id="likes_{{article.id}}" onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px">Likes {{article.likes.count}}</span>
-             
+             {% if article.find_keyword %}
+             <a href= "https://www.google.com/maps/search/{{article.find_keyword}}">
+               <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
+             </a>
+             {% endif %}
+             <div style="position:absolute; right:0">
+               {% if user.is_authenticated and user != article.author %}
+               <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="articleSave({{authenticated_user.id}},{{article.id}})"><i class="fas fa-paperclip"></i></div>
+               {% elif not user.is_authenticated %}
+               <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"><i class="fas fa-paperclip"></i></div>
+               {% endif %}
+             </div>
            </div>
            {% if article.rating != 0 %}
            <div class="rating">
@@ -358,11 +369,6 @@ opacity: 1;
          <div style="margin-top: 10px">
            <p class="article_text">{{article.text|safe}}</p>
          </div>
-         {% if user.is_authenticated %}
-         <input type="button" class="btn btn-info" value="Save" onclick="articleSave({{authenticated_user.id}},{{article.id}})"/>
-         {% else %}
-         <input type="button" class="btn btn-info" value="Save" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"/>
-         {% endif %}
          <div id="snackbar"></div>
       </div>
       <div class="row" style="margin-bottom: 20px; border:0px solid red; " >
@@ -480,6 +486,7 @@ opacity: 1;
 window.onscroll = function() {myFunction();};
 var navbar = document.getElementById("top_bar");
 var sticky = navbar.offsetTop;
+var save_vol = getCookie('save_vol');
 
 function myFunction() {
   // #top_bar's margin-top is -2 
@@ -676,6 +683,11 @@ function articleSave(user_id, article_id){
         $('#snackbar').html('Added!');
         $('#snackbar').addClass('show');
         setTimeout(function(){ $('#snackbar').removeClass('show'); }, 1500);
+        save_vol = getCookie('save_vol');
+        setCookie('save_vol', ++save_vol, 1);
+        save_vol = getCookie('save_vol');
+        $('.cart_vol').text('+'+save_vol);
+        $('.cart_vol').css('display','initial');
       }
       else{
         swal("You added it aleady.")

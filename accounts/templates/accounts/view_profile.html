@@ -62,7 +62,7 @@ table tr:last-child {
 		</div>
 		<div class="col-md-6" style="border:0px solid red;text-align: center">
 			{% if userarticle.count > 0 %}
-			<div class="card" style="width:100%; margin-bottom: 10px">
+			<div class="card root" style="width:100%; margin-bottom: 10px">
 				<p>Tips made by {{authenticated_user.user}}</p>
 				<table class="table table-striped table-hover" style="border:0px solid red">
 					<thead>
@@ -87,8 +87,8 @@ table tr:last-child {
 			</div>
 			{% endif %}
 			{% if authenticated_user.article_cart.count > 0 %}
-			<div class="card" style="width:100%; margin-bottom: 10px">
-				<p>{{authenticated_user.user}}'s article cart</p>
+			<div class="card root" style="width:100%; margin-bottom: 10px">
+				<p>Saved articles</p>
 				<table class="table table-striped table-hover" style="border:0px solid red;width:100%">
 					<thead>
 					  <tr>
@@ -102,7 +102,30 @@ table tr:last-child {
 					<tr>
 				      <td>{{article.category}}</td>
 				      <td><a href="{% url 'tips:view_tips' pk=article.id %}">{{article.title}}</a></td>
-				      <td><input type="button" class="btn btn-danger" value="Remove" onclick="remove_ajax({{authenticated_user.id}},{{article.id}}, this)"/></td>
+				      <td><input type="button" class="btn btn-danger" value="Remove" onclick="remove_ajax('atc',{{authenticated_user.id}},{{article.id}}, this)"/></td>
+				    </tr>
+				{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+			{% if authenticated_user.recommendation_cart.count > 0 %}
+			<div class="card root" style="width:100%; margin-bottom: 10px">
+				<p>Saved recommendations</p>
+				<table class="table table-striped table-hover" style="border:0px solid red;width:100%">
+					<thead>
+					  <tr>
+					    <th scope="col">Category</th>
+					    <th scope="col">Title</th>					   
+					    <th scope="col">Remove</th>
+					  </tr>
+					</thead>
+					<tbody>
+				{% for article in authenticated_user.recommendation_cart.all|dictsort:"name" %}
+					<tr>
+				      <td>{{article.category}}</td>
+				      <td><a href="{% url 'tips:view_tips' pk=article.id %}">{{article.name}}</a></td>
+				      <td><input type="button" class="btn btn-danger" value="Remove" onclick="remove_ajax('rcmd',{{authenticated_user.id}},{{article.id}}, this)"/></td>
 				    </tr>
 				{% endfor %}
 					</tbody>
@@ -142,7 +165,9 @@ table tr:last-child {
 <script>
 updateBtn();
 
-function remove_ajax(user_id, id, current){
+setCookie('save_vol', 0, -1);
+
+function remove_ajax(sect, user_id, id, current){
 	console.log(id);
 	swal({
 	    title: "Remove!",
@@ -154,6 +179,7 @@ function remove_ajax(user_id, id, current){
 	  }, function () {
 	    setTimeout(function () {
 	        var _delete={};
+	        _delete.sect = sect;
 	        _delete.user = parseInt(user_id); 
 	        _delete.pk = parseInt(id);
 	        _delete.csrfmiddlewaretoken = '{{csrf_token}}';
@@ -162,7 +188,15 @@ function remove_ajax(user_id, id, current){
 	          method:"post",
 	          data: _delete,
 	          success: function(res){
-	            $(current).parent().parent().remove();
+	          	console.log('left_count:', res);
+	          	if (res == '0'){
+	          		console.log("d_a");
+	          		$(current).parentsUntil('div').parent().remove();
+	          	}
+	          	else {
+	          		$(current).parent().parent().remove();
+	          	};
+	            
 	          }, error: function(error){
 	            console.log(error);
 	            console.log("error");
@@ -172,6 +206,15 @@ function remove_ajax(user_id, id, current){
 	      }, 2000);
 	  });
 }
+
+function setCookie(cName, cValue, cDay){
+    var expire = new Date();
+    expire.setDate(expire.getDate() + cDay);
+    cookies = cName + '=' + escape(cValue) + '; path=/ ';
+    if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+    document.cookie = cookies;
+}
+
 </script>
 {% endblock %}
 

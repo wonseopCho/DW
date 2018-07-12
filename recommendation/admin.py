@@ -63,7 +63,7 @@ class RecommendationAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteM
     search_fields = ['category__category','name']
     list_display = ['id', 'category', 'name', 'slug', 'likes_counts', 'author', 'created_at', 'updated_at']
     list_display_links = ['id', 'category', 'name']
-    summernote_fields = ['text']
+    summernote_fields = ['about', 'information', 'contact']
     
     def delete_file(self, pk, request):
         '''
@@ -77,7 +77,7 @@ class RecommendationAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteM
 
     def save_model(self, request, obj, form, change):
         max_length = 50
-        slug = slugify(strip_tags(obj.text), allow_unicode=True)
+        slug = slugify(strip_tags(obj.about), allow_unicode=True)
         slug = slug.replace('nbsp','-')
         if len(slug) <= max_length:
             obj.slug = slug

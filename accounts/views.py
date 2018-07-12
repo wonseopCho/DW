@@ -21,6 +21,7 @@ from django.contrib.auth.forms import (
 										)
 from allauth.socialaccount.models import SocialAccount
 from tips.models import Article, Category
+from recommendation.models import Recommendation
 from .models import Friend, UserProfile
 from .forms import (
 					EditProfileForm, 
@@ -197,10 +198,17 @@ def articleRemove(request):
 	if request.method == 'POST':
 		user_pk = request.POST['user']
 		article_pk = request.POST['pk']
+		article_sect = request.POST['sect']
 		user = UserProfile.objects.get(pk=user_pk)
-		article = Article.objects.get(id=article_pk)
-		user.article_cart.remove(article)
-		return HttpResponse(article.id)
+		if(article_sect == 'atc'):
+			article = Article.objects.get(id=article_pk)
+			user.article_cart.remove(article)
+			count = user.article_cart.count()
+		else :
+			article = Recommendation.objects.get(id=article_pk)
+			user.recommendation_cart.remove(article)
+			count = user.recommendation_cart.count()
+		return HttpResponse(count)
 	else:
 		return HttpResponse('post_error')
 
