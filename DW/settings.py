@@ -318,7 +318,7 @@ else :
     AWS_STORAGE_BUCKET_NAME = 'ktrip'
     AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
     AWS_SES_REGION = 'us-west-2'
-    DEFAULT_FROM_EMAIL = 'helly011@msn.com'
+    DEFAULT_FROM_EMAIL = 'ktripguideservice@gmail.com'
     STATIC_URL = "https://%s/static/" % AWS_S3_CUSTOM_DOMAIN
     STATICFILES_STORAGE = 'DW.s3storages.StaticStorage'
     MEDIA_URL = "https://%s/media/" % AWS_S3_CUSTOM_DOMAIN

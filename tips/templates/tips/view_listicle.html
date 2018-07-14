@@ -143,7 +143,7 @@ table {
   height: 25px;
   display: block;
   width: 25px;
-  background-color: #E9ECEF;
+  background-color: #F7F7F7;
 }
 .rating label:before{
   content:'\f005';
@@ -291,8 +291,8 @@ opacity: 1;
            </div>
            <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
              <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#{{article.id}}_snsShare"></span>
-             <span id="views_{{article.id}}" class="badge badge-light"  style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{article.views}}</span>
-             <span id="likes_{{article.id}}" onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px">Likes {{article.likes.count}}</span>
+             <span id="views_{{article.id}}" class="badge badge-light"  style="border:0px solid red;position:absolute;left:50px;margin-top:5px;font-size:18px"><i class="fas fa-caret-right" style="border:0px solid blue;margin-right:5px;"></i>{{article.views}}</span>
+             <span onclick="likesUpdate({{article.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px;font-size:18px;cursor:pointer"><i class="fas fa-heart" style="margin-right:5px;color:#FF6699;"></i><span id="likes_{{article.id}}">{{article.likes.count}}</span></span>
              {% if article.find_keyword %}
              <a href= "https://www.google.com/maps/search/{{article.find_keyword}}">
                <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
@@ -743,7 +743,8 @@ $(document).ready(function(){
     $('.comment_form #id_parent').val(0);
   });
 
-  $('#article_text > img').css('height','');
+  // $('#article_text img').css('width','');
+  $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
 });
 </script>

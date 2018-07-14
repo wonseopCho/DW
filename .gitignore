@@ -117,3 +117,4 @@ venv.bak/
 .mypy_cache/
 
 # End of https://www.gitignore.io/api/django,python
+accounts/migrations/0014_auto_20180712_1531.py

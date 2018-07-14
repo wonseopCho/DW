@@ -8,6 +8,7 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django_summernote.models import Attachment
 from accounts.models import UserProfile
+from django.contrib.auth.models import User
 from allauth.socialaccount.models import SocialAccount
 from .models import Listicle, Category, Comment, Article, Image
 from .forms import CommentForm, ListicleForm, ArticleForm
@@ -32,12 +33,13 @@ def view_tips(request, pk, comment_pk=None):
 	category = article.category
 	form = CommentForm(request.POST, request.FILES)
 	if request.user.is_authenticated:
+		user = UserProfile.objects.get(user=request.user)
 		if request.method == 'POST':
 			form = CommentForm(request.POST, request.FILES)
 			if form.is_valid():
 				comment = form.save(commit=False)
 				comment.article = Article.objects.get(pk=pk)
-				comment.author = request.user
+				comment.author = user.user
 				try:
 					parent = Comment.objects.get(pk=comment.parent)
 				except:
@@ -190,7 +192,7 @@ def likesUpdate(request):
 			res = {
 				"updated": updated,
 				"liked": liked,
-				"likes_counts": "Likes {}".format(updates.likes.count()),
+				"likes_counts": "{}".format(updates.likes.count()),
 			}
 			return JsonResponse(res, safe=False)
 			# return HttpResponse(res['result'])

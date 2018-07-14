@@ -154,12 +154,12 @@ def edit_profile(request, pk):
 	except :
 		socialaccount = None
 	if request.method == 'POST':
-		form = EditProfileForm(request.POST, instance=request.user)
+		form = EditProfileForm(request.POST, request.FILES, instance=authenticated_user)
 		if form.is_valid():
 			form.save()
 			return redirect('accounts:view_profile')
 	else:
-		form = EditProfileForm(instance=request.user)
+		form = EditProfileForm(instance=authenticated_user)
 		args = {
 				'form': form,
 				'authenticated_user':authenticated_user,

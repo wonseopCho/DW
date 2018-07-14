@@ -11,7 +11,7 @@ class UserProfile(models.Model):
 	city = models.CharField(max_length=100, blank=True, null=True)
 	firstname = models.CharField(max_length=50, blank=True, null=True)
 	lastname = models.CharField(max_length=50, blank=True, null=True)
-	phone = models.IntegerField(default=0)
+	phone = models.CharField(max_length=50, blank=True, null=True)
 	picture = models.ImageField(blank=True, null=True, upload_to="accounts/user_profile/%Y/%m/%d")
 	photo_url = models.CharField(max_length=200, blank=True, null=True)
 	gender = models.CharField(max_length=10, blank=True, null=True)

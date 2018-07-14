@@ -343,7 +343,7 @@ function onLoad() {
             </a>
             <div style="text-align: left">
               <a href="/logout?next={{ request.path }}">
-                Log-Out
+                Log-Out<span style="margin-left:10px"><i class="fas fa-sign-out-alt"></i></span>
               </a>
             </div>
             {% if socialaccount is None %}
@@ -357,12 +357,12 @@ function onLoad() {
             <a href="/login?next={{ request.path }}">
               <div style="text-align: left">
                 <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" alt="Avatar" class="avatar" style="margin-right: 10px;">
-                Log-In please
+                Log-In<span style="margin-left:10px"><i class="fas fa-sign-in-alt"></i></span>
               </div>
             </a>
             <div style="text-align: left">
               <a href="{% url 'accounts:register' %}">
-                Register
+                Register<span style="margin-left:10px"><i class="fas fa-address-book"></i></span>
               </a>
             </div>  
             <div style="text-align: left">

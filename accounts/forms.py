@@ -76,13 +76,16 @@ class ExtraUserForm(forms.ModelForm):
 	model = UserProfile
 	exclude = ['user']
 
-class EditProfileForm(UserChangeForm):
+class EditProfileForm(forms.ModelForm):
 	class Meta:
-		model = User
+		model = UserProfile
 		fields = [
-			'email',
-			'first_name',
-			'last_name',
-			'password',
+			'firstname',
+			'lastname',
+			'gender',
+			'city',
+			'locale',
+			'phone',
+			'picture',
 			]
 	#	exclud = []

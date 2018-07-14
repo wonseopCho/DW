@@ -7,6 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from colorful.fields import RGBColorField
+# from accounts.models import UserProfile
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)

@@ -43,9 +43,14 @@ textarea {
 #id_message{
   height: auto;
 }
-
+.card-body{
+  padding:2px;
+}
+.card-footer {
+  padding:2px;
+}
 .card-body > table {
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
   border-collapse: collapse;
   margin: 0;
   padding: 0;
@@ -67,7 +72,6 @@ textarea {
 .card-body > table th,
 .card-body > table td {
   padding: 0;
-  text-align: center;
 }
 
 .card-body > table th {
@@ -81,32 +85,70 @@ textarea {
 }
 .table td, .table th {
   padding: 0;
-  vertical-align: top;
-  border-top: 1px solid #dee2e6;
-}
-.td_author {
-  border:none;
-  text-align: left;
-  width: 100px
-}
-.td_message {
-  border:none;
-  width:60%;
-  text-align: left
-}
-.td_message > p {
-  border:none;
-  white-space: pre-wrap;
-}
-.td_edit {
-  border:none;
-  width:100px;
-}
-.td_updated_at {
-  border:none;
-  width:180px;
+  vertical-align: middle;
+  border:0;
+  /*border-top: 1px solid #dee2e6;*/
 }
 
+/*
+.td_propic {
+  border:0px solid red; 
+  width:30px;
+  text-align:center;
+}
+.td_author {
+  text-align: left;
+  width:15%;
+}
+.td_message {
+  text-align: left;
+}
+.td_message p {
+  border:1px solid red;
+  white-space: pre-wrap;
+  vertical-align: middle;
+}
+.td_edit {
+  border:1px solid red;
+  width:10%;
+}
+.td_updated_at {
+  width:12%;
+}*/
+
+.td_propic {
+  border:0px solid red; 
+  width:30px;
+  height:30px;
+  float:left;
+  text-align:center;
+}
+
+.td_author {
+  width:100%;
+  height:30px;
+  text-align:left;
+  display:block;
+}
+.td_message {
+  width:100%;
+  padding:0px;
+  display:block;
+}
+.td_edit{
+  display:block;
+  float:left;
+  width:50%;
+}
+.td_updated_at {
+  width:50%;
+  float:left;
+  text-align: right;
+}
+
+.far{
+  padding:3px;
+}
 #snackbar {
     visibility: hidden;
     min-width: 250px;
@@ -146,7 +188,7 @@ textarea {
   height: 25px;
   display: block;
   width: 25px;
-  background-color: #E9ECEF;
+  background-color: #F7F7F7;
 }
 .rating label:before{
   content:'\f005';
@@ -222,16 +264,15 @@ opacity: 1;
   }
   
   .card-body > table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
+    /*border-bottom: 3px solid #ddd;*/
     margin-bottom: .625em;
   }
   
   .card-body > table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
+    /*border-bottom: 1px solid #ddd;*/
     font-size: .8em;
-    text-align: left;
+    padding:1px;
+    /*border:1px solid red;*/
   }
   
   .card-body > table td::before {
@@ -248,24 +289,47 @@ opacity: 1;
   .card-body > table td:last-child {
     border-bottom: 0;
   }
+
+  .table td, .table th {
+    border-top: 1px solid #dee2e6;
+    border:0px solid red;
+    vertical-align: middle;
+  }
+
+  .td_propic {
+    border:0px solid red; 
+    width:30px;
+    height:30px;
+    float:left;
+    text-align:center;
+  }
+
   .td_author {
     width:100%;
-    text-align: left;
+    height:30px;
+    text-align:left;
+    display:block;
   }
   .td_message {
     width:100%;
     padding:0;
+    display:block;
+  }
+  .td_edit{
+    display:block;
+    float:left;
+    width:50%;
   }
   .td_updated_at {
+    width:50%;
+    float:left;
     text-align: right;
-    margin-left: 88px
   }
   #article_text > p > a, #article_text > div > a{
     border-radius: 5px;
     background-color : #28a745;
     color:white;
     padding:10px;
-    display: block;
     text-align: center;
     position: relative;
     top:10px;
@@ -282,7 +346,6 @@ opacity: 1;
     padding-top:0px
   }
 }
-
 </style>
 <script>
 function thumbImage(title, text){
@@ -316,8 +379,9 @@ function thumbImage(title, text){
         </div>
         <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
           <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
-          <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px">Views {{content.views}}</span>
-          <span id="likes_{{content.id}}" onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px;cursor:pointer;">Likes {{content.likes.count}}</span>
+          <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px;font-size:18px">
+            <i class="fas fa-caret-right" style="border:0px solid blue;margin-right:5px;"></i>{{content.views}}</span>
+          <span onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px;cursor:pointer;font-size:18px"><i class="fas fa-heart" style="margin-right:5px;color:#FF6699"></i><span id="likes_{{content.id}}">{{content.likes.count}}</span></span>
           {% if content.find_keyword %}
           <a href= "https://www.google.com/maps/search/{{content.find_keyword}}">
             <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
@@ -413,42 +477,53 @@ function thumbImage(title, text){
             <div class="card-header">{{content.comment_set.all.count}} Comments</div>
               <div class="card-body">
                     {% if content.comment_set.all.count == 0 %}
-                      <p style="font-weight: bold; font-size: 13px">You will be the first to make a comment. Be the one!<p>
+                      <p style="font-weight: bold; font-size:13px">You will be the first to make a comment. Be the one!<p>
                     {% else %}
                       <table class="table">
                         <tbody>
                      {% for comment in content.comment_set.all %}
-                        {% if comment.depth == 2 %}
-                          <tr style="background-color: white; width:96.5%; margin-left:10px">
-                            <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
-                              <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}">
-                              {{comment.author}}<span> to </span> {{comment.parent_author}}
+                        <tr style="background-color: white; width:100%;">
+                          <td class="td_propic">                            
+                            {% if comment.author.userprofile.picture %}
+                              <img src="{{comment.author.userprofile.picture.url}}" class="avatar" style="width:25px;height:25px" />
+                            {% elif comment.author.userprofile.photo_url %}
+                              <img src="{{comment.author.userprofile.photo_url}}" class="avatar" style="width:25px;height:25px" />
+                            {% else %}
+                              {% if comment.author.userprofile.gender == 'female' %}
+                                <img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="avatar" alt="Avatar" style="width:25px;height:25px"/>
+                              {% else %}
+                                <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="avatar" alt="Avatar" style="width:25px;height:25px"/>
+                              {% endif %}
+                            {% endif %}
+                          </td>
+                        
+                        {% if comment.depth == 2 %}                          
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}<span> <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}"> </span>{{comment.parent_author}}
                             </td>
-                        {% elif comment.depth > 2 %}
-                          <tr style="background-color: #d4fce4; width:96.5%; margin-left:10px">
-                            <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
-                              <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}">
-                              {{comment.author}}<span> to </span> {{comment.parent_author}}
+                        {% elif comment.depth > 2 %}                         
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}<span> <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}"> </span>{{comment.parent_author}}
                             </td>
-                        {% else %}
-                          <tr>
-                            <td class="td_author" style="font-size: 12px;padding-left: 10px;border: none">
+                        {% else %}                          
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
                               {{comment.author}}
                             </td>
                         {% endif %}
-                            <td class="td_message" style="font-size: 11px; ">
-                              <p style="border:0px solid red">{{comment.message}}</p>
+                        
+                            <td class="td_message" style="font-size: 13px;padding:10px 5px">
+                              {{comment.message}}
                             </td>
-                            <td class="td_edit" style="font-size: 11px; border: none" >
+                            <td class="td_edit" style="font-size:17px; cursor:pointer;" >
                               {% if user.is_authenticated and request.user == comment.author %}
-                                <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{content.id}}, {{comment.id}})">수정</a>
-                                <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{content.id}}, {{comment.id}})">삭제</a>
+                                <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{content.id}}, {{comment.id}})"><i class="far fa-edit"></i></a>
+                                <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{content.id}}, {{comment.id}})"><i class="far fa-trash-alt"></i></a>
                               {% endif %}
-                              {% if user.is_authenticated %}
-                                <a style="border:px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{content.id}}, {{ comment.id }})">댓글</a>
+                              {% if user.is_authenticated and request.user != comment.author%}
+                                <a style="border:px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{content.id}}, {{ comment.id }})"><i class="far fa-comment"></i></a>
                               {% endif %}
                             </td>
-                            <td class="td_updated_at" style="font-size: 11px; border:0px solid black;">
+                            <td class="td_updated_at" style="font-size: 11px;">
                               <span>{{comment.updated_at}}</span>
                             </td>
                           </tr>
@@ -460,12 +535,12 @@ function thumbImage(title, text){
               <div id="card-footer" class="card-footer">
                 {% if user.is_authenticated %}
                 <div id="comment_form" class="comment_form">
-                  <form method="POST">
+                  <form id="cm_write_{{content.id}}" method="POST">
                     {% csrf_token %}
                     <input class="noneDisplay" type="text" id="article" name="article" value="{{content.id}}"/>
                     {{ form.parent|add_class:"noneDisplay" }}
                     {{ form.message|add_class:"col-sm-12" }}
-                    <input type="submit" value="Write"/>
+                    <button type="submit" style="background-color: #4dc7a0; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-comment"></i></button>
                   </form>
                 </div>
                 <!-- <a href="{% url 'tips:comment_new' content.pk %}">Write Comments</a> -->
@@ -567,7 +642,7 @@ function contentEdit(author, article_pk){
 }
 
 function replyOnComment(current, article_pk, comment_pk){
-  var insert_td = $(current).parents('tr').children(":eq(1)");
+  var insert_td = $(current).closest('tr');
   if ($(current).hasClass('remove')){
     $(current).removeClass('remove');
     $('.replyForm').remove();
@@ -576,17 +651,18 @@ function replyOnComment(current, article_pk, comment_pk){
   else {
     $('.replyForm').remove();
     $('.edit_replyForm').remove(); 
-    insert_td.append(`
-                  <div class="replyOnCommentForm replyForm">
-                    <br>
+    insert_td.after(`
+                  <tr class="replyOnCommentForm replyForm" style="text-align:right">
+                    <td colspan='1'>
                     <form method="POST">
                       {% csrf_token %}
                       <input class="noneDisplay" type="text" id="article" name="article" value="`+article_pk+`"/>
                       {{ form.parent |add_class:"noneDisplay"}}
                       {{ form.message |add_class:"col-sm-12" }}
-                      <input type="submit" value="Write"/>
+                      <button type="submit" style="background-color: #ffc107; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-comment"></i></button>
                     </form>
-                  </div>`
+                    </td>
+                  </tr>`
       );
     $('#id_parent').val(comment_pk);
     $("#id_message").attr("rows", "2");
@@ -597,7 +673,7 @@ function replyOnComment(current, article_pk, comment_pk){
 };
 
 function edit_replyOnComment(current, p_pk, c_pk){
-  var insert_td = $(current).parents('tr').children(":eq(1)");
+  var insert_td = $(current).closest('tr');
   if ($(current).hasClass('remove')){
     $(current).removeClass('remove');
     $('.edit_replyForm').remove();
@@ -622,17 +698,18 @@ function edit_replyOnComment(current, p_pk, c_pk){
         else {
           $('.edit_replyForm').remove();
           $('.replyForm').remove();
-          var edit = `<div class='edit_replyOnCommentForm edit_replyForm'>
-                        <br>
+          var edit = `<tr class='edit_replyOnCommentForm edit_replyForm' style="text-align:right">
+                        <td colspan='1'>
                         <form method='POST' action='/tips/`+p_pk+`/`+c_pk+`/'>
                         {% csrf_token %}
                         <input class='noneDisplay' type='text' id='article' name='article' value='`+p_pk+`'/>
                         {{ form.parent|add_class:"noneDisplay" }}
                         {{ form.message|add_class:"col-sm-12" }}
-                        <input type='submit' value='Write'/>
+                        <button type="submit" style="background-color: #ffc107; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-edit"></i></button>
                         </form>
-                      </div>`;
-          insert_td.append(edit);
+                        </td>
+                      </tr>`;
+          insert_td.after(edit);
           if (res.comment_parent == null ){
             $('#id_parent').val(0);
           }
@@ -831,7 +908,8 @@ $(document).ready(function(){
     $('#comment_form #id_parent').val(0);
   });
 
-  $('#article_text > img').css('height','');
+  // $('#article_text img').css('width','');
+  $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
 
 });
