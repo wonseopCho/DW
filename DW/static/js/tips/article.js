@@ -88,11 +88,11 @@ $(document).ready(function(){
          .btn-sm:has(.note-icon-minus)
          `).remove();  
       $('.note-insert').append(`
-            <div style="float:left;width:88%;height:30px;border:0px solid red;margin-left:4px">
+            <div style="float:left;width:88%;height:30px;border:0px solid blue;margin-left:0px;">
               <div class="form-group" style="border:0px solid red;">
-                <div class="input-group input-file" name="video" id="id_video">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default btn-choose" type="button" style="height:30px;padding-top:4px"><i class="note-icon-video"></i></button>
+                <div class="input-group input-file" name="video" id="id_video" style="widht:100%;border:0px solid yellow;">
+                  <span class="input-group-btn" style="border:0px solid red;width:14%">
+                    <button class="btn btn-default btn-choose" type="button" style="width:100%;height:30px;padding-top:4px;border-radius:0px"><i class="note-icon-video"></i></button>
                   </span>
                   <input id="_file" type="text" style="height:30px" class="form-control" placeholder='Choose a file...' />
                   <span class="input-group-btn">
@@ -102,7 +102,7 @@ $(document).ready(function(){
               </div>
             </div>`);
       $('#summernote').css('border','1px solid red');
-
+      $('.btn-sm').css('width','12%');
       bs_input_file();   
     });
   };
