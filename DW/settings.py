@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_summernote',
     "sslserver",
+    'pwa',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -61,7 +62,8 @@ INSTALLED_APPS = [
     'tips',
     'tips.templatetags',
     'recommendation',
-    'pwa',
+    'qna',
+    
 ]
 
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'service-worker.js') # in template the name 'serviceworker.js must be kept'
@@ -313,8 +315,8 @@ else :
     EMAIL_USE_SSL = True
     MEDIAFILES_LOCATION = 'media'
     STATICFILES_LOCATION = 'static'
-    AWS_ACCESS_KEY_ID = ''
-    AWS_SECRET_ACCESS_KEY = ''
+    AWS_ACCESS_KEY_ID = 'DW.keys.AWS_ACCESS_KEY_ID'
+    AWS_SECRET_ACCESS_KEY = 'DW.keys.AWS_SECRET_ACCESS_KEY'
     AWS_STORAGE_BUCKET_NAME = 'ktrip'
     AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
     AWS_SES_REGION = 'us-west-2'

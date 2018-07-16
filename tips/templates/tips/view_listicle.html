@@ -12,24 +12,27 @@
 img {
   max-width: 100%;
 }
-
-.article_text {
-  white-space: pre-wrap;
+.article_text{
+    white-space: pre-wrap;
 }
 
-#article_text > p > a{
-  border-radius: 5px;
-  background-color : #28a745;
-  color:white;
-  padding:10px;
-  text-align: center;
+#article_text > p > a, 
+#article_text > div > a, 
+#article_text > p > span > a,
+#article_text > p > span > font > a,
+#article_text > p > font > span > a{
+    border-radius: 5px;
+    background-color : #28a745;
+    color:white;
+    padding:8px 14px;
+    text-align: center;
+    position: relative;
+    font-size: 13px;
 }
-
 .slick-slide{
   border: none;
   outline:none;
 }
-
 .noneDisplay{
   display :none;
 }
@@ -40,9 +43,14 @@ textarea {
 #id_message{
   height: auto;
 }
-
-table {
-  border: 1px solid #ccc;
+.card-body{
+  padding:2px;
+}
+.card-footer {
+  padding:2px;
+}
+.card-body > table {
+  /*border: 1px solid #ccc;*/
   border-collapse: collapse;
   margin: 0;
   padding: 0;
@@ -64,7 +72,6 @@ table {
 .card-body > table th,
 .card-body > table td {
   padding: 0;
-  text-align: center;
 }
 
 .card-body > table th {
@@ -78,32 +85,70 @@ table {
 }
 .table td, .table th {
   padding: 0;
-  vertical-align: top;
-  border-top: 1px solid #dee2e6;
-}
-.td_author {
-  border:none;
-  text-align: left;
-  width: 100px
-}
-.td_message {
-  border:none;
-  width:60%;
-  text-align: left
-}
-.td_message > p {
-  border:none;
-  white-space: pre-wrap;
-}
-.td_edit {
-  border:none;
-  width:100px;
-}
-.td_updated_at {
-  border:none;
-  width:180px;
+  vertical-align: middle;
+  border:0;
+  /*border-top: 1px solid #dee2e6;*/
 }
 
+/*
+.td_propic {
+  border:0px solid red; 
+  width:30px;
+  text-align:center;
+}
+.td_author {
+  text-align: left;
+  width:15%;
+}
+.td_message {
+  text-align: left;
+}
+.td_message p {
+  border:1px solid red;
+  white-space: pre-wrap;
+  vertical-align: middle;
+}
+.td_edit {
+  border:1px solid red;
+  width:10%;
+}
+.td_updated_at {
+  width:12%;
+}*/
+
+.td_propic {
+  border:0px solid red; 
+  width:30px;
+  height:30px;
+  float:left;
+  text-align:center;
+}
+
+.td_author {
+  width:100%;
+  height:30px;
+  text-align:left;
+  display:block;
+}
+.td_message {
+  width:100%;
+  padding:0px;
+  display:block;
+}
+.td_edit{
+  display:block;
+  float:left;
+  width:50%;
+}
+.td_updated_at {
+  width:50%;
+  float:left;
+  text-align: right;
+}
+
+.far{
+  padding:3px;
+}
 #snackbar {
     visibility: hidden;
     min-width: 250px;
@@ -203,11 +248,11 @@ opacity: 1;
     border: 0;
   }
 
-  ..card-body > table caption {
+  .card-body > table caption {
     font-size: 1.3em;
   }
   
-  ..card-body > table thead {
+  .card-body > table thead {
     border: none;
     clip: rect(0 0 0 0);
     height: 1px;
@@ -218,20 +263,19 @@ opacity: 1;
     width: 1px;
   }
   
-  ..card-body > table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
+  .card-body > table tr {
+    /*border-bottom: 3px solid #ddd;*/
     margin-bottom: .625em;
   }
   
-  ..card-body > table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
+  .card-body > table td {
+    /*border-bottom: 1px solid #ddd;*/
     font-size: .8em;
-    text-align: left;
+    padding:1px;
+    /*border:1px solid red;*/
   }
   
-  ..card-body > table td::before {
+  .card-body > table td::before {
     /*
     * aria-label has no advantage, it won't be read inside a table
     content: attr(aria-label);
@@ -242,29 +286,55 @@ opacity: 1;
     text-transform: uppercase;
   }
   
-  ..card-body > table td:last-child {
+  .card-body > table td:last-child {
     border-bottom: 0;
   }
+
+  .table td, .table th {
+    border-top: 1px solid #dee2e6;
+    border:0px solid red;
+    vertical-align: middle;
+  }
+
+  .td_propic {
+    border:0px solid red; 
+    width:30px;
+    height:30px;
+    float:left;
+    text-align:center;
+  }
+
   .td_author {
     width:100%;
-    text-align: left;
+    height:30px;
+    text-align:left;
+    display:block;
   }
   .td_message {
     width:100%;
     padding:0;
+    display:block;
+  }
+  .td_edit{
+    display:block;
+    float:left;
+    width:50%;
   }
   .td_updated_at {
+    width:50%;
+    float:left;
     text-align: right;
-    margin-left: 88px
   }
-
-  #article_text > p > a{
+  #article_text > p > a, #article_text > div > a{
     border-radius: 5px;
     background-color : #28a745;
     color:white;
     padding:10px;
-    display: block;
     text-align: center;
+    position: relative;
+    top:10px;
+    margin-bottom:40px;
+    width:100%;
   }
 
   .sticky {
@@ -276,7 +346,6 @@ opacity: 1;
     padding-top:0px
   }
 }
-
 </style>
 {% endblock %}
 
@@ -382,34 +451,44 @@ opacity: 1;
                        <table class="table">
                          <tbody>
                       {% for comment in article.comment_set.all %}
-                          {% if comment.depth == 2 %}
-                            <tr style="background-color: white; width:96.5%; margin-left:10px">                         
-                              <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
-                              <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}">
-                                {{comment.author}}<span> to </span> {{comment.parent_author}}
-                              </td>
-                          {% elif comment.depth > 2 %}
-                            <tr style="background-color: #d4fce4; width:96.5%; margin-left:10px">
-                              <td class="td_author" style="font-size: 12px; padding-left: 10px; border: none">
-                              <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}">
-                                {{comment.author}}<span> to </span> {{comment.parent_author}}
-                              </td>
-                          {% else %}
-                            <tr>
-                              <td class="td_author" style="font-size: 12px;padding-left: 10px;border: none">
-                                {{comment.author}}
-                              </td>
+                        <tr style="background-color: white; width:100%;">
+                          <td class="td_propic">                            
+                            {% if comment.author.userprofile.picture %}
+                              <img src="{{comment.author.userprofile.picture.url}}" class="avatar" style="width:25px;height:25px" />
+                            {% elif comment.author.userprofile.photo_url %}
+                              <img src="{{comment.author.userprofile.photo_url}}" class="avatar" style="width:25px;height:25px" />
+                            {% else %}
+                              {% if comment.author.userprofile.gender == 'female' %}
+                                <img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="avatar" alt="Avatar" style="width:25px;height:25px"/>
+                              {% else %}
+                                <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="avatar" alt="Avatar" style="width:25px;height:25px"/>
+                              {% endif %}
+                            {% endif %}
+                          </td>
+
+                          {% if comment.depth == 2 %}                          
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}<span> <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}"> </span>{{comment.parent_author}}
+                            </td>
+                          {% elif comment.depth > 2 %}                         
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}<span> <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}"> </span>{{comment.parent_author}}
+                            </td>
+                          {% else %}                          
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}
+                            </td>
                           {% endif %}
-                             <td class="td_message" style="font-size: 11px;">
-                               <p style="border:0px solid red">{{comment.message}}</p>
+                             <td class="td_message" style="font-size: 11px; padding:10px 5px">
+                               {{comment.message}}
                              </td>
-                             <td class="td_edit" style="font-size: 11px; border: none" >
-                                 {% if user.is_authenticated and request.user == comment.author %}
-                                 <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{listicle.id}}, {{article.id}}, {{comment.id}})">수정</a>
-                                 <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{article.id}}, {{comment.id}})">삭제</a>
+                             <td class="td_edit" style="font-size: 17px; border: none" >
+                              {% if user.is_authenticated and request.user == comment.author %}
+                                <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{listicle.id}}, {{article.id}}, {{comment.id}})"><i class="far fa-edit"></i></a>
+                                <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{article.id}}, {{comment.id}})"><i class="far fa-trash-alt"></i></a>
                                {% endif %}
-                               {% if user.is_authenticated %}
-                                 <a style="border:0px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{listicle.id}}, {{article.id}}, {{ comment.id }})">댓글</a>
+                               {% if user.is_authenticated and request.user != comment.author%}
+                                <a style="border:0px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{listicle.id}}, {{article.id}}, {{ comment.id }})"><i class="far fa-comment"></i></a>
                                {% endif %}
                              </td>
                              <td class="td_updated_at" style="font-size: 11px; border:0px solid black;">
@@ -429,7 +508,7 @@ opacity: 1;
                      <input class="noneDisplay" type="text" id="article" name="article" value="{{article.id}}"/>
                      {{ form.parent|add_class:"noneDisplay" }}
                      {{ form.message|add_class:"col-sm-12 id_message" }}
-                     <input type="submit" value="Write"/>
+                     <button type="submit" style="background-color: #4dc7a0; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-comment"></i></button>
                    </form>
                  </div>
                  {% else %}
@@ -498,7 +577,7 @@ function myFunction() {
 }
 
 function replyOnComment(current, listicle_pk, article_pk, comment_pk){
-  var insert_td = $(current).parents('tr').children(":eq(1)");
+  var insert_td = $(current).closest('tr');
   if ($(current).hasClass('remove')){
     $(current).removeClass('remove');
     $('.replyForm').remove();
@@ -507,17 +586,18 @@ function replyOnComment(current, listicle_pk, article_pk, comment_pk){
   else {
     $('.replyForm').remove();
     $('.edit_replyForm').remove(); 
-    insert_td.append(`
-                  <div class="replyOnCommentForm replyForm">
-                    <br>
+    insert_td.after(`
+                  <tr class="replyOnCommentForm replyForm" style="text-align:right">
+                    <td colspan='1'>
                     <form method="POST">
                       {% csrf_token %}
                       <input class="noneDisplay" type="text" id="article" name="article" value="`+article_pk+`"/>
                       {{ form.parent |add_class:"noneDisplay"}}
                       {{ form.message |add_class:"col-sm-12" }}
-                      <input type="submit" value="Write"/>
+                      <button type="submit" style="background-color: #ffc107; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-comment"></i></button>
                     </form>
-                  </div>`
+                    </td>
+                  </tr>`
       );
     $('#id_parent').val(comment_pk);
     $("#id_message").attr("rows", "2");
@@ -527,7 +607,7 @@ function replyOnComment(current, listicle_pk, article_pk, comment_pk){
 };
 
 function edit_replyOnComment(current, listicle_pk, p_pk, c_pk){
-  var insert_td = $(current).parents('tr').children(":eq(1)");
+  var insert_td = $(current).closest('tr');
   if ($(current).hasClass('remove')){
     $(current).removeClass('remove');
     $('.edit_replyForm').remove();
@@ -552,17 +632,18 @@ function edit_replyOnComment(current, listicle_pk, p_pk, c_pk){
         else {
           $('.edit_replyForm').remove();
           $('.replyForm').remove();
-          var edit = `<div class='edit_replyOnCommentForm edit_replyForm'>
-                        <br>
-                        <form method='POST' action='/tips/listicle/`+listicle_pk+`/`+p_pk+`/`+c_pk+`/'>
+          var edit = `<tr class='edit_replyOnCommentForm edit_replyForm' style="text-align:right">
+                        <td colspan='1'>
+                        <form method='POST' action='/tips/`+p_pk+`/`+c_pk+`/'>
                         {% csrf_token %}
                         <input class='noneDisplay' type='text' id='article' name='article' value='`+p_pk+`'/>
                         {{ form.parent|add_class:"noneDisplay" }}
                         {{ form.message|add_class:"col-sm-12" }}
-                        <input type='submit' value='Write'/>
+                        <button type="submit" style="background-color: #ffc107; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-edit"></i></button>
                         </form>
-                      </div>`;
-          insert_td.append(edit);
+                        </td>
+                      </tr>`;
+          insert_td.after(edit);
           if (res.comment_parent == null ){
             $('#id_parent').val(0);
           }

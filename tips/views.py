@@ -106,12 +106,13 @@ def view_listicle(request, listicle_pk, pk=None, comment_pk=None):
 	form = CommentForm(request.POST, request.FILES)
 	articleNum = form['article'].value()
 	if request.user.is_authenticated:
+		user = UserProfile.objects.get(user=request.user)
 		if request.method == 'POST':
 			form = CommentForm(request.POST, request.FILES)
 			if form.is_valid():				
 				comment = form.save(commit=False)
 				comment.article = Article.objects.get(pk=articleNum)
-				comment.author = request.user
+				comment.author = user.user
 				try:
 					parent = Comment.objects.get(pk=comment.parent)
 				except:

@@ -28,13 +28,14 @@ def view_recommendation(request, pk, comment_pk=None):
 	category = recommendation.category
 	form = CommentForm(request.POST, request.FILES)
 	if request.user.is_authenticated:
+		user = UserProfile.objects.get(user=request.user)
 		if request.method == 'POST':
 			form = CommentForm(request.POST, request.FILES)
 			if form.is_valid():
 				print("yes")
 				comment = form.save(commit=False)
 				comment.recommendation = Recommendation.objects.get(pk=pk)
-				comment.author = request.user
+				comment.author = user.user
 				try:
 					parent = Comment.objects.get(pk=comment.parent)
 				except:
