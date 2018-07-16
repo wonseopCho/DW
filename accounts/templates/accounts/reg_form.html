@@ -12,7 +12,7 @@
 /* Full-width input fields */
 input[type=text], input[type=password], input[type=email] {
     width: 100%;
-    padding: 15px;
+    padding: 10px;
     margin: 5px 0 22px 0;
     display: inline-block;
     border: none;
@@ -428,6 +428,9 @@ When we make any material changes to our Privacy Policy, we will notify you on o
 {% block additional_script %}
 <script>
 $(document).ready(function(){
+
+	$('input:checkbox[id="id_terms"]').prop("checked",true);
+	$('input:checkbox[id="id_privacy"]').prop("checked",true);
 
 	$('#id_username').focusin(function(){
 		$('.username_helptext').show();

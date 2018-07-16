@@ -4,15 +4,89 @@
 {% block title %}Profile{% endblock %}
 
 {% block headAddon %}
+<style>
+.outtercontainer {
+	width: 90%;
+    padding: 16px;
+    background-color: white;
+    border:0px solid #F1F1F1;
+}
+label {
+	font-weight: bold;
+}
+form a {
+	font-size: 9px;
+}
+/* Full-width input fields */
+input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding:10px;
+    margin: 5px 0 0px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus ,input[type=email]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+</style>
+<script>
+function bs_input_file() {
+  $(".input-file").before(
+    function() {
+      if ( ! $(this).prev().hasClass('input-ghost') ) {
+        var element = $("<input type='file' class='input-ghost' style='visibility:hidden; height:0'>");
+        element.attr("name",$(this).attr("name"));
+        element.change(function(){
+          element.next(element).find('input').val((element.val()).split('\\').pop());
+        });
+        $(this).find("button.btn-choose").click(function(){
+          element.click();
+        });
+        $(this).find("button.btn-reset").click(function(){
+          element.val(null);
+          $(this).parents(".input-file").find('input').val('');
+          $('input:checkbox[id="picture-clear_id"]').prop("checked",true);
+        });
+        $(this).find('input').css("cursor","pointer");
+        $(this).find('input').mousedown(function() {
+          $(this).parents('.input-file').prev().click();
+          return false;
+        });
+        return element;
+      }
+    }
+  );
+}
+</script>
 {% endblock %}
 
 {% block content %}
 
-<div class="container rewidth" style="border:1px solid red">
+<div class="rewidth" style="padding:3px 3px">
 	<form method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		{{form.as_p}}
-	<button type="submit">Submit</button>
+		<span style="display:block;font-weight:bold;">Picture:</span>
+		<div class="input-group input-file" name="picture" id="id_picture" style="margin-top:-20px;margin-bottom:10px;">
+          <span class="input-group-btn">
+            <button class="btn btn-primary btn-choose" type="button" style="font-size: 20px"><i class="fas fa-user-alt"></i></button>
+          </span>
+          <input id="_file" type="text" style="border:0px solid red;height:43px; margin-top:0px" class="form-control" placeholder='Choose a file...' />
+          <span class="input-group-btn">
+             <button class="btn btn-warning btn-reset" type="button" style="color:white;font-size: 21px"><i class="fas fa-eraser"></i></button>
+          </span>
+        </div>
+        <input type="checkbox" name="picture-clear" id="picture-clear_id" style="width:0; display:none">
+		<p><label for="id_firstname">Firstname:</label> <input type="text" name="firstname" value="xxxx1" maxlength="50" id="id_firstname"></p>
+		<p><label for="id_lastname">Lastname:</label> <input type="text" name="lastname" value="wetwet" maxlength="50" id="id_lastname"></p>
+		<p><label for="id_gender">Gender:</label> <input type="text" name="gender" value="male" maxlength="10" id="id_gender"></p>
+		<p><label for="id_city">City:</label> <input type="text" name="city" value="sydney" maxlength="100" id="id_city"></p>
+		<p><label for="id_locale">Locale:</label> <input type="text" name="locale" value="en" maxlength="50" id="id_locale"></p>
+		<p><label for="id_phone">Phone:</label> <input type="text" name="phone" maxlength="50" id="id_phone"></p>
+		
+	<button type="submit" style="background-color:#4DC7A0;color:white; border:0; border-radius:5px; cursor:pointer; padding:10px 10px;width:100%">SAVE</button>
 	</form>
 </div>
 
@@ -21,6 +95,11 @@
 {% block additional_script %}
 <script>
 updateBtn();
+$(document).ready(function(){
+  bs_input_file();
+  var aTag = `{{form.picture.value}}`.split("/").pop(-1);
+  $('#_file').val(aTag);
+ });
 </script>
 {% endblock %}
 {% block footer %}{% endblock %}
