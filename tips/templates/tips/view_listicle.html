@@ -634,7 +634,7 @@ function edit_replyOnComment(current, listicle_pk, p_pk, c_pk){
           $('.replyForm').remove();
           var edit = `<tr class='edit_replyOnCommentForm edit_replyForm' style="text-align:right">
                         <td colspan='1'>
-                        <form method='POST' action='/tips/`+p_pk+`/`+c_pk+`/'>
+                        <form method='POST' action='/tips/listicle/`+listicle_pk+`/`+p_pk+`/`+c_pk+`/'>
                         {% csrf_token %}
                         <input class='noneDisplay' type='text' id='article' name='article' value='`+p_pk+`'/>
                         {{ form.parent|add_class:"noneDisplay" }}
