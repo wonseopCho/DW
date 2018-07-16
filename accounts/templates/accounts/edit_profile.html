@@ -8,9 +8,7 @@
 
 {% block content %}
 
-<br>
-
-<div class="container">
+<div class="container rewidth" style="border:1px solid red">
 	<form method="post" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{form.as_p}}
@@ -20,5 +18,9 @@
 
 {% endblock %}
 
-{% block additional_script %}{% endblock %}
+{% block additional_script %}
+<script>
+updateBtn();
+</script>
+{% endblock %}
 {% block footer %}{% endblock %}

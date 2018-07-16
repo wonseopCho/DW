@@ -40,13 +40,14 @@
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="messageLabel">Success</h5>
+		        <h5 class="modal-title" id="messageLabel">A email has been sent</h5>
 		      </div>
 		      <div class="modal-body">
-		        <span style="font-weight:bold;font-size:15px;">Thank you for your email confirmation. Now you can login your account</span><br>
+		        <span style="font-weight:bold;font-size:15px;">Please confirm the email. address to complete the registration.</span><br>
+		        <span style="font-weight:bold;font-size:15px; color:#F98387">* Please check junk box in case of you can't find the email.</span>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-primary" style="background-color:#4DC7A0" data-dismiss="modal" onclick="location.href='/login">OK</button>
+		        <button type="button" class="btn btn-primary" style="background-color:#4DC7A0" data-dismiss="modal" onclick="location.href='https://ktripguide.com'">OK</button>
 		      </div>
 		    </div>
 		  </div>
@@ -63,7 +64,7 @@
 $(document).ready(function(){
 	$('.init').click();
 	$('.fade').on('click',function(){
-		location.href = "/login";
+		location.href = "/";
 	});
 });
 

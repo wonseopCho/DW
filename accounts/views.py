@@ -76,9 +76,13 @@ def register(request):
 					[to_email],
 					fail_silently=False,
 					)
-			return HttpResponse('please confirm your email. address to complete the registration')
+			res = 1 # succesfully has sent a email
 		else:
-			return HttpResponse('username exists')
+			res = 0 # user exist
+		return render(request, 'manual_registration/user_verification.html' , {
+			'res' : res,
+			'categories' : Category.objects.all(),
+			})
 	else:
 		form = RegistrationForm()
 		return render(request, 'accounts/reg_form.html', {
