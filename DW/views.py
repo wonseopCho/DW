@@ -6,12 +6,13 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.conf import settings
-from tips.models import Listicle, Category, Article, Image
-from recommendation.models import Recommendation
-from accounts.models import UserProfile
 from allauth.socialaccount.models import SocialAccount
-from urllib import parse
+from accounts.models import UserProfile
+from tips.models import Listicle, Category, Article
 from tips.forms import ArticleForm
+from recommendation.models import Recommendation
+from qna.models import Qna
+from urllib import parse
 import json
 import os
 
@@ -95,6 +96,7 @@ def home_view(request):
 				 'socialaccount': socialaccount,
 				 'form' : articleForm,
 				 'categories' : categories,
+				 'qnas' : Qna.objects.all().order_by('-id'),
 		})
 	return render(request, 'home.html', args)
 

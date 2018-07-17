@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<style>
+body{
+	padding-bottom: 0;
+}
+input[type=text], select {
+    width: 100%;
+    padding: 8px;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, select {
+    background-color: #ddd;
+    outline: none;
+}
+
+#submitbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    
+}
+label {
+	font-weight: bold;
+}
+
+#edit_body {
+  background-image: url("{% static 'images/south-korea.jpg' %}");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.rating {
+  padding-bottom:10px;
+  position: relative;
+  float: left;
+  transform: rotateY(180deg);
+  display: flex;
+}
+
+.rating input{
+  display: none;
+}
+.rating label{
+  height:30px;
+  display: block;
+  width: 30px;
+  background-color: white;
+}
+.rating label:before{
+  content:'\f005';
+  font-family: fontAwesome;
+  display: block;
+  font-size: 30px;
+  color: #DDDDDD;
+}
+.rating label:after{
+  content:'\f005';
+  font-family: fontAwesome;
+  position: relative;
+  top:-45px;
+  display: block;
+  font-size: 30px;
+  color: #1f9cff;
+  opacity: 0;
+  transition: .5s;
+  text-shadow: 0 2px 5px rbga(0,0,0,.5);
+}
+
+.rating label:hover:after,
+.rating label:hover ~ label:after,
+.rating input:checked ~ label:after{
+opacity: 1;
+}
+
+</style>
+<script>
+function tipTitleCheckAjax(value) {
+  var tip_title = {};
+  tip_title.csrfmiddlewaretoken = '{{csrf_token}}';
+  tip_title.title = value;
+  if (value ==''){
+    $('#id_title').text("");
+    $('#id_title').css('background-color','#F1F1F1');
+  }
+  else if (value == '{{form.instance}}'){
+  	$('#title_feeback_text').text('');
+    $('#id_title').css('background-color', '#7CFFBB');
+    $('#submitbtn').prop("disabled", false);
+  }
+  else {
+      $.ajax({
+        url:"{% url 'tips:title_check_ajax' %}",
+        method:"post",
+        data: tip_title,
+        success: function(res){
+          console.log(res)
+          if (res == 1){
+            $('#title_feeback_text').css('color', '#FF7878');
+            $('#title_feeback_text').text('A article exists aleady with the title you have entered');
+            $('#id_title').css('background-color', '#FF7878'); 
+            $('#submitbtn').prop("disabled", true);
+          }
+          else {
+            $('#title_feeback_text').text('');
+            $('#id_title').css('background-color', '#7CFFBB');
+            $('#submitbtn').prop("disabled", false);
+          }
+        },error: function(error){
+          console.log("error",error);
+        }
+    }); 
+  }
+};
+
+// function bs_input_file() {
+//   $(".input-file").before(
+//     function() {
+//       if ( ! $(this).prev().hasClass('input-ghost') ) {
+//         var element = $("<input type='file' class='input-ghost' style='visibility:hidden; height:0'>");
+//         element.attr("name",$(this).attr("name"));
+//         element.change(function(){
+//           element.next(element).find('input').val((element.val()).split('\\').pop());
+//         });
+//         $(this).find("button.btn-choose").click(function(){
+//           element.click();
+//         });
+//         $(this).find("button.btn-reset").click(function(){
+//           element.val(null);
+//           $(this).parents(".input-file").find('input').val('');
+//         });
+//         $(this).find('input').css("cursor","pointer");
+//         $(this).find('input').mousedown(function() {
+//           $(this).parents('.input-file').prev().click();
+//           return false;
+//         });
+//         return element;
+//       }
+//     }
+//   );
+// }
+
+$(document).ready(function(){
+  // bs_input_file();
+  $("#id_title").keyup(function(e){
+    var value = $(this).val();
+    console.log(value);
+    tipTitleCheckAjax(value);
+  });
+});
+</script>
+
+<div id="edit_body" style="border:0px solid blue;padding:3px 0px 3px 0px;">
+	<div class="rewidth" style="border:0px solid red; border-radius:.3rem;margin:0 auto; padding:5px; background-color: white">
+    <span style="text-align:center"><h4>QnA</h4></span>
+		<span style="text-align:center"><h4>{{form.title.value}} Edit</h4></span>
+		<form id="user_write_form" action="" enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+			<label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
+			<div id="title_tootip" data-toggle="tooltip" data-placement="top" title="Please put a Title">
+      {{form.title}}
+      </div>
+      <!-- <label for="rating" style="width:100%; margin-bottom:0"><b>Rating</b></label>
+      <div class="rating">
+        <input type="radio" name="star" id="star1" value="5"><label for="star1"></label>
+        <input type="radio" name="star" id="star2" value="4"><label for="star2"></label>
+        <input type="radio" name="star" id="star3" value="3"><label for="star3"></label>
+        <input type="radio" name="star" id="star4" value="2"><label for="star4"></label>
+        <input type="radio" name="star" id="star5" value="1"><label for="star5"></label>
+      </div> -->
+      <div style="visibility:hidden; height:0">{{form.rating}}</div>
+			<div class="form-group" style="border:0px solid red;margin-top:-25px;visibility:hidden; height:0">
+        <div class="input-group input-file" name="video" id="id_video">
+          <span class="input-group-btn">
+            <button class="btn btn-primary btn-choose" type="button">Choose</button>
+          </span>
+          <input type="text" style="height:34px" class="form-control" placeholder='Choose a file...' />
+          <span class="input-group-btn">
+             <button class="btn btn-warning btn-reset" type="button">Reset</button>
+          </span>
+        </div>
+      </div>
+      <br>
+      <div id="text_tooltip" data-toggle="tooltip" data-placement="bottom" title="Please write Contents">
+        {{form.text}}
+      </div>
+			<button id="submitbtn" type="button" class="btn btn-default" style="width:100%">Submit</button>
+		</form>
+	</div>
+</div>
+<script>
+  $('iframe').on('load', function(){
+    setTimeout(function(){
+    var aTag = `{{form.video.value}}`.split("/").pop(-1);
+    $('input:radio[value="{{form.rating.value}}"]').prop("checked", true);
+    $('iframe').contents().find('#_file').val(aTag);
+    }, 500);
+  });
+
+  $(document).ready(function(){
+    $('input:radio[name="star"]').on('change',function(){
+      $('#id_rating').val($('input:radio[name="star"]:checked').val());
+    });
+
+    $('#submitbtn').on('click', function(){
+      if($('#id_category').val() == ''){
+        $('#category_tooltip').tooltip('show');
+      }
+      else if($('#id_title').val() == ''){
+        $('#title_tootip').tooltip('show');
+      }
+      else if($('#id_text').val() == ''){
+        $('#text_tooltip').tooltip('show');
+      }
+      else {
+        $('#user_write_form').submit();
+      }
+      setTimeout(function(){
+        $('#category_tooltip').tooltip('hide');
+        $('#title_tootip').tooltip('hide');
+        $('#text_tooltip').tooltip('hide');
+      },1000);
+    });
+  });
+</script>
+{% endblock %}

@@ -107,7 +107,7 @@ def likesUpdate(request):
 			res = {
 				"updated": updated,
 				"liked": liked,
-				"likes_counts": "Likes {}".format(updates.likes.count()),
+				"likes_counts": "{}".format(updates.likes.count()),
 			}
 			return JsonResponse(res, safe=False)
 			# return HttpResponse(res['result'])

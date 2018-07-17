@@ -38,6 +38,9 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('', views.index_view, name='index'),
     path('heart_beat/', heart_beat),
+    path('summernote/', include('django_summernote.urls')),
+    path('login/', login, {'template_name':'login.html', 'extra_context': args} ,name='login'),
+    path('logout/', logout, {'template_name':'logout.html'}, name='logout'),
     path('home/', views.home_view, name='home'),
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
@@ -45,12 +48,10 @@ urlpatterns = [
     path('bookmark/', include('bookmark.urls')),
     path('mapAPI/', include('mapAPI.urls')),
     path('accounts/', include('accounts.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('login/', login, {'template_name':'login.html', 'extra_context': args} ,name='login'),
-    path('logout/', logout, {'template_name':'logout.html'}, name='logout'),
+    path('accounts/', include('allauth.urls')),    
     path('tips/', include('tips.urls')),
     path('recommendation/', include('recommendation.urls')),
-    path('summernote/', include('django_summernote.urls')),
+    path('qna/', include('qna.urls')),
 ]
 
 if settings.DEBUG:
