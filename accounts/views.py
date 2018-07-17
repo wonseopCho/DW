@@ -124,7 +124,7 @@ def login_redirect(request):
 @login_required
 def view_profile(request, pk=None):
 	if pk:
-		user = User.objects.get(pk=pk)
+		user = UserProfile.objects.get(pk=pk)
 	else :
 		user = request.user
 	try :
