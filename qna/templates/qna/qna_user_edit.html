@@ -163,12 +163,12 @@ $(document).ready(function(){
 <div id="edit_body" style="border:0px solid blue;padding:3px 0px 3px 0px;">
 	<div class="rewidth" style="border:0px solid red; border-radius:.3rem;margin:0 auto; padding:5px; background-color: white">
     <span style="text-align:center"><h4>QnA</h4></span>
-		<span style="text-align:center"><h4>{{form.title.value}} Edit</h4></span>
+		<span style="text-align:center"><h4>{{form.q_title.value}} Edit</h4></span>
 		<form id="user_write_form" action="" enctype="multipart/form-data" method="POST">
 			{% csrf_token %}
 			<label for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
 			<div id="title_tootip" data-toggle="tooltip" data-placement="top" title="Please put a Title">
-      {{form.title}}
+      {{form.q_title}}
       </div>
       <!-- <label for="rating" style="width:100%; margin-bottom:0"><b>Rating</b></label>
       <div class="rating">

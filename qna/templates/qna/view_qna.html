@@ -223,6 +223,12 @@ opacity: 1;
   padding-top:0px
 }
 
+#top_bar {
+	position:fixed;
+	z-index:2;
+	background-color:white;
+}
+
 @-webkit-keyframes fadein {
     from {bottom: 0; opacity: 0;} 
     to {bottom: 30px; opacity: 1;}
@@ -369,13 +375,13 @@ function thumbImage(title, text){
 {% endblock %}
 
 {% block content %}
-<div class="container rewidth" style="border:0px solid red; overflow-x:hidden;">
+<div class="container rewidth" style="border:0px solid red; overflow-x:hidden;margin-top:54px;">
   <div class="row">
-    <div class="col-md-8" style="padding:0;">
+    <div class="col-md-8"  style="padding:0;">
   	{% for content in qna %}
     	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
         <div style="width:100%; height:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap;">
-          <h2>{{content.title}}</h2>
+          <h2>{{content.q_title}}</h2>
         </div>
         <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
           <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
@@ -387,13 +393,13 @@ function thumbImage(title, text){
             <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
           </a>
           {% endif %}
-          <div style="position:absolute; right:0">
+          <!-- <div style="position:absolute; right:0">
             {% if user.is_authenticated and user != content.author %}
             <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="qnaSave({{authenticated_user.id}},{{content.id}})"><i class="fas fa-paperclip"></i></div>
             {% elif not user.is_authenticated %}
             <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"><i class="fas fa-paperclip"></i></div>
             {% endif %}
-          </div>
+          </div> -->
         </div>
         {% if content.rating != 0 %}
         <div class="rating">
@@ -577,7 +583,7 @@ function thumbImage(title, text){
             {% endif %}
           </div> -->
           <div style="border:0px solid orange;width: 75%;height:47px;margin-left:7px;float:left;font-size:12.5px;display:table;">
-            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;font-size: 0.9em;">{{exqna.title}}</div>
+            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;font-size: 0.9em;">{{exqna.q_title}}</div>
             <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{qna.slug|_replace}}</div> -->
           </div>
           </a>
@@ -599,7 +605,7 @@ function thumbImage(title, text){
 <script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
 <script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
-window.onscroll = function() {myFunction();};
+// window.onscroll = function() {myFunction();};
 var navbar = document.getElementById("top_bar");
 var sticky = navbar.offsetTop;
 var save_vol = getCookie('save_vol');

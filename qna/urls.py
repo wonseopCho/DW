@@ -7,6 +7,7 @@ app_name ='qna'
 urlpatterns = [
 	path('likesUpdate/', views.likesUpdate, name='likesUpdate'),
 	path('addToCart/', views.add_to_cart_ajax, name='add_to_cart'),
+	path('write/', views.user_write_qna, name='user_write_qna'),
 	path('qnaRemove/<author>/<qna_pk>/', views.qna_remove, name='qna_remove'),
 	path('qnaEdit/<author>/<qna_pk>/', views.qna_edit, name='qna_edit'),
 	path('imageDelete/', views.image_delete, name='image_delete'),

@@ -220,6 +220,33 @@ def add_to_cart_ajax(request):
 	else:
 		return HttpResponse(5) #login require
 
+def user_write_qna(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = QnaForm(request.POST, request.FILES)
+			if form.is_valid():
+				qna = form.save(commit=False)
+				title = request.POST['q_title'] 
+				text = strip_tags(request.POST['text'])
+				slug = slugify(text, allow_unicode=True)
+				slug = slug.replace('nbsp', '-')
+				max_length = 48
+				if len(slug) <= max_length:
+				    qna.slug = slug
+				trimmed_slug = slug[:max_length].rsplit('-', 1)[0]
+				if len(trimmed_slug) <= max_length:
+				    qna.slug = trimmed_slug
+				qna.slug = slug[:max_length]+'...'
+				qna.q_title = title
+				qna.author = request.user				
+				qna.save()
+				return redirect(qna)
+		else:
+			return redirect('home')
+		form = QnaForm()
+	else:
+		return redirect('home')
+
 def qna_edit(request, author, qna_pk):
 	qna = Qna.objects.get(id=qna_pk)
 	authenticated_user = ''

@@ -12,6 +12,7 @@ from tips.models import Listicle, Category, Article
 from tips.forms import ArticleForm
 from recommendation.models import Recommendation
 from qna.models import Qna
+from qna.forms import QnaForm
 from urllib import parse
 import json
 import os
@@ -37,7 +38,6 @@ def index_view(request):
 	category_recommendation={}
 	authenticated_user = ''
 	socialaccount = None
-	articleForm = ArticleForm()
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
 		try :
@@ -59,7 +59,7 @@ def index_view(request):
 				 'category_recommendation' : category_recommendation,
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
-				 'form' : articleForm,
+				 'qnaform' : QnaForm,
 				 'categories' : categories,
 		})
 	return render(request, 'index.html', args)
@@ -75,6 +75,7 @@ def home_view(request):
 	authenticated_user = ''
 	socialaccount = None
 	articleForm = ArticleForm()
+	qnaForm = QnaForm()
 	categories = Category.objects.all()
 	if request.user.is_authenticated:
 		authenticated_user = UserProfile.objects.get(user=request.user)
@@ -95,6 +96,7 @@ def home_view(request):
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
 				 'form' : articleForm,
+				 'qnaform' : QnaForm,
 				 'categories' : categories,
 				 'qnas' : Qna.objects.all().order_by('-id'),
 		})

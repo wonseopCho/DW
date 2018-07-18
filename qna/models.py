@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
-from accounts.models import UserProfile
 from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
@@ -10,7 +9,7 @@ from imagekit.processors import ResizeToFill
 
 class Qna(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(unique=True, max_length=100)
+    q_title = models.CharField(unique=True, max_length=100)
     video = models.FileField(blank=True, upload_to='tips/video/%Y/%m/%d')
     slug = models.SlugField(max_length=100, unique=False, editable=False, allow_unicode=True)
     text = models.TextField(blank=False, null=False)
@@ -25,7 +24,7 @@ class Qna(models.Model):
     	ordering = ['-id']
 
     def __str__(self):
-        return self.title
+        return self.q_title
 
     def get_absolute_url(self):
         return reverse('qna:view_qna', args=[self.pk])

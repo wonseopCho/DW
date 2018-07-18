@@ -223,6 +223,12 @@ opacity: 1;
   padding-top:0px
 }
 
+#top_bar {
+  position:fixed;
+  z-index:2;
+  background-color:white;
+}
+
 @-webkit-keyframes fadein {
     from {bottom: 0; opacity: 0;} 
     to {bottom: 30px; opacity: 1;}
@@ -350,7 +356,7 @@ opacity: 1;
 {% endblock %}
 
 {% block content %}
-<div class="container rewidth" style="border:0px solid red; overflow-x: hidden;">
+<div class="container rewidth" style="border:0px solid red; overflow-x: hidden; margin-top:54px;">
   <div class="row">
     <div class="col-md-8" style="padding:0;">
   	   {% for article in listicle.articles.all %}
@@ -562,7 +568,7 @@ opacity: 1;
 <script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
 <script>
 
-window.onscroll = function() {myFunction();};
+// window.onscroll = function() {myFunction();};
 var navbar = document.getElementById("top_bar");
 var sticky = navbar.offsetTop;
 var save_vol = getCookie('save_vol');

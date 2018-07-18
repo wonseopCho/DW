@@ -4,6 +4,7 @@ from django.db.models.signals import post_save, post_delete
 from allauth.socialaccount.models import SocialAccount
 from tips.models import Article
 from recommendation.models import Recommendation
+from qna.models import Qna
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,8 +17,9 @@ class UserProfile(models.Model):
 	photo_url = models.CharField(max_length=200, blank=True, null=True)
 	gender = models.CharField(max_length=10, blank=True, null=True)
 	locale = models.CharField(max_length=50, blank=True, null=True)
-	article_cart = models.ManyToManyField(Article, blank=True, related_name='user_articles')
-	recommendation_cart = models.ManyToManyField(Recommendation, blank=True, related_name='user_recommendation')
+	article_cart = models.ManyToManyField(Article, blank=True, related_name='user_cart_articles')
+	recommendation_cart = models.ManyToManyField(Recommendation, blank=True, related_name='user_cart_recommendation')
+	qna_cart = models.ManyToManyField(Qna, blank=True, related_name='user_cart_qna')
 	subscription = models.CharField(max_length=500, blank=True, null=True)
 
 def create_profile(sender, **kwargs):

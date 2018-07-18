@@ -11,7 +11,7 @@ class CommentForm(forms.ModelForm):
 class QnaForm(forms.ModelForm):
 	class Meta:
 		model = Qna
-		fields = ['title', 'video', 'rating', 'text']
+		fields = ['q_title', 'video', 'rating', 'text']
 		widgets = {
 				'text' : SummernoteWidget(attrs={'width': '100%', 'height': '400px'},)
 		}

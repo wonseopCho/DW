@@ -47,9 +47,9 @@ class QnaAdmin(ImagesMultiuploadMixing, MultiUploadAdmin, SummernoteModelAdmin):
     inlines = [ImageInlineAdmin,]
     multiupload_form = True
     multiupload_list = True
-    search_fields = ['id', 'title']
-    list_display = ['id', 'title', 'video', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
-    list_display_links = ['id', 'title']
+    search_fields = ['id', 'q_title']
+    list_display = ['id', 'q_title', 'video', 'slug', 'rating', 'views', 'likes_counts', 'author', 'created_at', 'updated_at']
+    list_display_links = ['id', 'q_title']
     summernote_fields = ['text']
     
     def delete_file(self, pk, request):
