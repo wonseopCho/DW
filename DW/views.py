@@ -59,7 +59,6 @@ def index_view(request):
 				 'category_recommendation' : category_recommendation,
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
-				 'qnaform' : QnaForm,
 				 'categories' : categories,
 		})
 	return render(request, 'index.html', args)
