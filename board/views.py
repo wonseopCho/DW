@@ -120,7 +120,7 @@ def board_remove(request, author, board_pk):
 		board.delete()
 		return redirect('home')
 	else:
-		return redirect("board:view_tips", board_pk )
+		return redirect("board:view_board", board_pk )
 
 @login_required
 def comment_new(request, pk):
