@@ -4,6 +4,7 @@ from django.db.models.signals import post_save, post_delete
 from allauth.socialaccount.models import SocialAccount
 from tips.models import Article
 from recommendation.models import Recommendation
+from board.models import Board
 from qna.models import Qna
 
 class UserProfile(models.Model):
@@ -19,6 +20,7 @@ class UserProfile(models.Model):
 	locale = models.CharField(max_length=50, blank=True, null=True)
 	article_cart = models.ManyToManyField(Article, blank=True, related_name='user_cart_articles')
 	recommendation_cart = models.ManyToManyField(Recommendation, blank=True, related_name='user_cart_recommendation')
+	board_cart = models.ManyToManyField(Board, blank=True, related_name='user_cart_qna')
 	qna_cart = models.ManyToManyField(Qna, blank=True, related_name='user_cart_qna')
 	subscription = models.CharField(max_length=500, blank=True, null=True)
 

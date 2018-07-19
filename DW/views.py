@@ -11,6 +11,8 @@ from accounts.models import UserProfile
 from tips.models import Listicle, Category, Article
 from tips.forms import ArticleForm
 from recommendation.models import Recommendation
+from board.models import Board
+from board.forms import BoardForm
 from qna.models import Qna
 from qna.forms import QnaForm
 from urllib import parse
@@ -95,8 +97,10 @@ def home_view(request):
 				 'authenticated_user' : authenticated_user,
 				 'socialaccount': socialaccount,
 				 'form' : articleForm,
+				 'boardform' : BoardForm,
 				 'qnaform' : QnaForm,
 				 'categories' : categories,
+				 'boards' : Board.objects.all().order_by('-id'),
 				 'qnas' : Qna.objects.all().order_by('-id'),
 		})
 	return render(request, 'home.html', args)

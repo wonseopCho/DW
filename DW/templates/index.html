@@ -381,14 +381,18 @@ $(window).on('load', function(){
 });
 
 function changeCallback(event){
-	// console.log(event.item.index, event.item.count);
-	if (event.item.index == 0 || event.item.index == 2 ) {
+	var total = event.item.count;
+	var total_1 = total +1;
+	var init = 0;
+	if ( total % 2 == 0) {init = total / 2 +1;}
+	else { init = total_1 / 2;};
+	if (event.item.index == 0 || event.item.index == 1 ) {
 		index = 1;
 	}
 	else {
-        index = event.item.index-(event.item.count-5);
+        index = event.item.index-(event.item.count-(init));
         if (index > event.item.count){
-                index = 1;
+            index = 1;
         }
     };
 	var link_url = $("#listicle_url_"+index).attr('href');

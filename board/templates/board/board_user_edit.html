@@ -85,7 +85,6 @@ opacity: 1;
 
 </style>
 <script>
-
 // function bs_input_file() {
 //   $(".input-file").before(
 //     function() {
@@ -118,12 +117,12 @@ opacity: 1;
 <div id="edit_body" style="border:0px solid blue;padding:3px 0px 3px 0px;">
 	<div class="rewidth" style="border:0px solid red; border-radius:.3rem;margin:0 auto; padding:5px; background-color: white">
     <span style="text-align:center"><h4>QnA</h4></span>
-		<span style="text-align:center"><h4>{{form.q_title.value}} Edit</h4></span>
+		<span style="text-align:center"><h4>{{form.b_title.value}} Edit</h4></span>
 		<form id="user_write_form" action="" enctype="multipart/form-data" method="POST">
 			{% csrf_token %}
-			<label for="id_q_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
+			<label for="id_b_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
 			<div id="title_tootip" data-toggle="tooltip" data-placement="top" title="Please put a Title">
-      {{form.q_title}}
+      {{form.b_title}}
       </div>
       <!-- <label for="rating" style="width:100%; margin-bottom:0"><b>Rating</b></label>
       <div class="rating">
@@ -171,7 +170,7 @@ opacity: 1;
       if($('#id_category').val() == ''){
         $('#category_tooltip').tooltip('show');
       }
-      else if($('#id_q_title').val() == ''){
+      else if($('#id_b_title').val() == ''){
         $('#title_tootip').tooltip('show');
       }
       else if($('#id_text').val() == ''){

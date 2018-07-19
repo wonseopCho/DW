@@ -62,8 +62,8 @@ INSTALLED_APPS = [
     'tips',
     'tips.templatetags',
     'recommendation',
+    'board',
     'qna',
-    
 ]
 
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'service-worker.js') # in template the name 'serviceworker.js must be kept'

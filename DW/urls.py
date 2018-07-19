@@ -52,6 +52,7 @@ urlpatterns = [
     path('tips/', include('tips.urls')),
     path('recommendation/', include('recommendation.urls')),
     path('qna/', include('qna.urls')),
+    path('board/', include('board.urls')),
 ]
 
 if settings.DEBUG:

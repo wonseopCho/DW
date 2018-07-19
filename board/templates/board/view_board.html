@@ -1,0 +1,923 @@
+{% extends "base.html" %}
+{% load static %}
+{% load embed_video_tags %}
+{% load imagekit %}
+{% load widget_tweaks %}
+{% load jb_replace %}
+
+{% block headAddon %}
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
+<style>
+img {
+  max-width: 100%;
+}
+.board_text{
+    white-space: pre-wrap;
+}
+
+#board_text > p > a, 
+#board_text > div > a, 
+#board_text > p > span > a,
+#board_text > p > span > font > a,
+#board_text > p > font > span > a{
+    border-radius: 5px;
+    background-color : #28a745;
+    color:white;
+    padding:8px 14px;
+    text-align: center;
+    position: relative;
+    font-size: 13px;
+}
+.slick-slide{
+  border: none;
+  outline:none;
+}
+.noneDisplay{
+  display :none;
+}
+textarea {
+  resize: none;
+  height: auto;
+}
+#id_message{
+  height: auto;
+}
+.card-body{
+  padding:2px;
+}
+.card-footer {
+  padding:2px;
+}
+.card-body > table {
+  /*border: 1px solid #ccc;*/
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.card-body > table caption {
+  font-size: 1.5em;
+  margin: .5em 0 .75em;
+}
+
+.card-body > table tr {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: .35em;
+}
+
+.card-body > table th,
+.card-body > table td {
+  padding: 0;
+}
+
+.card-body > table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.table{
+  margin-bottom: 0;
+}
+.table td, .table th {
+  padding: 0;
+  vertical-align: middle;
+  border:0;
+  /*border-top: 1px solid #dee2e6;*/
+}
+
+/*
+.td_propic {
+  border:0px solid red; 
+  width:30px;
+  text-align:center;
+}
+.td_author {
+  text-align: left;
+  width:15%;
+}
+.td_message {
+  text-align: left;
+}
+.td_message p {
+  border:1px solid red;
+  white-space: pre-wrap;
+  vertical-align: middle;
+}
+.td_edit {
+  border:1px solid red;
+  width:10%;
+}
+.td_updated_at {
+  width:12%;
+}*/
+
+.td_propic {
+  border:0px solid red; 
+  width:30px;
+  height:30px;
+  float:left;
+  text-align:center;
+}
+
+.td_author {
+  width:100%;
+  height:30px;
+  text-align:left;
+  display:block;
+}
+.td_message {
+  width:100%;
+  padding:0px;
+  display:block;
+}
+.td_edit{
+  display:block;
+  float:left;
+  width:50%;
+}
+.td_updated_at {
+  width:50%;
+  float:left;
+  text-align: right;
+}
+
+.far{
+  padding:3px;
+}
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+.rating {
+  padding-top:5px;
+  padding-bottom:10px;
+  position: relative;
+  transform: rotateY(180deg);
+  display: flex;
+  float:left;
+  width:100%;
+}
+
+.rating input{
+  display: none;
+}
+.rating label{
+  height: 25px;
+  display: block;
+  width: 25px;
+  background-color: #F7F7F7;
+}
+.rating label:before{
+  content:'\f005';
+  font-family: fontAwesome;
+  display: block;
+  font-size: 25px;
+  color: white;
+}
+.rating label:after{
+  content:'\f005';
+  font-family: fontAwesome;
+  position: relative;
+  top:-37px;
+  display: block;
+  font-size: 25px;
+  color: #1f9cff;
+  opacity: 0;
+  transition: .5s;
+  text-shadow: 0 2px 5px rbga(0,0,0,.5);
+}
+
+.rating input:checked ~ label:after{
+opacity: 1;
+}
+
+.sticky {
+  background-color:white;
+  position:fixed;
+  width:70%;
+  top: 0px;
+  z-index:2;
+  padding-top:0px
+}
+
+#top_bar {
+	position:fixed;
+	z-index:2;
+	background-color:white;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@media only screen and (max-width: 450px) {
+  table {
+    border: 0;
+  }
+
+  .card-body > table caption {
+    font-size: 1.3em;
+  }
+  
+  .card-body > table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  
+  .card-body > table tr {
+    /*border-bottom: 3px solid #ddd;*/
+    margin-bottom: .625em;
+  }
+  
+  .card-body > table td {
+    /*border-bottom: 1px solid #ddd;*/
+    font-size: .8em;
+    padding:1px;
+    /*border:1px solid red;*/
+  }
+  
+  .card-body > table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    /*content: attr(data-label);*/
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .card-body > table td:last-child {
+    border-bottom: 0;
+  }
+
+  .table td, .table th {
+    border-top: 1px solid #dee2e6;
+    border:0px solid red;
+    vertical-align: middle;
+  }
+
+  .td_propic {
+    border:0px solid red; 
+    width:30px;
+    height:30px;
+    float:left;
+    text-align:center;
+  }
+
+  .td_author {
+    width:100%;
+    height:30px;
+    text-align:left;
+    display:block;
+  }
+  .td_message {
+    width:100%;
+    padding:0;
+    display:block;
+  }
+  .td_edit{
+    display:block;
+    float:left;
+    width:50%;
+  }
+  .td_updated_at {
+    width:50%;
+    float:left;
+    text-align: right;
+  }
+  #board_text > p > a, #board_text > div > a{
+    border-radius: 5px;
+    background-color : #28a745;
+    color:white;
+    padding:10px;
+    text-align: center;
+    position: relative;
+    top:10px;
+    margin-bottom:40px;
+    width:100%;
+  }
+
+  .sticky {
+    background-color:white;
+    position:fixed;
+    width:100%;
+    top: 0px;
+    z-index:2;
+    padding-top:0px
+  }
+}
+</style>
+<script>
+function thumbImage(title, text){
+  var parser = new DOMParser();
+  var textHtml = parser.parseFromString(text, 'text/html');
+  var image = textHtml.querySelector('img');
+  // console.log(textHtml.querySelectorAll('img').length);
+  if (image != null) {
+    if (image.src.length > 0 ){
+      $("#"+title+"_main_image").attr('data-src', image.src);
+    }
+    else {
+      $("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
+    }; 
+  }
+  else {
+    $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
+  };
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container rewidth" style="border:0px solid red; overflow-x:hidden;margin-top:54px;">
+  <div class="row">
+    <div class="col-md-8"  style="padding:0;">
+  	{% for content in boards %}
+    	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
+        <div style="width:100%; height:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap;">
+          <h2>{{content.b_title}}</h2>
+        </div>
+        <div style="margin-top: 0px; border:0px solid red;position:relative;height:55PX;padding-top:13px;margin-bottom:0px">
+          <span style="border:0px solid red;position:absolute;left:0;top:10px"><img src="{% static 'Images/sns/sb3.svg' %}" style="cursor: pointer;" width="35" height="35" data-toggle="modal" data-target="#snsShare"></span>
+          <span id="views_{{content.id}}" class="badge badge-light" style="border:0px solid red;position:absolute;left:50px;margin-top:5px;font-size:18px">
+            <i class="fas fa-caret-right" style="border:0px solid blue;margin-right:5px;"></i>{{content.views}}</span>
+          <span onclick="likesUpdate({{content.id}})" class="badge badge-light" style="margin-left:3%;position:absolute;left:110px;margin-top:5px;cursor:pointer;font-size:18px"><i class="fas fa-heart" style="margin-right:5px;color:#FF6699"></i><span id="likes_{{content.id}}">{{content.likes.count}}</span></span>
+          {% if content.find_keyword %}
+          <a href= "https://www.google.com/maps/search/{{content.find_keyword}}">
+            <div style="color:#17A2B8; position:absolute; cursor:pointer; right:40px; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px"><i class="fas fa-map-marker-alt"></i></div>
+          </a>
+          {% endif %}
+          <!-- <div style="position:absolute; right:0">
+            {% if user.is_authenticated and user != content.author %}
+            <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="boardSave({{authenticated_user.id}},{{content.id}})"><i class="fas fa-paperclip"></i></div>
+            {% elif not user.is_authenticated %}
+            <div style="color:#D57100; position:absolute; cursor:pointer; right:0; border:0px solid red;font-size:30px;padding:0px; margin: -5px 10px" onclick="swal({title: 'Requires Login?', text: 'By clicking OK you will be redirected to Login.', showCancelButton: true },function(){window.location.href = '/login?next={{ request.path }}'})"><i class="fas fa-paperclip"></i></div>
+            {% endif %}
+          </div> -->
+        </div>
+        {% if content.rating != 0 %}
+        <div class="rating">
+          <input disabled type="radio" name="star" id="star1" value="5"><label for="star1"></label>
+          <input disabled type="radio" name="star" id="star2" value="4"><label for="star2"></label>
+          <input disabled type="radio" name="star" id="star3" value="3"><label for="star3"></label>
+          <input disabled type="radio" name="star" id="star4" value="2"><label for="star4"></label>
+          <input disabled type="radio" name="star" id="star5" value="1"><label for="star5"></label>
+          <script>
+            $('input:radio[value="{{content.rating}}"]').prop("checked", true);
+          </script>
+        </div>
+        {% endif %}
+
+        {% if content.video or content.images.all.count > 0 %}
+        <!-- !!!VIP!!! as we are going to use multiupload package for django, in order to call images in template page just simply call images.all not like image_set which is typcal way!!!! -->
+          <div id="show_slick" class="show_slick" style="border:0px solid red; width:100%; height:100%;">
+          {% if content.images.all.count > 0 %} 
+            {%for pic in content.images.all %}
+              <div style="border: 0px solid red; width:100%; height:100%; margin-bottom:5px">
+                <img style="width:100%; height:100%" src="{{pic.file.url}}">
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% if content.video %}
+          <div class="show_slick_item" style="border:0px solid red">
+            <video style="width:100%" controls>
+              <source src="{{content.video.url}}" type="video/mp4">
+              <source src="{{content.video.url}}" type="video/ogg">
+              <source src="{{content.video.url}}" type="video/webm">
+               Your browser does not support the video tag.
+            </video>
+          </div>
+          {% endif %}
+          </div>
+        {% endif %}
+        
+        <div style="margin-top: 10px">
+          <!-- Modal -->
+          <div id="snsShare" class="modal fade" role="dialog">
+            <div class="modal-dialog" style="border:0px solid red; top: 40%">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-body" style="text-align:center; padding:30px">
+                  <a style="border:0px solid red; margin-right:7px" href="https://plus.google.com/share?url={{request.build_absolute_uri}}{{content.id}}&t={{content.title}}">
+                    <img src="{% static 'Images/sns/googleplus.svg' %}" width="40" height="40">
+                  </a>
+                  <a style="border:0px solid red; margin-right:7px" href="https://twitter.com/share?text={{content.title}}&url={{request.build_absolute_uri}}{{content.id}}">
+                    <img src="{% static 'Images/sns/twitter.svg' %}" width="35" height="35">
+                  </a>
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
+                    <img src="{% static 'Images/sns/pinterest.svg' %}" width="35" height="35">
+                  </a>
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
+                    <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="board_text" style="margin-top: 10px;display:block">
+          <p>{{content.text|safe}}</p>
+        </div>
+        <div style="border:0px solid blue; width:100%;height:40px">
+          <div style="border:1px solid #F7F7F7; width:50%;display:inline-block;float:left">
+            
+          </div>
+            {% if user.is_authenticated and user == content.author %}
+          <div style="border:0px solid red; width:50%; display:inline-block; text-align: right">
+            <input id="content_edit" type="button" class="btn btn-warning" style="width:45%; max-width:70px" value="Edit" onclick="contentEdit('{{content.author}}',{{content.pk}})"/> 
+            <input id="content_delete" type="button" class="btn btn-danger" style="width:50%; max-width:70px" value="Delete" onclick="contentDelete('{{content.author}}',{{content.pk}})"/>
+          </div>
+            {% endif %}
+        </div>
+        <div id="snackbar"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-default">
+            <div class="card-header">{{content.comment_set.all.count}} Comments</div>
+              <div class="card-body">
+                    {% if content.comment_set.all.count == 0 %}
+                      <p style="font-weight: bold; font-size:13px">You will be the first to make a comment. Be the one!<p>
+                    {% else %}
+                      <table class="table">
+                        <tbody>
+                     {% for comment in content.comment_set.all %}
+                        <tr style="background-color: white; width:100%;">
+                          <td class="td_propic">                            
+                            {% if comment.author.userprofile.picture %}
+                              <img src="{{comment.author.userprofile.picture.url}}" class="avatar" style="width:25px;height:25px" />
+                            {% elif comment.author.userprofile.photo_url %}
+                              <img src="{{comment.author.userprofile.photo_url}}" class="avatar" style="width:25px;height:25px" />
+                            {% else %}
+                              {% if comment.author.userprofile.gender == 'female' %}
+                                <img src="{% static 'Images/accounts/avatars/img_avatar2.png' %}" class="avatar" alt="Avatar" style="width:25px;height:25px"/>
+                              {% else %}
+                                <img src="{% static 'Images/accounts/avatars/img_avatar.png' %}" class="avatar" alt="Avatar" style="width:25px;height:25px"/>
+                              {% endif %}
+                            {% endif %}
+                          </td>
+                        
+                        {% if comment.depth == 2 %}                          
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}<span> <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}"> </span>{{comment.parent_author}}
+                            </td>
+                        {% elif comment.depth > 2 %}                         
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}<span> <img width="10" height="10" style="transform: rotate(-90deg)" src="{% static 'Images/comment/comment_arrow.svg' %}"> </span>{{comment.parent_author}}
+                            </td>
+                        {% else %}                          
+                            <td class="td_author" style="font-size: 12px; padding-top:4px">
+                              {{comment.author}}
+                            </td>
+                        {% endif %}
+                        
+                            <td class="td_message" style="font-size: 13px;padding:10px 5px">
+                              {{comment.message}}
+                            </td>
+                            <td class="td_edit" style="font-size:17px; cursor:pointer;" >
+                              {% if user.is_authenticated and request.user == comment.author %}
+                                <a style="border:0px solid red" class='text-primary edit_replyOnComment' onclick="edit_replyOnComment(this, {{content.id}}, {{comment.id}})"><i class="far fa-edit"></i></a>
+                                <a style="border:0px solid red" class='text-danger' onclick="delete_comment(this, {{content.id}}, {{comment.id}})"><i class="far fa-trash-alt"></i></a>
+                              {% endif %}
+                              {% if user.is_authenticated and request.user != comment.author%}
+                                <a style="border:px solid red" class='text-primary replyOnComment' data-comment-parent="{{ comment.id }}" onclick="replyOnComment(this, {{content.id}}, {{ comment.id }})"><i class="far fa-comment"></i></a>
+                              {% endif %}
+                            </td>
+                            <td class="td_updated_at" style="font-size: 11px;">
+                              <span>{{comment.updated_at}}</span>
+                            </td>
+                          </tr>
+                     {% endfor %}
+                        </tbody>
+                      </table>
+                    {% endif %}
+              </div>
+              <div id="card-footer" class="card-footer">
+                {% if user.is_authenticated %}
+                <div id="comment_form" class="comment_form">
+                  <form id="cm_write_{{content.id}}" method="POST">
+                    {% csrf_token %}
+                    <input class="noneDisplay" type="text" id="board" name="board" value="{{content.id}}"/>
+                    {{ form.parent|add_class:"noneDisplay" }}
+                    {{ form.message|add_class:"col-sm-12" }}
+                    <button type="submit" style="background-color: #4dc7a0; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-comment"></i></button>
+                  </form>
+                </div>
+                <!-- <a href="{% url 'board:comment_new' content.pk %}">Write Comments</a> -->
+                {% else %}
+                <div style="width:100%; margin:0 auto; text-align: center;" >
+                  <a href="/login?next={{ request.path }}">
+                    <p>To make a comment, Please Log-in</p>              
+                  </a>
+                </div> 
+                {% endif %}
+              </div> 
+          </div>
+        </div>
+      </div>
+    	{% endfor %}
+      <br>
+    </div>
+
+    <div class="col-md-4" style="padding:0px 3px 0px 3px;">
+      <div style="display:block; border-radius:5px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa">
+        Board
+      </div>
+      {% for exboard in excludeBoards %}
+        <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:52px; margin-top:10px">
+          <a href="{{exboard.get_absolute_url}}">
+          <!-- <div style=" border:0px solid red; margin-top:0px; max-width:130px; width:20%; height:47px; float:left">
+            {% if exboard.image_set.first.thumnails.url %}
+              <img class="lazy" style="width:100%; height:100%;" data-src="{{exboard.image_set.first.thumnails.url}}"/>
+            {% else %}
+              <img class="lazy" id="{{exboard.title|slugify}}_main_image" style="width:100%; height:100%"/>
+              <script async>                       
+                thumbImage("{{exboard.title|slugify}}", "{{exboard.text|replace_sq|safe|linebreaksbr}}");
+              </script>
+            {% endif %}
+          </div> -->
+          <div style="border:0px solid orange;width: 75%;height:47px;margin-left:7px;float:left;font-size:12.5px;display:table;">
+            <div style="border:0px solid blue;width:100%;font-weight:bold;display:table-cell;vertical-align:middle;font-size: 0.9em;">{{exboard.b_title}}</div>
+            <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{board.slug|_replace}}</div> -->
+          </div>
+          </a>
+        </div>
+      {% endfor %}
+      <div id='categories' style="border-top:6px solid #dddbdb;border-bottom:6px solid #dddbdb; width:100%; height:68px; padding:0 ">
+        {% for category in categories %}
+          <div style="border:0.5px solid #dddbdb; width:33.3%; float:left; cursor:pointer; text-align:center;" onclick="gotoCategory('{{category}}')">
+            <img style="width:25px; height:25px" src="{{category.image.url}}"/>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>  
+{% endblock %}
+
+{% block additional_script %}
+<script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
+<script src="{% static 'jquery.lazy-master/jquery.lazy.min.js' %}"></script>
+<script>
+// window.onscroll = function() {myFunction();};
+var navbar = document.getElementById("top_bar");
+var sticky = navbar.offsetTop;
+var save_vol = getCookie('save_vol');
+
+function myFunction() {
+  // #top_bar's margin-top is -2 
+  if (window.pageYOffset-2 >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+
+function contentDelete(author, board_pk){ 
+  swal({
+    title: 'Delete?',
+    text: "Do you want to delete?",
+    type: "info",
+    showCancelButton: true,
+    closeOnConfirm: true,
+    },function(){
+        console.log(author, board_pk);
+        location.replace("/board/boardRemove/"+author+"/"+board_pk+"/"); 
+    }
+  );
+}
+
+function contentEdit(author, board_pk){ 
+  swal({
+    title: 'Edit?',
+    text: "Do you want to edit?",
+    type: "info",
+    showCancelButton: true,
+    closeOnConfirm: true,
+    },function(){
+        console.log(author, board_pk);
+        location.replace("/board/boardEdit/"+author+"/"+board_pk+"/"); 
+    }
+  );
+}
+
+function replyOnComment(current, board_pk, comment_pk){
+  var insert_td = $(current).closest('tr');
+  if ($(current).hasClass('remove')){
+    $(current).removeClass('remove');
+    $('.replyForm').remove();
+    $('.edit_replyForm').remove();
+  }
+  else {
+    $('.replyForm').remove();
+    $('.edit_replyForm').remove(); 
+    insert_td.after(`
+                  <tr class="replyOnCommentForm replyForm" style="text-align:right">
+                    <td colspan='1'>
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input class="noneDisplay" type="text" id="board" name="board" value="`+board_pk+`"/>
+                      {{ form.parent |add_class:"noneDisplay"}}
+                      {{ form.message |add_class:"col-sm-12" }}
+                      <button type="submit" style="background-color: #ffc107; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-comment"></i></button>
+                    </form>
+                    </td>
+                  </tr>`
+      );
+    $('#id_parent').val(comment_pk);
+    $("#id_message").attr("rows", "2");
+    $("#id_message").focus();
+    $(current).addClass('remove');
+    console.log($('#id_parent').val())
+  }
+};
+
+function edit_replyOnComment(current, p_pk, c_pk){
+  var insert_td = $(current).closest('tr');
+  if ($(current).hasClass('remove')){
+    $(current).removeClass('remove');
+    $('.edit_replyForm').remove();
+    $('.replyForm').remove();
+  }
+  else {
+    var edits={};
+    edits.p_pk = parseInt(p_pk);
+    edits.c_pk = parseInt(c_pk);
+    edits.csrfmiddlewaretoken = '{{csrf_token}}';
+    $.ajax({
+      url:"/board/"+p_pk+"/comment/"+c_pk+"/edit_ajax/",
+      method:"post",
+      data: edits,
+      success: function(res){
+        if (res == 'login_require') {
+          alert(res);
+        }
+        else if (res == 'post_error') {
+          // add.. process
+        }
+        else {
+          $('.edit_replyForm').remove();
+          $('.replyForm').remove();
+          var edit = `<tr class='edit_replyOnCommentForm edit_replyForm' style="text-align:right">
+                        <td colspan='1'>
+                        <form method='POST' action='/board/`+p_pk+`/`+c_pk+`/'>
+                        {% csrf_token %}
+                        <input class='noneDisplay' type='text' id='board' name='board' value='`+p_pk+`'/>
+                        {{ form.parent|add_class:"noneDisplay" }}
+                        {{ form.message|add_class:"col-sm-12" }}
+                        <button type="submit" style="background-color: #ffc107; color:white; border:0; padding:5px 10px; cursor:pointer; border-radius:3px;"><i class="far fa-edit"></i></button>
+                        </form>
+                        </td>
+                      </tr>`;
+          insert_td.after(edit);
+          if (res.comment_parent == null ){
+            $('#id_parent').val(0);
+          }
+          else {
+            $('#id_parent').val(res.comment_parent);
+          } 
+          $('#id_message').val(res.comment_message);
+          $("#id_message").attr("rows", "2");
+          $("#id_message").focus();
+          $(current).addClass('remove');
+        }
+      }, error: function(error){
+        console.log(error);
+        console.log("error");
+      }
+    });
+  } 
+};
+
+function delete_comment(current, p_pk, c_pk){
+  console.log(current);
+  swal({
+    title: "Delete!",
+    text: "Do you want to delete the comment?",
+    type: "info",
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true
+  }, function () {
+    setTimeout(function () {
+        var _delete={};
+        _delete.p_pk = parseInt(p_pk);
+        _delete.c_pk = parseInt(c_pk);
+        _delete.csrfmiddlewaretoken = '{{csrf_token}}';
+        $.ajax({
+          url:"/board/"+p_pk+"/comment/"+c_pk+"/delete_ajax/",
+          method:"post",
+          data: _delete,
+          success: function(res){
+            // console.log(res);
+            if (res == 'login_require') {
+              swal(res);
+            }
+            else if (res == 'delete_error') {
+              // add.. process
+            }
+            else if(res.comment_count == 0){
+              $(current).parent().parent().remove();
+              $('.card-body').html("<span style='font-weight:bold; font-size: 13px'>You will be the first to make a comment. Be the one!</span>");
+            }
+            else {
+              $(current).parent().parent().remove();
+            }
+            $('.card-header').html(res.comment_count+" Comments");
+          }, error: function(error){
+            console.log(error);
+            console.log("error");
+          }
+        });
+        swal("Deleted!");
+      }, 2000);
+    
+  });
+
+}
+// var category = document.location.href.split('/')[4];
+// console.log( document.location.href.split('/'));
+setCookie('p_page', 'Board', 1);
+
+function likesUpdate(pk){
+    var updates={};
+    updates.pk = parseInt(pk);
+    updates.csrfmiddlewaretoken = '{{csrf_token}}';
+    $.ajax({
+      url:"{% url 'board:likesUpdate' %}",
+      method:"post",
+      data: updates,
+      success: function(res){
+        if (res == 'login_require') {
+          swal({
+            title: 'Requires Login?', 
+            text: 'By clicking OK you will be redirected to Login.', 
+            showCancelButton: true },
+            function(){
+              window.location.href = '/login?next={{ request.path }}';
+            });
+        }
+        else if (res == 'post_error') {
+          // add.. process
+        }
+        else {
+        $('#likes_'+pk).html(res.likes_counts);
+        }
+      }, error: function(error){
+        console.log(error);
+        console.log("error");
+      }
+    });
+  }
+
+function boardSave(user_id, board_id){
+  // console.log(user_id, board_id);
+  var _add={};
+  _add.user_id = parseInt(user_id);
+  _add.board_id = parseInt(board_id);
+  _add.csrfmiddlewaretoken = '{{csrf_token}}';
+  $.ajax({
+    url:"{% url 'board:add_to_cart' %}",
+    method:"post",
+    data: _add,
+    success: function(res){
+      if(res==1){
+        $('#snackbar').html('Added!');
+        $('#snackbar').addClass('show');
+        setTimeout(function(){ $('#snackbar').removeClass('show'); }, 1500);
+        save_vol = getCookie('save_vol');
+        setCookie('save_vol', ++save_vol, 1);
+        save_vol = getCookie('save_vol');
+        $('.cart_vol').text('+'+save_vol);
+        $('.cart_vol').css('display','initial'); 
+      }
+      else{
+        swal("You added it aleady.")
+      }
+    }, error: function(error){
+      console.log(error);
+      console.log("error");
+    }
+  });
+}
+
+var loadedElements = 0;
+
+function lazyImageCall(){
+  
+   $('.lazy').lazy({
+      beforeLoad: function(element){
+        // console.log('image "' + stripTime(element.data('src')) + '" is about to be loaded');
+      },
+      afterLoad: function(element) {
+        loadedElements++;
+        // console.log('image "' + stripTime(element.data('src')) + '" was loaded successfully');
+      },
+      onError: function(element) {
+        loadedElements++;
+        // console.log('image "' + stripTime(element.data('src')) + '" could not be loaded');
+      },
+      onFinishedAll: function() {
+        // console.log('finished loading ' + loadedElements + ' elements');
+        // console.log('lazy instance is about to be destroyed')
+      }
+    });
+}
+
+$(document).ready(function(){
+  lazyImageCall();
+  $('#show_slick').slick({
+    arrows: false,
+    dots: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    adaptiveHeight: false,
+    centerMode: false,
+    focusOnSelect: true,
+    swipeToSlide: true,
+    accessibility: true,
+    edgeFriction: 0.0,
+  });
+
+  $('#thumnail_slick').slick({
+    dots: true,
+    arrows: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 3,
+    centerMode: false,
+    lazyLoad: 'ondemand',
+    adaptiveHeight: true,
+    cssEase: 'linear',
+    centerPadding: '40px',
+    edgeFriction: 0.0,
+  });
+
+  $('.show_slick_item').on('click',function(event) {
+    slideIndex = $(this).index();
+    $('#show_slick').slick('slickGoTo', slideIndex, true );
+    $('#thumnail_slick').slick('slickGoTo', slideIndex, true ); 
+  });
+
+  $("#id_message").attr("placeholder", "Type your comment here").blur();
+  $("#id_message").attr("rows", "2");
+
+  $('#comment_form').click(function(){
+    $('#comment_form #id_parent').val(0);
+  });
+
+  // $('#board_text img').css('width','');
+  $('#board_text img').css('height','');
+  $('iframe').css({'width':'100%','height':''});
+
+});
+</script>
+{% endblock %}
