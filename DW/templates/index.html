@@ -272,13 +272,20 @@ function thumbImage(title, text, index){
 				</div>
 			</div>
 			{% endfor %}
+			<div class="vw_rewidth" style="border:0px solid blue; position: fixed; bottom:0;z-index:10;background-color:white;margin:0 auto;text-align: center">
+				{% for category in categories %}
+				 <img src="{{category.image.url}}" style="cursor:pointer; border: 0px solid orange; width:25px; height:25px;margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')" />
+				{% endfor %}
+				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:black;padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Board')"><i class="fas fa-clipboard"></i></span>
+				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:black;padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Qna')"><i class="fas fa-question-circle"></i></span>
+			</div>
 		</div>
 	</div>
 </div>
 {% endblock %}
 
 {% block footer	%}
-<div class="rewidth" style="border: 0px solid red; height:100%; margin:0 auto; text-align:center; font-size:12px">
+<div class="rewidth" style="border: 0px solid red; height:63px; margin:0 auto; text-align:center; font-size:12px">
 	&copy; Loen ALL RIGHTS RESERVED
 </div>
 {% endblock %}

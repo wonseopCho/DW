@@ -371,14 +371,23 @@ function onLoad() {
               </a>
             </div>
           {% endif %}
-        <div id='categories' style="border:1px solid #dddbdb; height: 160px; padding:0 ">
+        <div id='categories' style="border:1px solid #dddbdb; height:250px; padding:0px ">
           {% for category in categories %}
             <div style="border: 0px solid black; width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('{{category}}')">
               <img style="width:40px; height:40px" src="{{category.image.url}}"/>
               <span style="display:block;border:0px solid red; font-size: 13px">{{category|capfirst}}</span>
             </div>
           {% endfor %}
+            <div style="width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('Board')">
+            <span style="cursor:pointer; border: 0px solid orange;font-size:40px; color:black;" ><i class="fas fa-clipboard"></i></span>
+            <span style="display:block;font-size: 13px;margin-top:-9px">Board</span>
+            </div>
+            <div style="width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('Qna')">
+            <span style="cursor:pointer; border: 0px solid orange;font-size:40px; color:black;"><i class="fas fa-question-circle"></i></span>
+            <span style="display:block;font-size:13px;margin-top:-9px">Qna</span>
+            </div>
         </div>
+
         <div id="push_and_map" style="border:1px solid #dddbdb; height: 70px; ">
           <div style="border:0px solid black; width:100%; float:left; font-size: 17px;">
             <div style="border:0px solid black; width:49%; height:34px; float:left; font-size:25px; padding-top:0px">

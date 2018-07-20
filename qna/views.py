@@ -120,7 +120,7 @@ def qna_remove(request, author, qna_pk):
 		qna.delete()
 		return redirect('home')
 	else:
-		return redirect("qna:view_tips", qna_pk )
+		return redirect("qna:view_qna", qna_pk )
 
 @login_required
 def comment_new(request, pk):

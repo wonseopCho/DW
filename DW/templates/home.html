@@ -412,10 +412,10 @@ function thumbImage(title, text, index){
             <label id="label_title" class="disapearable" for="id_title" style="width:100%; margin-bottom:0"><b>Title</b></label><span id="title_feeback_text"></span>
             <input type="text" class="disapearable" name="title" maxlength="100" required="" autofocus="" id="id_title" data-toggle="tooltip" data-placement="top" title="Please put a Title">
 
-            <label id="label_b_title" class="disapearable" for="id_b_title" style="width:100%; margin-bottom:0;display:none"><b>Title</b></label><span id="title_feeback_text"></span>
+            <label id="label_b_title" class="disapearable" for="id_b_title" style="width:100%; margin-bottom:0;display:none"><b>Title</b></label><span id="b_title_feeback_text"></span>
             <input type="text" class="disapearable" name="b_title" maxlength="100" required="" autofocus="" id="id_b_title" data-toggle="tooltip" data-placement="top" title="Please put a Title" style="display:none">
 
-            <label id="label_q_title" class="disapearable" for="id_q_title" style="width:100%; margin-bottom:0;display:none"><b>Title</b></label><span id="title_feeback_text"></span>
+            <label id="label_q_title" class="disapearable" for="id_q_title" style="width:100%; margin-bottom:0;display:none"><b>Title</b></label><span id="q_title_feeback_text"></span>
             <input type="text" class="disapearable" name="q_title" maxlength="100" required="" autofocus="" id="id_q_title" data-toggle="tooltip" data-placement="top" title="Please put a Title" style="display:none">
 
             <label id="label_rating" class="disapearable"  for="rating" style="width:100%; margin-bottom:0"><b>Rating</b></label>
@@ -642,7 +642,7 @@ function thumbImage(title, text, index){
                         <div style="border:0px solid red; width:25px;margin:0 auto;padding-bottom:3px">
                           {% if board.author.userprofile.picture %}
                             <img src="{{board.author.userprofile.picture.url}}" class="avatar" style="width:25px;height:25px" />
-                          {% elif comment.author.userprofile.photo_url %}
+                          {% elif board.author.userprofile.photo_url %}
                             <img src="{{board.author.userprofile.photo_url}}" class="avatar" style="width:25px;height:25px" />
                           {% else %}
                             {% if board.author.userprofile.gender == 'female' %}
@@ -693,7 +693,7 @@ function thumbImage(title, text, index){
                         <div style="border:0px solid red; width:25px;margin:0 auto;padding-bottom:3px">
                           {% if qna.author.userprofile.picture %}
                             <img src="{{qna.author.userprofile.picture.url}}" class="avatar" style="width:25px;height:25px" />
-                          {% elif comment.author.userprofile.photo_url %}
+                          {% elif qna.author.userprofile.photo_url %}
                             <img src="{{qna.author.userprofile.photo_url}}" class="avatar" style="width:25px;height:25px" />
                           {% else %}
                             {% if qna.author.userprofile.gender == 'female' %}
