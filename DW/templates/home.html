@@ -2,6 +2,7 @@
 {% load static %}
 {% load embed_video_tags %}
 {% load imagekit %}
+{% load el_pagination_tags %}
 {% load jb_replace %}
 
 {% block headAddon %}
@@ -333,6 +334,12 @@ div.scrollmenu a {
 .right_col {
   padding-left: 14px;
 }
+.endless_container a{
+  display:block;
+  background-color: orange;
+  text-align: center;
+  font-size: 25px;
+}
 
 @media only screen and (max-width: 600px) {
   .listicle_title {
@@ -457,7 +464,7 @@ function thumbImage(title, text, index){
     <!-- <div style="border:0px solid red; background-color: grey; width:100%; height:300px">
       {{ p_page }}
     </div> -->
-    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center;">
+    <div id="main_navi" class="scrollmenu main_navi" style="text-align:center;cursor:pointer;">
      {% for category in categories %}
         {% if forloop.first %}
           <a class="main_navi_item slick_select" style="color:white;">{{category|upper}}</a>
@@ -498,48 +505,29 @@ function thumbImage(title, text, index){
                 <div style="margin-top:5px; display:block; border-radius:2px; background-color:#E9ECEF; text-align:center; border-bottom:2px solid #aaaaaa; font-weight: bold;">
                   {{art_category}} Guide
                 </div>
-                {% for article in articles %}
-                  {% if forloop.first %}
-                  <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:0px">
-                  {% else %}
-                  <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
-                  {% endif %}
-                  <a href="{{article.get_absolute_url}}">
-                  <div style=" border:0px solid red; margin-top:0px; max-width:160px; width:37%; height:95px; float:left">
-                    {% if article.image_set.first.thumnails.url %}
-                      <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
-                    {% else %}
-                      <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
-                      <script async>                       
-                        thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
-                      </script>
-                    {% endif %}
-                  </div>
-                  <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
-                    <div style="border:0px solid blue; width:100%; display: table-cell; vertical-align:middle;">
-                      {{article.title}}
-                      <div style="display:block; border:0px solid red; font-size:17px">
-                        <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue;padding-right:5px;"></i>{{article.views}}</span>
-                        {% if article.find_keyword %}
-                        <a href= "https://www.google.com/maps/search/{{article.find_keyword}}">
-                        <div style="color:#17A2B8; border: 0px solid blue; position: absolute;margin-top:-40px; right:25px; padding:10px 0px;cursor:pointer; font-size:25px">
-                          <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        </a>
-                        {% endif %}
-                      </div>
-                      
-                    </div>
-                    
-                    <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
-                  </div>
-                  </a>
+                {% paginate 5 articles using art_category %}
+                <div class="{{art_category}}endless_page_template">
+                {% include 'home_pagenation.html' %}
                 </div>
-
-                {% endfor %}
+                {% show_more "<i class='fas fa-plus-square'></i>" %}
+                
+                {% block js %}
+                {{ block.super }}
+                <script src="{% static 'el-pagination/js/el-pagination.js' %}"></script>
+                <script>
+                    $.endlessPaginate({ contentSelector: '{{art_category}}endless_page_template',
+                      // onCompleted: function(context, fragment){
+                      //   console.log('Label:', $(this).text());
+                      //   console.log('URL:', context.url);
+                      //   console.log('Querystring key:', context.key);
+                      //   console.log('Fragment:', fragment);
+                      // }
+                    });
+                </script>
+                {% endblock %}
               </div>
                 
-              <div class="col-md-6 right_col" >               
+              <div class="col-md-6 right_col" style="height:100%">
                 {% for recomd_cate, recomd_articles in category_recommendation.items %}
                   {% if recomd_cate == art_category %}
                     {% if recomd_articles %}
@@ -606,6 +594,7 @@ function thumbImage(title, text, index){
                       {% endfor %}
                     {% endif %}
                   {% endif %}
+
                 {% endfor %}
 
               </div>

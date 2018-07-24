@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'multiupload',
     'smart_selects',
     'widget_tweaks',
+    'el_pagination',
     'blog',
     'blog2',
     'bookmark',

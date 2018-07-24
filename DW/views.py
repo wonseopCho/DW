@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
 from django.views.generic import ListView, DetailView, TemplateView, View
 from django.views.decorators.csrf import csrf_exempt
@@ -18,7 +19,7 @@ from qna.forms import QnaForm
 from urllib import parse
 import json
 import os
-
+from el_pagination.decorators import page_template
 #CVB
 # class HomeView(TemplateView):
 # 	template_name ='home.html'
@@ -65,8 +66,12 @@ def index_view(request):
 		})
 	return render(request, 'index.html', args)
 
+
+# @page_template('home_pagenation.html')
 def home_view(request):
 	# p_page = request.META['HTTP_REFERER']
+	template='home.html'
+	page_template = "home_pagenation.html"
 	p_page = parse.urlparse(request.META.get('HTTP_REFERER')).path
 	args= {'p_page' : p_page}
 	category_articles={}
@@ -87,7 +92,12 @@ def home_view(request):
 	for cate in categories:
 		category = Category.objects.get(category=cate.category).id
 		category_listicle.update({ cate.category : Listicle.objects.filter(category=category)})
-		category_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=1),).filter(category=category).order_by('-id')})
+		articles = Article.objects.filter(author__in=User.objects.filter(is_staff=1),).filter(category=category).order_by('-id')
+		# paginator = Paginator(articles,5)
+		# page = request.GET.get('page')
+		# page_articles = paginator.get_page(page)
+		# category_articles.update({ cate.category : page_articles})
+		category_articles.update({ cate.category : articles})
 		category_user_articles.update({ cate.category : Article.objects.filter(author__in=User.objects.filter(is_staff=0),).filter(category=category).order_by('-id')})
 		category_recommendation.update({ cate.category : Recommendation.objects.filter(category=category)})
 	args.update({'category_listicle' : category_listicle,
@@ -103,7 +113,11 @@ def home_view(request):
 				 'boards' : Board.objects.all().order_by('-id'),
 				 'qnas' : Qna.objects.all().order_by('-id'),
 		})
-	return render(request, 'home.html', args)
+	# if extra_context is not None:
+	# 	args.update(extra_context)
+	if request.is_ajax():
+		template = page_template
+	return render(request, template, args)
 
 @csrf_exempt
 def service_worker_js(request):

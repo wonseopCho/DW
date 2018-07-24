@@ -1,0 +1,51 @@
+{% load jb_replace %}
+{% load el_pagination_tags %}
+{{request.GET.querystring_key}}
+
+{% if request.is_ajax %}
+{% for art_category, articles in category_articles.items %}
+  {% if art_category == request.GET.querystring_key %}
+{% paginate 5 articles using art_category %}
+  <div class="{{art_category}}endless_page_template">
+    {% for article in articles %}
+    <div class="endless_content_wrapper">
+      {% if forloop.first %}
+      <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:0px">
+      {% else %}
+      <div style="border-bottom:1px solid #D3D3D3; background-color: #ffffff; width:100%; height:104px; margin-top:10px">
+      {% endif %}
+      <a href="{{article.get_absolute_url}}">
+      <div style=" border:0px solid red; margin-top:0px; max-width:160px; width:37%; height:95px; float:left">
+        {% if article.image_set.first.thumnails.url %}
+          <img class="lazy" style="width:100%; height:100%" data-src="{{article.image_set.first.thumnails.url}}"/>
+        {% else %}
+          <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
+          <script async>                       
+            thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+          </script>
+        {% endif %}
+      </div>
+      <div style="border: 0px solid orange; width: 60%; height:95px; margin-left:7px; float:left; font-size: 15px; display: table;">
+        <div style="border:0px solid blue; width:100%; display: table-cell; vertical-align:middle;">
+          {{article.title}}
+          <div style="display:block; border:0px solid red; font-size:17px">
+            <span class="badge badge-light"><i class="fas fa-caret-right" style="border:0px solid blue;padding-right:5px;"></i>{{article.views}}</span>
+            {% if article.find_keyword %}
+            <a href= "https://www.google.com/maps/search/{{article.find_keyword}}">
+            <div style="color:#17A2B8; border: 0px solid blue; position: absolute;margin-top:-40px; right:25px; padding:10px 0px;cursor:pointer; font-size:25px">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <!-- <div style="font-size: 0.9em; margin-top:5px; /*overflow:hidden;white-space:nowrap; text-overflow:ellipsis;*/">{{article.slug|_replace}}</div> -->
+      </div>
+      </a>
+      </div>
+    </div>
+    {% endfor %}
+  {% if art_category == request.GET.querystring_key %}</div>{% show_more %}{% endif %}
+  {% endif %}
+{% endfor %}
+{% endif %}
