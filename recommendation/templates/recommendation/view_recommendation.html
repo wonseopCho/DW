@@ -8,10 +8,10 @@
 {% block extrameta %}
 {% for content in article %}
 <meta property="og:url"                           content="{{request.build_absolute_uri}}" />
-<meta property="og:type"                          content="website" />
-<meta property="og:title"                         content="{{content.title}}" />
-<meta property="og:description"                   content="{{content.title}}" />
-<meta property="og:image"         id="meta_image" content="" />
+<meta property="og:type"                          content="article" />
+<meta property="og:title"                         content="{{content.name}}" />
+<meta property="og:description"                   content="{{content.name}}" />
+<meta property="og:image"                         content="{{content.images.all.first.file.url}}" />
 {% endfor %}
 {% endblock %}
 
@@ -384,10 +384,6 @@ function thumbImage(title, text){
   <div class="row">
     <div class="col-md-8" style="padding:0;">
   	{% for content in article %}
-
-    <script async>                       
-      $("#meta_image").prop('content','{{content.images.all.first.file.url}}');
-    </script>
     	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
         <div style="width:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap;">
           <h2>{{content.name}}</h2>
