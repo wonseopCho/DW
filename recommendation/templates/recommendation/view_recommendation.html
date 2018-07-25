@@ -5,6 +5,16 @@
 {% load widget_tweaks %}
 {% load jb_replace %}
 
+{% block extrameta %}
+{% for content in article %}
+<meta property="og:url"                           content="{{request.build_absolute_uri}}" />
+<meta property="og:type"                          content="website" />
+<meta property="og:title"                         content="{{content.title}}" />
+<meta property="og:description"                   content="{{content.title}}" />
+<meta property="og:image"         id="meta_image" content="" />
+{% endfor %}
+{% endblock %}
+
 {% block headAddon %}
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
@@ -374,6 +384,10 @@ function thumbImage(title, text){
   <div class="row">
     <div class="col-md-8" style="padding:0;">
   	{% for content in article %}
+
+    <script async>                       
+      $("#meta_image").prop('content','{{content.images.all.first.file.url}}');
+    </script>
     	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
         <div style="width:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap;">
           <h2>{{content.name}}</h2>
@@ -433,7 +447,7 @@ function thumbImage(title, text){
                   <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
                     <img src="{% static 'Images/sns/pinterest.svg' %}" width="35" height="35">
                   </a>
-                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}&redirect_uri=https://ktripguide.com/">
                     <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35">
                   </a>
                 </div>
@@ -896,7 +910,6 @@ $(document).ready(function(){
 
   $('#article_text > img').css('height','');
   $('iframe > img').css({'width':'100%','height':''});
-
 });
 </script>
 {% endblock %}

@@ -5,7 +5,18 @@
 {% load widget_tweaks %}
 {% load jb_replace %}
 
+{% block extrameta %}
+{% for content in article %}
+<meta property="og:url"                           content="{{request.build_absolute_uri}}" />
+<meta property="og:type"                          content="website" />
+<meta property="og:title"                         content="{{content.title}}" />
+<meta property="og:description"                   content="{{content.title}}" />
+<meta property="og:image"         id="meta_image" content="" />
+{% endfor %}
+{% endblock %}
+
 {% block headAddon %}
+
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'slick/1.8.0/slick/slick-theme.css' %}"/>
 <style>
@@ -354,23 +365,43 @@ opacity: 1;
 }
 </style>
 <script>
-function thumbImage(title, text){
+function metaImage(text){
   var parser = new DOMParser();
   var textHtml = parser.parseFromString(text, 'text/html');
   var image = textHtml.querySelector('img');
   // console.log(textHtml.querySelectorAll('img').length);
   if (image != null) {
     if (image.src.length > 0 ){
-      $("#"+title+"_main_image").attr('data-src', image.src);
+      $("#meta_image").prop('content', image.src);
     }
     else {
-      $("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));
+      $("#meta_image").prop('content', (image.outerHTML).split(" ")[1].slice(5,-1));
+    }; 
+  }
+  else {
+    $("#meta_image").prop('content',("{% static 'Images/No_image_available.svg' %}"));
+  };
+}
+
+function thumbImage(title, text, index){
+  var parser = new DOMParser();
+  var textHtml = parser.parseFromString(text, 'text/html');
+  var image = textHtml.querySelector('img');
+  // console.log(textHtml.querySelectorAll('img').length);
+  if (image != null) {
+    if (image.src.length > 0 ){
+      if(index < 6){$("#"+title+"_main_image").attr('src', image.src);}
+      else{$("#"+title+"_main_image").attr('data-src', image.src);};
+    }
+    else {
+      if(index < 6){$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));}
+      else{$("#"+title+"_main_image").attr('data-src',(image.outerHTML).split(" ")[1].slice(5,-1));};
     }; 
   }
   else {
     $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
   };
-}
+};
 </script>
 {% endblock %}
 
@@ -453,7 +484,7 @@ function thumbImage(title, text){
                   <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
                     <img src="{% static 'Images/sns/pinterest.svg' %}" width="35" height="35">
                   </a>
-                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}{{content.id}}&redirect_uri={{request.build_absolute_uri}}">
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}&redirect_uri=https://ktripguide.com/">
                     <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35">
                   </a>
                 </div>
@@ -464,6 +495,9 @@ function thumbImage(title, text){
         <div id="article_text" style="margin-top: 10px;display:block">
           <p>{{content.text|safe}}</p>
         </div>
+          <script async>                       
+            metaImage("{{content.text|replace_sq|safe|linebreaksbr}}");
+          </script>
         <div style="border:0px solid blue; width:100%;height:40px">
           <div style="border:1px solid #F7F7F7; width:50%;display:inline-block;float:left">
             
@@ -923,7 +957,6 @@ $(document).ready(function(){
   // $('#article_text img').css('width','');
   $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
-
 });
 </script>
 {% endblock %}
