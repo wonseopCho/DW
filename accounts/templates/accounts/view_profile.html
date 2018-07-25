@@ -55,7 +55,7 @@ table tr:last-child {
 					<p> City : {{authenticated_user.city}}</a></p>
 					<p> First Name :{{authenticated_user.firstname}} </p>
 					<p> Last Name : {{authenticated_user.lastname}} </p>
-					<p> Gender : {{authenticated_user.gender}} </p>
+					<p> Gender : {{authenticated_user.gender|capfirst}} </p>
 					{% if user == authenticated_user.user %}
 					<a href="{% url 'accounts:edit_profile' pk=user.pk %}"><input type="button" name="edit" class="btn btn-primary" value="Edit" /></a>
 					{% endif %}

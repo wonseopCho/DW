@@ -235,7 +235,9 @@ function thumbImage(title, text, index){
 						{% if category.category == article_category %}
 							{% if articles %}
 							<div style="width:100%; height:100%; padding:10px; cursor: pointer; border: 0px solid blue" onclick="gotoCategory('{{category.category}}')">
-								<img src="{{category.image.url}}" style="border: 0px solid orange; position:absolute; margin-top:3px; width:19px; height:19px"/>
+								<!-- <img src="{{category.image.url}}" style="border: 0px solid orange; position:absolute; margin-top:3px; width:19px; height:19px"/> -->
+								<div style="border:0px solid orange; position:absolute;margin-top:-3px; font-size: 20px; color:{{category.color}}">{{category.image_tag|safe}}
+								</div>
 								<span style="margin-left:30px; border: 0px solid red">{{category.category|upper}}</span>
 								<div style="float: right; font-size: 20px" >
 									<i class="fas fa-plus-square"></i>
@@ -274,10 +276,11 @@ function thumbImage(title, text, index){
 			{% endfor %}
 			<div class="vw_rewidth" style="border:0px solid blue; position: fixed; bottom:0;z-index:10;background-color:white;margin:0 auto;text-align: center">
 				{% for category in categories %}
-				 <img src="{{category.image.url}}" style="cursor:pointer; border: 0px solid orange; width:25px; height:25px;margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')" />
+				 <!-- <img src="{{category.image.url}}" style="cursor:pointer; border: 0px solid orange; width:25px; height:25px;margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')" /> -->
+				<span style="color:{{category.color}}; cursor:pointer; border: 0px solid orange; font-size:23px; margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')">{{category.image_tag|safe}}</span>
 				{% endfor %}
-				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:black;padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Board')"><i class="fas fa-clipboard"></i></span>
-				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:black;padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Qna')"><i class="fas fa-question-circle"></i></span>
+				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:green; padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Board')"><i class="fas fa-clipboard"></i></span>
+				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:red; padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Qna')"><i class="fas fa-question-circle"></i></span>
 			</div>
 		</div>
 	</div>

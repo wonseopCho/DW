@@ -14,8 +14,8 @@ from DW import keys
 import json, re
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'category', 'image', 'color', 'author', 'created_at', 'updated_at']
-    list_display_links = ['id', 'category']
+    list_display = ['id', 'category', 'image', 'image_tag', 'color', 'author', 'created_at', 'updated_at']
+    list_display_links = ['id', 'category', 'image_tag']
 
     def save_model(self, request, obj, form, change):
         first = obj.category[0].upper()

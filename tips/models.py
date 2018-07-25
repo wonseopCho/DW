@@ -13,6 +13,7 @@ class Category(models.Model):
     id = models.AutoField(primary_key=True)
     category = models.CharField(max_length=50, unique=True, blank=False)
     image = models.FileField(upload_to='tips/category/images/')
+    image_tag = models.CharField(max_length=50, unique=False, blank=True, null=True)
     color = RGBColorField()
     author = models.ForeignKey(User, blank=True, null=True, editable=False, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

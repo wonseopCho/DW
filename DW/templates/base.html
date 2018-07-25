@@ -373,20 +373,21 @@ function onLoad() {
               </a>
             </div>
           {% endif %}
-        <div id='categories' style="border:1px solid #dddbdb; height:250px; padding:0px ">
+        <div id='categories' style="border:1px solid #dddbdb; height:270px; padding:0px ">
           {% for category in categories %}
-            <div style="border: 0px solid black; width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('{{category}}')">
-              <img style="width:40px; height:40px" src="{{category.image.url}}"/>
+            <div style="border: 0px solid black; width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('{{category}}')"><!-- 
+              <img style="width:40px; height:40px" src="{{category.image.url}}"/> -->
+              <span style="color:{{category.color}}; cursor:pointer; border: 0px solid orange; font-size:35px;">{{category.image_tag|safe}}</span>
               <span style="display:block;border:0px solid red; font-size: 13px">{{category|capfirst}}</span>
             </div>
           {% endfor %}
             <div style="width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('Board')">
-            <span style="cursor:pointer; border: 0px solid orange;font-size:40px; color:black;" ><i class="fas fa-clipboard"></i></span>
-            <span style="display:block;font-size: 13px;margin-top:-9px">Board</span>
+            <span style="cursor:pointer; border: 0px solid orange;font-size:35px; color:green;" ><i class="fas fa-clipboard"></i></span>
+            <span style="display:block;font-size: 13px;margin-top:-1px">Board</span>
             </div>
             <div style="width:33.3%; float:left; cursor:pointer" onclick="gotoCategory('Qna')">
-            <span style="cursor:pointer; border: 0px solid orange;font-size:40px; color:black;"><i class="fas fa-question-circle"></i></span>
-            <span style="display:block;font-size:13px;margin-top:-9px">Qna</span>
+            <span style="cursor:pointer; border: 0px solid orange;font-size:35px; color:red;"><i class="fas fa-question-circle"></i></span>
+            <span style="display:block;font-size:13px;margin-top:-1px">Qna</span>
             </div>
         </div>
 
