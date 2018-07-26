@@ -504,9 +504,7 @@ function thumbImage(title, text, index){
                   <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
                     <img src="{% static 'Images/sns/pinterest.svg' %}" width="35" height="35">
                   </a>
-                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}&redirect_uri=https://ktripguide.com/">
-                    <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35">
-                  </a>
+                    <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35" onclick="shareOverrideOGMeta('{{request.build_absolute_uri}}','test','test','test');">
                 </div>
               </div>
             </div>
@@ -977,8 +975,6 @@ $(document).ready(function(){
   // $('#article_text img').css('width','');
   $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
-
-  shareOverrideOGMeta('test','test','test','test');
 });
 
 function shareOverrideOGMeta(overrideLink, overrideTitle, overrideDescription, overrideImage)
