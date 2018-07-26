@@ -6,13 +6,50 @@
 {% load jb_replace %}
 
 {% block extrameta %}
-{% for content in article %}
+
 <meta property="og:url"                           content="{{request.build_absolute_uri}}" />
 <meta property="og:type"                          content="article" />
-<meta property="og:title"                         content="{{content.title}}" />
-<meta property="og:description"                   content="{{content.title}}" />
-<meta property="og:image"         id="meta_image" content="" />
-{% endfor %}
+<meta property="og:title"                         content="" />
+<meta property="og:description"                   content="" />
+<meta property="og:image"                         content="" />
+
+<script type="text/javascript">
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId            : '124285848214697',
+    autoLogAppEvents : true,
+    xfbml            : true,
+    version          : 'v3.0'
+  });
+  FB.AppEvents.logPageView();
+};
+ 
+(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+function shareOverrideOGMeta(overrideTitle, overrideDescription, overrideImage){
+  FB.ui({
+    method: 'share_open_graph',
+    action_type: 'og.likes',
+    action_properties: JSON.stringify({
+      object: {
+        'og:title': overrideTitle,
+        'og:description': overrideDescription,
+        'og:image': overrideImage
+      }
+    })
+  },
+  function (response) {
+  // Action after response
+  });
+};
+</script>
+
 {% endblock %}
 
 {% block headAddon %}
@@ -365,23 +402,13 @@ opacity: 1;
 }
 </style>
 <script>
+
 function metaImage(text){
   var parser = new DOMParser();
   var textHtml = parser.parseFromString(text, 'text/html');
   var image = textHtml.querySelector('img');
   // console.log(textHtml.querySelectorAll('img').length);
-  if (image != null) {
-    if (image.src.length > 0 ){
-      $("#meta_image").prop('content', image.src);
-    }
-    else {
-      $("#meta_image").prop('content', (image.outerHTML).split(" ")[1].slice(5,-1));
-    }; 
-  }
-  else {
-    $("#meta_image").prop('content',("{% static 'Images/No_image_available.svg' %}"));
-  };
-}
+};
 
 function thumbImage(title, text, index){
   var parser = new DOMParser();
@@ -410,6 +437,10 @@ function thumbImage(title, text, index){
 <div class="container rewidth" style="border:0px solid red; overflow-x:hidden;margin-top:54px;">
   <div class="row">
     <div class="col-md-8" style="padding:0;">
+      <div id="fb-root"></div>
+      <script>
+        
+      </script>
   	{% for content in article %}
     	<div class="jumbotron" style="padding:1px; margin-bottom: 0px; background-color: #F7F7F7">
         <div style="width:100%; height:100%;text-align: center; border: 0px solid red;font-family: 'Bungee Inline', cursive; white-space: pre-wrap;">
@@ -496,9 +527,6 @@ function thumbImage(title, text, index){
         <div id="article_text" style="margin-top: 10px;display:block">
           <p>{{content.text|safe}}</p>
         </div>
-          <script async>                       
-            metaImage("{{content.text|replace_sq|safe|linebreaksbr}}");
-          </script>
         <div style="border:0px solid blue; width:100%;height:40px">
           <div style="border:1px solid #F7F7F7; width:50%;display:inline-block;float:left">
             
@@ -958,6 +986,10 @@ $(document).ready(function(){
   // $('#article_text img').css('width','');
   $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
+  {% for content in article %}
+  var image = metaImage("{{content.text|replace_sq|safe|linebreaksbr}}");
+  shareOverrideOGMeta('{{content.title}}', '{{content.title}}', image);
+  {% endfor %}
 });
 </script>
 {% endblock %}
