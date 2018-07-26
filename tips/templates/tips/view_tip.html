@@ -13,25 +13,6 @@
 <meta property="og:description"                   content="{{content.title}}" />
 <meta property="og:image"         id="meta_image" content="" />
 {% endfor %}
-<script>
-  window.fbAsyncInit = function() {
-  FB.init({
-    appId            : '124285848214697',
-    autoLogAppEvents : true,
-    xfbml            : true,
-    version          : 'v2.10'
-  });
-  FB.AppEvents.logPageView();
-  };
- 
-  (function(d, s, id){
-   var js, fjs = d.getElementsByTagName(s)[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement(s); js.id = id;
-   js.src = "//connect.facebook.net/en_US/sdk.js";
-   fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
 {% endblock %}
 
 {% block headAddon %}
@@ -422,6 +403,14 @@ function thumbImage(title, text, index){
   };
 };
 
+(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
 </script>
 {% endblock %}
 
@@ -504,7 +493,9 @@ function thumbImage(title, text, index){
                   <a style="border:0px solid red; margin-right:7px" href="https://www.pinterest.com/pin/create/button/?url={{request.build_absolute_uri}}{{content.id}}&media={{image}}&description={{content.title}}">
                     <img src="{% static 'Images/sns/pinterest.svg' %}" width="35" height="35">
                   </a>
-                    <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35" onclick="shareOverrideOGMeta('{{request.build_absolute_uri}}','test','test','test');">
+                  <a style="border:0px solid red; margin-right:7px" href="https://www.facebook.com/dialog/share?app_id=174283690066940&display=popup&href={{request.build_absolute_uri}}&redirect_uri=https://ktripguide.com/">
+                    <img src="{% static 'Images/sns/facebook.svg' %}" width="35" height="35">
+                  </a>
                 </div>
               </div>
             </div>
@@ -976,24 +967,5 @@ $(document).ready(function(){
   $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
 });
-
-function shareOverrideOGMeta(overrideLink, overrideTitle, overrideDescription, overrideImage)
-{
-  FB.ui({
-    method: 'share_open_graph',
-    action_type: 'og.likes',
-    action_properties: JSON.stringify({
-      object: {
-        'og:url': 'https://www.ktripguide.com/tips/94/',
-        'og:title': overrideTitle,
-        'og:description': overrideDescription,
-        'og:image': overrideImage
-      }
-    })
-  },
-  function (response) {
-  // Action after response
-  });
-}
 </script>
 {% endblock %}
