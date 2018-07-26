@@ -13,6 +13,25 @@
 <meta property="og:description"                   content="{{content.title}}" />
 <meta property="og:image"         id="meta_image" content="" />
 {% endfor %}
+<script>
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId            : '124285848214697',
+    autoLogAppEvents : true,
+    xfbml            : true,
+    version          : 'v2.10'
+  });
+  FB.AppEvents.logPageView();
+  };
+ 
+  (function(d, s, id){
+   var js, fjs = d.getElementsByTagName(s)[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement(s); js.id = id;
+   js.src = "//connect.facebook.net/en_US/sdk.js";
+   fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 {% endblock %}
 
 {% block headAddon %}
@@ -402,25 +421,6 @@ function thumbImage(title, text, index){
     $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
   };
 };
-
-  window.fbAsyncInit = function() {
-  FB.init({
-    appId            : '124285848214697',
-    autoLogAppEvents : true,
-    xfbml            : true,
-    version          : 'v3.0'
-  });
-  FB.AppEvents.logPageView();
-  console.log("initial");
-  };
- 
-  (function(d, s, id){
-   var js, fjs = d.getElementsByTagName(s)[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement(s); js.id = id;
-   js.src = "//connect.facebook.net/en_US/sdk.js";
-   fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
 
 </script>
 {% endblock %}
@@ -977,6 +977,27 @@ $(document).ready(function(){
   // $('#article_text img').css('width','');
   $('#article_text img').css('height','');
   $('iframe').css({'width':'100%','height':''});
+
+  shareOverrideOGMeta('test','test','test','test');
 });
+
+function shareOverrideOGMeta(overrideLink, overrideTitle, overrideDescription, overrideImage)
+{
+  FB.ui({
+    method: 'share_open_graph',
+    action_type: 'og.likes',
+    action_properties: JSON.stringify({
+      object: {
+        'og:url': 'https://www.ktripguide.com/tips/94/',
+        'og:title': overrideTitle,
+        'og:description': overrideDescription,
+        'og:image': overrideImage
+      }
+    })
+  },
+  function (response) {
+  // Action after response
+  });
+}
 </script>
 {% endblock %}
