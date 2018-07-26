@@ -7,11 +7,11 @@
 
 {% block extrameta %}
 {% for content in article %}
-<meta property="og:url"                           content="{{request.build_absolute_uri}}" />
-<meta property="og:type"                          content="article" />
-<meta property="og:title"                         content="{{content.title}}" />
-<meta property="og:description"                   content="{{content.title}}" />
-<meta property="og:image"         id="meta_image" content="" />
+<meta                 property="og:url"           content="{{request.build_absolute_uri}}" />
+<meta                 property="og:type"          content="article" />
+<meta                 property="og:title"         content="{{content.title}}" />
+<meta                 property="og:description"   content="{{content.title}}" />
+<meta id="meta_image" property="og:image"         content="" />
 {% endfor %}
 {% endblock %}
 
@@ -372,14 +372,14 @@ function metaImage(text){
   // console.log(textHtml.querySelectorAll('img').length);
   if (image != null) {
     if (image.src.length > 0 ){
-      $("#meta_image").prop('content', image.src);
+      $("#meta_image").attr('content', image.src);
     }
     else {
-      $("#meta_image").prop('content', (image.outerHTML).split(" ")[1].slice(5,-1));
+      $("#meta_image").attr('content', (image.outerHTML).split(" ")[1].slice(5,-1));
     }; 
   }
   else {
-    $("#meta_image").prop('content',("{% static 'Images/No_image_available.svg' %}"));
+    $("#meta_image").attr('content',("{% static 'Images/No_image_available.svg' %}"));
   };
 }
 

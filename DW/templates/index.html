@@ -289,7 +289,7 @@ function thumbImage(title, text, index){
 
 {% block footer	%}
 <div class="rewidth" style="border: 0px solid red; height:63px; margin:0 auto; text-align:center; font-size:12px">
-	&copy; Loen ALL RIGHTS RESERVED
+	&copy; Lo.Em.Inc ALL RIGHTS RESERVED
 </div>
 {% endblock %}
 
@@ -380,15 +380,19 @@ $(document).ready(function(){
 	});
 	var next_nav = Math.floor($('.article_Thumbs').width());
 	$('.owl-next').css('left',(next_nav-19)+'px');
-	
+
+	$.when($("#loading_overay").fadeOut('500')).done(function(e){
+	    $('body').css("overflowY", "auto");
+	    console.log("Page loaded");
+  });
 });
 
-$(window).on('load', function(){
-	console.log("Page loaded");
-	$.when($("#loading_overay").fadeOut('500')).done(function(e){
-		$('body').css("overflowY", "auto");
-	});
-});
+// $(window).on('load', function(){
+// 	console.log("Page loaded");
+// 	$.when($("#loading_overay").fadeOut('500')).done(function(e){
+// 		$('body').css("overflowY", "auto");
+// 	});
+// });
 
 function changeCallback(event){
 	var total = event.item.count;
