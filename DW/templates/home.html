@@ -1170,7 +1170,9 @@ $(document).ready(function(){
 
 $(window).on('load', function(){
     setTimeout(function(){
-    $('iframe').contents().find('.note-editable').css('height','355px');  
+    var category = getCookie('p_page');
+    $('#id_category option:contains('+category+')').prop('selected', true);
+    $('iframe').contents().find('.note-editable').css('height','355px');
     }, 500);
   });
 

@@ -107,7 +107,41 @@ $(document).ready(function(){
     });
   };
   $('#summernote').on('summernote.image.upload', function(we, files) {
-     console.log(we, files);
+     // console.log(we, files);
+     console.log('file',files);
+     // $('#summernote').summernote('insertImage', imageUrl);
+     // var orientation = 1;
+     // var imageUrl = '/media/django-summernote/2018-07-27/afe6ac61-6323-4761-8337-98d60f6c37bb.jpg';
+     // var imgNode = $('<img>').attr('src',imageUrl);
+     // loadImage.parseMetaData(
+     //     files[0],
+     //     function (data) {
+     //         if (!data.imageHead) {
+     //             return;
+     //         }
+     //         orientation = data.exif.get('Orientation');
+     //         console.log('ori', orientation);
+             
+     //         var pi=loadImage(
+     //             imageUrl,
+     //             function (img) {
+     //                 if(img.type === "error") {
+     //                     console.log("Error loading image " + imageUrl);
+     //                 } else {
+     //                      // $('#summernote').summernote('insertImage', imageUrl);
+     //                     // document.querySelector('.panel-body').appendChild(img);
+     //                     console.log(img);
+     //                 }
+     //             },
+     //             {maxWidth: 600,orientation: orientation,canvas: false}
+     //         );
+     //         console.log(pi);
+     //         $('#summernote').summernote('insertNode', pi);
+
+     //     }
+     // );
+     
+
   });
   $('#summernote').on('summernote.media.delete', function(we, files) {
     console.log(we,"------------",files);

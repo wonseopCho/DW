@@ -305,7 +305,7 @@ if DEBUG :
             ['help', ['help']],
         ],
         'attachment_filesize_limit': 1024 * 1024 * 10, #10MB limits
-        'js': ('/static/js/tips/article.js',),
+        'js': ('/static/js/tips/article.js','/static/load-image/js/load-image.all.min.js'),
     }
 
 else :
