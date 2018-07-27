@@ -102,7 +102,7 @@ $(document).ready(function(){
               </div>
             </div>`);
       $('#summernote').css('border','1px solid red');
-      $('.btn-sm').css('width','12%');
+      $('.note-toolbar .btn-sm').css({'width':'12%'});
       bs_input_file();   
     });
   };
