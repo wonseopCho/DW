@@ -1,432 +1,427 @@
-{% extends "base.html" %}
-{% load static %}
-{% load embed_video_tags %}
-{% load imagekit %}
-{% load jb_replace %}
-
+{% extends "base.html" %} 
+{% load static %} 
+{% load embed_video_tags %} 
+{% load imagekit %} 
+{% load jb_replace %} 
 {% block headAddon %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" media="print"/>
-<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.carousel.css' %}" >
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" media="print" />
+<link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.carousel.css' %}">
 <link rel="stylesheet" href="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/assets/owl.theme.default.css' %}" media="print">
 
 <style>
+	.listicle {
+		width: 70%;
+		height: 100%;
+	}
 
-.listicle{
-	width:70%;
-	height:100%;
-}
+	.listicle_title {
+		position: absolute;
+		border: 0px solid red;
+		width: 100%;
+		height: 100%;
+		background-color: rgba( 0, 0, 0, 0.3);
+		font-family: 'Monoton', cursive;
+		color: #f1f1f1;
+		padding: 6px;
+		font-size: 3vw;
+	}
 
-.listicle_title {
-    position: absolute; 
-    border:0px solid red;
-    width:100%;
-    height:100%; 
-    background-color: rgba( 0, 0, 0, 0.3 );
-    font-family: 'Monoton', cursive;
-    color:#f1f1f1;
-    padding: 6px;
-    font-size: 3vw;
-}
+	#l_t_d {
+		top: 230px;
+	}
 
-#l_t_d {
-	top:230px;
-}
+	#listicle_title_show {
+		font-family: 'Monoton', cursive;
+		color: #f1f1f1;
+		padding: 6px;
+		font-size: 3vw;
+	}
 
-#listicle_title_show {
-	font-family: 'Monoton', cursive;
-    color:#f1f1f1;
-    padding: 6px;
-    font-size: 3vw;
-}
+	.sticky {
+		background-color: white;
+		position: fixed;
+		width: 70%;
+		top: 0px;
+		z-index: 4;
+		padding-top: 0px
+	}
 
-.sticky {
-  background-color:white;
-  position:fixed;
-  width:70%;
-  top:0px;
-  z-index:4;
-  padding-top:0px
-}
+	.lis_sticky {
+		position: fixed;
+		top: -1px;
+		/* background-color:#4DC7A0; */
+		z-index: 2;
+		width: 70%;
+	}
 
-.lis_sticky {
-  position:fixed;
-  top: -1px;
- /* background-color:#4DC7A0; */
-  z-index:2; 
-  width:70%;
-}
+	.owl-dots {
+		height: 0;
+	}
 
-.owl-dots {
-	height:0;
-}
-
-.div_weather{
- /* background-image: url("{% static 'Images/weather_div.png' %}");
+	.div_weather {
+		/* background-image: url("{% static 'Images/weather_div.png' %}");
   background-position: center;
   background-repeat: no-repeat;*/
-  display:block;
-  width:100%;
-  height:90px;
-  padding-top:20px; 
-  margin:0 auto;
-  border:0px solid red;
-}
-
-#top_bar {
-  position:fixed;
-  top:0px;
-  z-index: 10;
-  width:70vw;
-  color:white;
-}
-
-#top_bar_text {
-  color: white;
-
-}
-
-#loader {
-  position: absolute;
-  left:46%;
-  top:45%;
-}
-
-.owl-nav {
-	position: absolute;
-	top: 0;
-
-}
-
-.owl-dots{
-	position:absolute;
-	margin-top:-30px;
-}
-
-
-.owl-carousel .owl-nav button.owl-prev, .owl-carousel .owl-nav button.owl-next{
-	height:100px;
-	width: 20px;
-	font-size: 20px;
-	font-weight: bold;
-	background-color: rgba( 0, 0, 0, 0.5 );
-	color: white;
-}
-
-.owl-carousel .owl-nav button.owl-next {
-	border:0px solid blue;
-	position: absolute;
-	
-}
-
-.vw_rewidth {
-  	width :70vw;
-}
-
-@media only screen and (max-width: 450px) {
-  .listicle{
-	width:100%;
-	height:100%;
+		display: block;
+		width: 100%;
+		height: 90px;
+		padding-top: 20px;
+		margin: 0 auto;
+		border: 0px solid red;
 	}
-  .listicle_title {
-	font-size:6vw;
+
+	#top_bar {
+		position: fixed;
+		top: 0px;
+		z-index: 10;
+		width: 70vw;
+		color: white;
 	}
-  #l_t_d {
-	top:15%;
+
+	#top_bar_text {
+		color: white;
+
 	}
-  #listicle_title_show {
-	font-size:6vw;
+
+	#loader {
+		position: absolute;
+		left: 46%;
+		top: 45%;
 	}
-  #top_bar {
-	width:100vw;
+
+	.owl-nav {
+		position: absolute;
+		top: 0;
+
 	}
-  .vw_rewidth {
-	width:100vw;
-  } 
-}
+
+	.owl-dots {
+		position: absolute;
+		margin-top: -30px;
+	}
 
 
-@media screen and (min-width: 450px) and (max-width: 500px) {
-  .listicle_title {
-    font-size:3vw;
-  }
-  #l_t_d {
-  	top:14%;
-  }
-  #listicle_title_show {
-    font-size:4vw;
-  }
-  #top_bar {
-	width:100vw;
+	.owl-carousel .owl-nav button.owl-prev,
+	.owl-carousel .owl-nav button.owl-next {
+		height: 100px;
+		width: 20px;
+		font-size: 20px;
+		font-weight: bold;
+		background-color: rgba( 0, 0, 0, 0.5);
+		color: white;
 	}
-  .vw_rewidth {
-	width:100vw;
-  } 
-}
 
-@media screen and (min-width: 500px) and (max-width: 800px) {
+	.owl-carousel .owl-nav button.owl-next {
+		border: 0px solid blue;
+		position: absolute;
 
-  .listicle_title {
-    font-size:3vw;
-  }
-  #l_t_d {
-  	top:16%;
-  }
-  #listicle_title_show {
-    font-size:4vw;
-  }
-  #top_bar {
-	width:100vw;
 	}
-  .vw_rewidth {
-	width:100vw;
-  } 
-}
 
+	.vw_rewidth {
+		width: 70vw;
+	}
+
+	@media only screen and (max-width: 450px) {
+		.listicle {
+			width: 100%;
+			height: 100%;
+		}
+		.listicle_title {
+			font-size: 6vw;
+		}
+		#l_t_d {
+			top: 15%;
+		}
+		#listicle_title_show {
+			font-size: 6vw;
+		}
+		#top_bar {
+			width: 100vw;
+		}
+		.vw_rewidth {
+			width: 100vw;
+		}
+	}
+
+
+	@media screen and (min-width: 450px) and (max-width: 500px) {
+		.listicle_title {
+			font-size: 3vw;
+		}
+		#l_t_d {
+			top: 14%;
+		}
+		#listicle_title_show {
+			font-size: 4vw;
+		}
+		#top_bar {
+			width: 100vw;
+		}
+		.vw_rewidth {
+			width: 100vw;
+		}
+	}
+
+	@media screen and (min-width: 500px) and (max-width: 800px) {
+
+		.listicle_title {
+			font-size: 3vw;
+		}
+		#l_t_d {
+			top: 16%;
+		}
+		#listicle_title_show {
+			font-size: 4vw;
+		}
+		#top_bar {
+			width: 100vw;
+		}
+		.vw_rewidth {
+			width: 100vw;
+		}
+	}
 </style>
 <script type="text/javascript">
-function thumbImage(title, text, index){
-  var parser = new DOMParser();
-  var textHtml = parser.parseFromString(text, 'text/html');
-  var image = textHtml.querySelector('img');
-  // console.log(textHtml.querySelectorAll('img').length);
-  // console.log(image.outerHTML.split(" ")[1].slice(5,-1));
-  if (image != null) {
-    if (image.src.length > 0 ){
-      if(index < 6){$("#"+title+"_main_image").attr('src', image.src);}
-      else{$("#"+title+"_main_image").attr('src', image.src);};
-    }
-    else {
-      if(index < 6){$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));}
-      else{$("#"+title+"_main_image").attr('src',(image.outerHTML).split(" ")[1].slice(5,-1));};
-    }; 
-  }
-  else {
-    $("#"+title+"_main_image").attr('src',("{% static 'Images/No_image_available.svg' %}"));
-  };
-};
-</script>
-{% endblock %}
-
-{% block title %} 
-  KOREAtripGuide
-{% endblock %}
-
-{% block content %}
+	function thumbImage(title, text, index) {
+		var parser = new DOMParser();
+		var textHtml = parser.parseFromString(text, 'text/html');
+		var image = textHtml.querySelector('img');
+		// console.log(textHtml.querySelectorAll('img').length);
+		// console.log(image.outerHTML.split(" ")[1].slice(5,-1));
+		if (image != null) {
+			if (image.src.length > 0) {
+				if (index < 6) { $("#" + title + "_main_image").attr('src', image.src); }
+				else { $("#" + title + "_main_image").attr('src', image.src); };
+			}
+			else {
+				if (index < 6) { $("#" + title + "_main_image").attr('src', (image.outerHTML).split(" ")[1].slice(5, -1)); }
+				else { $("#" + title + "_main_image").attr('src', (image.outerHTML).split(" ")[1].slice(5, -1)); };
+			};
+		}
+		else {
+			$("#" + title + "_main_image").attr('src', ("{% static 'Images/No_image_available.svg' %}"));
+		};
+	};
+</script> {% endblock %} {% block title %} KOREAtripGuide {% endblock %} {% block content %}
 <div id="loading_overay" style="background-color: white; position: fixed; width:100%; height:100%; z-index: 99;">
 	<i id="loader" class="fa fa-spinner fa-spin" style="font-size:35px"></i>
 </div>
 <div class="home_main" style="border: 0px solid red; width:100%; height: 90%">
 	<div class="rewidth" style="border: 0px solid blue;margin: 0 auto">
 		<div id="listicle" class="listicle" style="z-index:2;top:0%;position:fixed;border:0px solid red">
-		  <!-- {{ p_page }} -->
-		  <div id="l_t_d" style="position:absolute; z-index:3; border:0px solid red; cursor:pointer">
-		  	<span id="listicle_title_show" style="margin-left:5px;"></span><br><br>
-		  	<span id="listicle_index" class="badge badge-light" style="border-radius: 8px;margin-left:10px"></span>
-		  </div>
-		  <div class="listicle_slider innerSlider owl-carousel owl-theme vw_rewidth" style="height:100%">
-		    {% for listicle in listicle_all %}
-		      <a id="listicle_url_{{forloop.counter}}" href="{{listicle.get_absolute_url}}">
-		        <div style="width:100%; border: 0px solid blue; position:relative;"> 
-		          <div class="listicle_title">
-		            <span id="listicle_title_hidden_{{forloop.counter}}" style="visibility: hidden; position: absolute; bottom:30%">{{listicle.title}}</span>
-		          </div>
-		          <div style="border:0px solid red">
-		            <img class="lazy" style="width:100%; height:100%" src="{{listicle.image.url}}" />
-		          </div>
-		        </div>
-		      </a>
-		    {% endfor %}
-		  </div>
+			<!-- {{ p_page }} -->
+			<div id="l_t_d" style="position:absolute; z-index:3; border:0px solid red; cursor:pointer">
+				<span id="listicle_title_show" style="margin-left:5px;"></span>
+				<br>
+				<br>
+				<span id="listicle_index" class="badge badge-light" style="border-radius: 8px;margin-left:10px"></span>
+			</div>
+			<div class="listicle_slider innerSlider owl-carousel owl-theme vw_rewidth" style="height:100%">
+				{% for listicle in listicle_all %}
+				<a id="listicle_url_{{forloop.counter}}" href="{{listicle.get_absolute_url}}">
+					<div style="width:100%; border: 0px solid blue; position:relative;">
+						<div class="listicle_title">
+							<span id="listicle_title_hidden_{{forloop.counter}}" style="visibility: hidden; position: absolute; bottom:30%">{{listicle.title}}</span>
+						</div>
+						<div style="border:0px solid red">
+							<img class="lazy" style="width:100%; height:100%" src="{{listicle.image.url}}" />
+						</div>
+					</div>
+				</a>
+				{% endfor %}
+			</div>
 		</div>
 		<div style="margin-top:56%;background-color: white; border-top:6px solid #dddbdb; width:100%; height:100%; padding-top:0px; position:relative; z-index: 3">
 			{% for category in categories %}
 			<div class="col-md-12" style="border: 0px solid red;padding: 1px">
 				<div style="width:100%; background-color: white; display:block; border: 0px solid orange">
-					{% for article_category, articles in category_articles.items %}
-						{% if category.category == article_category %}
-							{% if articles %}
-							<div style="width:100%; height:100%; padding:10px; cursor: pointer; border: 0px solid blue" onclick="gotoCategory('{{category.category}}')">
-								<!-- <img src="{{category.image.url}}" style="border: 0px solid orange; position:absolute; margin-top:3px; width:19px; height:19px"/> -->
-								<div style="border:0px solid orange; position:absolute;margin-top:-3px; font-size: 20px; color:{{category.color}}">{{category.image_tag|safe}}
+					{% for article_category, articles in category_articles.items %} 
+					{% if category.category == article_category %} {% if articles %}
+					<div style="width:100%; height:100%; padding:10px; cursor: pointer; border: 0px solid blue" onclick="gotoCategory('{{category.category}}')">
+						<!-- <img src="{{category.image.url}}" style="border: 0px solid orange; position:absolute; margin-top:3px; width:19px; height:19px"/> -->
+						<div style="border:0px solid orange; position:absolute;margin-top:-3px; font-size: 20px; color:{{category.color}}">{{category.image_tag|safe}}
+						</div>
+						<span style="margin-left:30px; border: 0px solid red">{{category.category|upper}}</span>
+						<div style="float: right; font-size: 20px">
+							<i class="fas fa-plus-square"></i>
+						</div>
+					</div>
+					{% endif %}
+					<div style="border-top:0px solid #dddbdb;display:block;width:100%; background-color: white;">
+						<div class="article_Thumbs innerSlider owl-carousel owl-theme">
+							{% for article in articles %}
+							<a href="{{article.get_absolute_url}}">
+								<div style="border:0px solid #dddbdb; text-align:center;">
+									<div style="width:100%; height:100px">
+										{% if article.images.first.thumnails.url %}
+										<img style="width:100%; height:100%" src="{{article.images.first.thumnails.url}}" /> 
+										{% else %}
+										<img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%" />
+										<script async>                       
+											thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
+										</script> 
+										{% endif %}
+									</div>
+									<div style="width:100%; height:60px; display:table;font-size: 13px">
+										<span style="border: 0px solid red; width:100%;display: table-cell; vertical-align:middle; background-color: white; ">
+											{{article.title|truncatechars:30}}
+										</span>
+									</div>
 								</div>
-								<span style="margin-left:30px; border: 0px solid red">{{category.category|upper}}</span>
-								<div style="float: right; font-size: 20px" >
-									<i class="fas fa-plus-square"></i>
-								</div>
-							</div>
-							{% endif %}
-							<div style="border-top:0px solid #dddbdb;display:block;width:100%; background-color: white;" >
-							  <div class="article_Thumbs innerSlider owl-carousel owl-theme">
-							    {% for article in articles %}
-							     <a href="{{article.get_absolute_url}}">
-							      <div style="border:0px solid #dddbdb; text-align:center;">
-							        <div style="width:100%; height:100px">
-							          {% if article.images.first.thumnails.url %}
-							          <img style="width:100%; height:100%" src="{{article.images.first.thumnails.url}}"/>
-							          {% else %}
-							            <img class="lazy" id="{{article.title|slugify}}_main_image" style="width:100%; height:100%"/>
-							            <script async>                       
-							              thumbImage("{{article.title|slugify}}", "{{article.text|replace_sq|safe|linebreaksbr}}", '{{forloop.counter}}');
-							            </script>
-							          {% endif %}
-							        </div>
-							        <div style="width:100%; height:60px; display:table;font-size: 13px">
-							          <span style="border: 0px solid red; width:100%;display: table-cell; vertical-align:middle; background-color: white; ">
-							          {{article.title|truncatechars:30}}
-							      	  </span>
-							        </div>
-							      </div>
-							    </a>
-							    {% endfor %}
-							  </div>
-							</div>
-						{% endif %}
-					{% endfor %}
+							</a>
+							{% endfor %}
+						</div>
+					</div>
+					{% endif %} 
+				{% endfor %}
 				</div>
 			</div>
 			{% endfor %}
 			<div class="vw_rewidth" style="border:0px solid blue; position: fixed; bottom:0;z-index:10;background-color:white;margin:0 auto;text-align: center">
 				{% for category in categories %}
-				 <!-- <img src="{{category.image.url}}" style="cursor:pointer; border: 0px solid orange; width:25px; height:25px;margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')" /> -->
-				<span style="color:{{category.color}}; cursor:pointer; border: 0px solid orange; font-size:23px; margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')">{{category.image_tag|safe}}</span>
+				<!-- <img src="{{category.image.url}}" style="cursor:pointer; border: 0px solid orange; width:25px; height:25px;margin-top:-10px;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('{{category}}')" /> -->
+				<span style="color:{{category.color}}; cursor:pointer; border: 0px solid orange; font-size:23px; margin-top:-10px;margin-right:1.5%;margin-left:1.5%"
+				 onclick="gotoCategory('{{category}}')">{{category.image_tag|safe}}</span>
 				{% endfor %}
-				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:green; padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Board')"><i class="fas fa-clipboard"></i></span>
-				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:red; padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%" onclick="gotoCategory('Qna')"><i class="fas fa-question-circle"></i></span>
+				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:green; padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%"
+				 onclick="gotoCategory('Board')">
+					<i class="fas fa-clipboard"></i>
+				</span>
+				<span style="cursor:pointer; border: 0px solid orange;font-size:25px; color:red; padding:0;bottom:0;margin-right:1.5%;margin-left:1.5%"
+				 onclick="gotoCategory('Qna')">
+					<i class="fas fa-question-circle"></i>
+				</span>
 			</div>
 		</div>
 	</div>
 </div>
-{% endblock %}
-
-{% block footer	%}
+{% endblock %} {% block footer %}
 <div class="rewidth" style="border: 0px solid red; height:63px; margin:0 auto; text-align:center; font-size:12px">
 	&copy; Lo.En.Inc ALL RIGHTS RESERVED
 </div>
-{% endblock %}
-
-{% block additional_script %}
+{% endblock %} {% block additional_script %}
 <script src="{% static 'slick/1.8.0/slick/slick.min.js' %}"></script>
 <script src="{% static 'owlcarousel/2-2.3.4/docs/assets/owlcarousel/owl.carousel.min.js' %}"></script>
 <script>
-window.onscroll = function() {myFunction();};
-var topbar = document.getElementById("top_bar");
-var listicle = document.getElementById("listicle");
-var sticky = topbar.offsetTop;
-var li_offset = listicle.offsetTop;
+	window.onscroll = function () { myFunction(); };
+	var topbar = document.getElementById("top_bar");
+	var listicle = document.getElementById("listicle");
+	var sticky = topbar.offsetTop;
+	var li_offset = listicle.offsetTop;
 
-function myFunction() {
-	// #top_bar's margin-top is -2 
-  if (window.pageYOffset-2 >= sticky) {
-  	var opacity = (window.pageYOffset/100).toFixed(1);
-    topbar.style.backgroundColor = "rgba( 77, 199, 160,"+opacity+" )";
-  } else {
-    topbar.style.backgroundColor = "";
-  };
+	function myFunction() {
+		// #top_bar's margin-top is -2 
+		if (window.pageYOffset - 2 >= sticky) {
+			var opacity = (window.pageYOffset / 100).toFixed(1);
+			topbar.style.backgroundColor = "rgba( 77, 199, 160," + opacity + " )";
+		} else {
+			topbar.style.backgroundColor = "";
+		};
 
-  if (window.pageYOffset-2 >= li_offset) {
-    listicle.style.top = "-"+window.pageYOffset/2+"px";
-  } else {
-    listicle.style.top = "0";
-  };
+		if (window.pageYOffset - 2 >= li_offset) {
+			listicle.style.top = "-" + window.pageYOffset / 2 + "px";
+		} else {
+			listicle.style.top = "0";
+		};
 
-  if (window.pageYOffset-2 >= li_offset) {
-    listicle.classList.add("lis_sticky");
-  } else {
-    listicle.classList.remove("lis_sticky");
-  }
-}
-
-$(document).ready(function(){
-	$(".listicle_slider").owlCarousel({
-	  margin:0,
-	  nav:false,
-	  dots: false,
-	  items:1,
-	  margin:0,
-	  loop: true,
-	  autoplay: true,
-	  autoplayTimeout: 4500,
-	  autoplaySpeed: 1500,
-	  autoHeight: false,
-	  autoHeightClass: true,
-	  touchDrag: true,
-	  responsiveClass:true,
-	  responsive:{
-	      600:{
-	          dots:true,
-	      } 
-	  },
-	  onChanged: changeCallback
-	});
-
-	$(".article_Thumbs").owlCarousel({
-	  loop:false,
-	  nav:false,
-	  dots:false,
-	  responsiveClass:true,
-	  responsive:{
-	      0:{
-	          items:2,
-	          margin:5,
-	          stagePadding: 10,
-	      },
-	      600:{
-	          items:3,
-	          margin:10,
-	          stagePadding: 10,
-	      },
-	      975:{
-	      	  nav:true,
-	          items:3,
-	          margin:10,
-	          stagePadding: 10,
-	      },
-	      980:{
-	      	  nav:true,
-	          items:4,
-	          margin:10,
-	          stagePadding: 20,
-	      }        
-	  }
-	});
-	var next_nav = Math.floor($('.article_Thumbs').width());
-	$('.owl-next').css('left',(next_nav-19)+'px');
-
-	$.when($("#loading_overay").fadeOut('500')).done(function(e){
-	    $('body').css("overflowY", "auto");
-	    console.log("Page loaded");
-  });
-});
-
-// $(window).on('load', function(){
-// 	console.log("Page loaded");
-// 	$.when($("#loading_overay").fadeOut('500')).done(function(e){
-// 		$('body').css("overflowY", "auto");
-// 	});
-// });
-
-function changeCallback(event){
-	var total = event.item.count;
-	var total_1 = total +1;
-	var init = 0;
-	if ( total % 2 == 0) {init = total / 2 +1;}
-	else { init = total_1 / 2;};
-	if (event.item.index == 0 || event.item.index == 1 ) {
-		index = 1;
+		if (window.pageYOffset - 2 >= li_offset) {
+			listicle.classList.add("lis_sticky");
+		} else {
+			listicle.classList.remove("lis_sticky");
+		}
 	}
-	else {
-        index = event.item.index-(event.item.count-(init));
-        if (index > event.item.count){
-            index = 1;
-        }
-    };
-	var link_url = $("#listicle_url_"+index).attr('href');
-	$("#listicle_index").text(index+'/'+event.item.count);
-	$("#listicle_title_show").text($("#listicle_title_hidden_"+index).text());
-	$("#l_t_d").attr("onClick", "location.href = '"+link_url+"'");
-	var next_nav = Math.floor($('.article_Thumbs').width());
-	$('.owl-next').css('left',(next_nav-19+'px'));
-}
 
-</script>
+	$(document).ready(function () {
+		$(".listicle_slider").owlCarousel({
+			margin: 0,
+			nav: false,
+			dots: false,
+			items: 1,
+			margin: 0,
+			loop: true,
+			autoplay: true,
+			autoplayTimeout: 4500,
+			autoplaySpeed: 1500,
+			autoHeight: false,
+			autoHeightClass: true,
+			touchDrag: true,
+			responsiveClass: true,
+			responsive: {
+				600: {
+					dots: true,
+				}
+			},
+			onChanged: changeCallback
+		});
+
+		$(".article_Thumbs").owlCarousel({
+			loop: false,
+			nav: false,
+			dots: false,
+			responsiveClass: true,
+			responsive: {
+				0: {
+					items: 2,
+					margin: 5,
+					stagePadding: 10,
+				},
+				600: {
+					items: 3,
+					margin: 10,
+					stagePadding: 10,
+				},
+				975: {
+					nav: true,
+					items: 3,
+					margin: 10,
+					stagePadding: 10,
+				},
+				980: {
+					nav: true,
+					items: 4,
+					margin: 10,
+					stagePadding: 20,
+				}
+			}
+		});
+		var next_nav = Math.floor($('.article_Thumbs').width());
+		$('.owl-next').css('left', (next_nav - 19) + 'px');
+
+		$.when($("#loading_overay").fadeOut('500')).done(function (e) {
+			$('body').css("overflowY", "auto");
+			console.log("Page loaded");
+		});
+	});
+
+	// $(window).on('load', function(){
+	// 	console.log("Page loaded");
+	// 	$.when($("#loading_overay").fadeOut('500')).done(function(e){
+	// 		$('body').css("overflowY", "auto");
+	// 	});
+	// });
+
+	function changeCallback(event) {
+		var total = event.item.count;
+		var total_1 = total + 1;
+		var init = 0;
+		if (total % 2 == 0) { init = total / 2 + 1; }
+		else { init = total_1 / 2; };
+		if (event.item.index == 0 || event.item.index == 1) {
+			index = 1;
+		}
+		else {
+			index = event.item.index - (event.item.count - (init));
+			if (index > event.item.count) {
+				index = 1;
+			}
+		};
+		var link_url = $("#listicle_url_" + index).attr('href');
+		$("#listicle_index").text(index + '/' + event.item.count);
+		$("#listicle_title_show").text($("#listicle_title_hidden_" + index).text());
+		$("#l_t_d").attr("onClick", "location.href = '" + link_url + "'");
+		var next_nav = Math.floor($('.article_Thumbs').width());
+		$('.owl-next').css('left', (next_nav - 19 + 'px'));
+	}
+
+</script> 
 {% endblock %}
