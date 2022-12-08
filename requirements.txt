@@ -2,7 +2,7 @@ admin-multiupload==1.10
 asn1crypto==0.24.0
 boto3==1.7.47
 botocore==1.10.47
-certifi==2018.1.18
+certifi==2022.12.7
 cffi==1.11.5
 chardet==3.0.4
 coverage==4.5.1
